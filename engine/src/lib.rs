@@ -17,3 +17,4 @@ extern {
 pub fn greet() {
     alert("Hello, engine!");
 }
+
