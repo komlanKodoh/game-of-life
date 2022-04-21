@@ -1,3 +1,4 @@
+import { next_occurrence } from '../../utils';
 import { ObjectMap } from '../../utils/index.generic';
 
 /**
@@ -84,6 +85,18 @@ export class Parser {
   }
 
   /**
+   * Reads the string until the target character is reached;
+   */
+  next_before(target: string) {
+    let start = this.current_char_index + 1;
+    let end = next_occurrence(this.directive, target, start);
+
+    this.current_char_index = end || this.directive.length;
+  
+    return end ? this.directive.slice(start, end) : null;
+  }
+
+  /**
    * Finds the next number from the parse {@link Directive}
    */
   private next_number() {
@@ -116,7 +129,6 @@ export class Parser {
 
       char += this.next_char();
     }
-
   }
 
   /**
@@ -143,7 +155,7 @@ export class Parser {
   private next_char() {
     let char = this.get_next_char();
     this.current_char_index++;
-    return char ;
+    return char;
   }
 
   /**
@@ -154,7 +166,7 @@ export class Parser {
     let char: string;
 
     while (true) {
-      char = this.directive[this.current_char_index + 1 ];
+      char = this.directive[this.current_char_index + 1];
 
       if (char !== ' ') {
         break;
@@ -168,4 +180,3 @@ export class Parser {
 }
 
 export default Directive;
-
