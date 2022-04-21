@@ -1,0 +1,171 @@
+import { ObjectMap } from '../../utils/index.generic';
+
+/**
+ * A rendering directive used by the renderer to compute cells
+ *  state to compute the state of the cells;
+ *
+ * ### Example Directive : world { rows: 10, columns; 10 }
+ *
+ * ```ts
+ * let directive = `
+ * ->2 1, 4, 6, 2, 9
+ * ->6 5
+ * ->9 9, 5, 6
+ * `.trim()
+ * ```
+ * 
+ * ### Basics
+ * 
+ * Every live ( separated by a \n represents) a new columns in the
+ * simulation. For any given column, all declared indexes are considered
+ * alive. 
+ * 
+ * ### Special Characters 
+ * 
+ * ### jump command ( ->row )
+ * 
+ * Any time character is encountered the parser jumps to the given row. This
+ * After the jump, the parsing continues from the current row. This
+ * 
+
+ * > Note : The row is not reset to the initial row after the given is completed
+ * 
+ */
+type Directive = string;
+
+/**
+ * Mapping from string numbers to integer number;
+ * The map includes a comma, as it is used as a number separator
+ */
+const NUMBER_MAP: ObjectMap<string, number | false> = {
+  '0': 0,
+  '1': 1,
+  '2': 2,
+  '3': 3,
+  '4': 4,
+  '5': 5,
+  '6': 6,
+  '7': 7,
+  '8': 8,
+  '9': 9,
+  ',': false,
+  ' ': false,
+};
+
+/**
+ * A list of all symbols that a Directive can possibly include
+ */
+const SYMBOL_MAP: ObjectMap<string, boolean> = {
+  ',': true,
+  '->': true,
+  '\n': true,
+  '-': false,
+  '-|': true,
+};
+
+export class Parser {
+  current_char_index = -1;
+
+  constructor(private directive: Directive) {}
+
+  /**
+   * Returns the next value from the parse {@link Directive};
+   */
+  next() {
+    let char = this.get_next_char();
+
+    if (NUMBER_MAP[char] !== undefined) {
+      return this.next_number();
+    } else if (SYMBOL_MAP[char] !== undefined) {
+      return this.next_symbol();
+    } else {
+      throw new Error(`Invalid character found in directive : ${char}`);
+    }
+  }
+
+  /**
+   * Finds the next number from the parse {@link Directive}
+   */
+  private next_number() {
+    this.current_char_index++;
+
+    let start = this.current_char_index;
+    let end = this.current_char_index + 1;
+
+    while (this.next_integer() !== false) {
+      end++;
+    }
+
+    return +this.directive.slice(start, end);
+  }
+
+  /**
+   * Returns the next symbol from the parse {@link Directive}
+   */
+  private next_symbol() {
+    let char = this.next_char();
+
+    while (true) {
+      if (SYMBOL_MAP[char] === undefined) {
+        throw new Error(`Invalid symbol found in directive : ${char}`);
+      }
+
+      if (SYMBOL_MAP[char] === true) {
+        return char;
+      }
+
+      char += this.next_char();
+    }
+
+  }
+
+  /**
+   * Returns the next integer from the parsed {@link Directive}
+   */
+  private next_integer(): number | false {
+    this.current_char_index++;
+    let char = this.directive[this.current_char_index];
+
+    if (char === ' ') {
+      return this.next_integer();
+    }
+
+    if (NUMBER_MAP[char] === undefined) {
+      throw new Error(`Invalid integer found in directive : ${char}`);
+    }
+
+    return NUMBER_MAP[char];
+  }
+
+  /**
+   * Returns the next character from the parsed {@link Directive}
+   */
+  private next_char() {
+    let char = this.get_next_char();
+    this.current_char_index++;
+    return char ;
+  }
+
+  /**
+   * Returns the first non-white space character from the parsed {@link Directive},
+   * It updates te current char index every time a white space character is encountered.
+   */
+  private get_next_char() {
+    let char: string;
+
+    while (true) {
+      char = this.directive[this.current_char_index + 1 ];
+
+      if (char !== ' ') {
+        break;
+      }
+
+      this.current_char_index++;
+    }
+
+    return char;
+  }
+}
+
+export default Directive;
+
