@@ -7,11 +7,11 @@ test('Linear directive should work', (ctx) => {
 1, 2,    3, 4, 5, 6,
 `.trim();
 
-  const parser = new Directive.Parser(test);
+  const reader = new Directive.Reader(test);
 
-  ctx.is(parser.next(), 1);
-  ctx.is(parser.next(), 2);
-  ctx.is(parser.next(), 3);
+  ctx.is(reader.next(), 1);
+  ctx.is(reader.next(), 2);
+  ctx.is(reader.next(), 3);
 });
 
 test('New line should be correctly parsed', (ctx) => {
@@ -20,13 +20,13 @@ test('New line should be correctly parsed', (ctx) => {
 4, 5, 6,
 `.trim();
 
-  const parser = new Directive.Parser(test);
+  const reader = new Directive.Reader(test);
 
-  ctx.is(parser.next(), 1);
-  ctx.is(parser.next(), 2);
-  ctx.is(parser.next(), 3);
-  ctx.is(parser.next(), '\n');
-  ctx.is(parser.next(), 4);
+  ctx.is(reader.next(), 1);
+  ctx.is(reader.next(), 2);
+  ctx.is(reader.next(), 3);
+  ctx.is(reader.next(), '\n');
+  ctx.is(reader.next(), 4);
 });
 
 test('Jump command should be correctly parsed', (ctx) => {
@@ -35,17 +35,17 @@ test('Jump command should be correctly parsed', (ctx) => {
 ->6, 4, 5, 6,
 `.trim();
 
-  const parser = new Directive.Parser(test);
+  const reader = new Directive.Reader(test);
 
-  ctx.is(parser.next(), 1);
-  ctx.is(parser.next(), 2);
-  ctx.is(parser.next(), 3);
-  ctx.is(parser.next(), '\n');
+  ctx.is(reader.next(), 1);
+  ctx.is(reader.next(), 2);
+  ctx.is(reader.next(), 3);
+  ctx.is(reader.next(), '\n');
 
-  ctx.is(parser.next(), '->');
-  ctx.is(parser.next_chunk_before(',') as string, '6');
+  ctx.is(reader.next(), '->');
+  ctx.is(reader.next_chunk_before(',') as string, '6');
 
-  ctx.is(parser.next(), 4);
+  ctx.is(reader.next(), 4);
 });
 
 test('Should parse sever digit numbers', (ctx) => {
@@ -54,15 +54,15 @@ test('Should parse sever digit numbers', (ctx) => {
 4, 5600, 6,
 `.trim();
 
-  const parser = new Directive.Parser(test);
+  const reader = new Directive.Reader(test);
 
-  ctx.is(parser.next(), 1);
-  ctx.is(parser.next(), 25);
-  ctx.is(parser.next(), 3);
-  ctx.is(parser.next(), '\n');
+  ctx.is(reader.next(), 1);
+  ctx.is(reader.next(), 25);
+  ctx.is(reader.next(), 3);
+  ctx.is(reader.next(), '\n');
 
-  ctx.is(parser.next(), 4);
-  ctx.is(parser.next(), 5600);
+  ctx.is(reader.next(), 4);
+  ctx.is(reader.next(), 5600);
 });
 
 test('Composition command should be correctly parsed', (ctx) => {
@@ -71,15 +71,15 @@ test('Composition command should be correctly parsed', (ctx) => {
 -|space_ship.500, 4, 5, 6,
 `.trim();
 
-  const parser = new Directive.Parser(test);
+  const reader = new Directive.Reader(test);
 
-  ctx.is(parser.next(), 1);
-  ctx.is(parser.next(), 2);
-  ctx.is(parser.next(), 3);
-  ctx.is(parser.next(), '\n');
+  ctx.is(reader.next(), 1);
+  ctx.is(reader.next(), 2);
+  ctx.is(reader.next(), 3);
+  ctx.is(reader.next(), '\n');
 
-  ctx.is(parser.next(), '-|');
-  ctx.is(parser.next_chunk_before(',') as string, 'space_ship.500');
+  ctx.is(reader.next(), '-|');
+  ctx.is(reader.next_chunk_before(',') as string, 'space_ship.500');
 
-  ctx.is(parser.next(), 4);
+  ctx.is(reader.next(), 4);
 });
