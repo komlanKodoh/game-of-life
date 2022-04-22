@@ -205,6 +205,9 @@ class _Parser {
 
   constructor() {}
 
+  /**
+   * Adds a directive to the list of directive to be parsed;
+   */
   feed(directive: Directive) {
     this.pipe.add(new _Reader(directive));
     this.current_reader = this.pipe.next();
@@ -231,7 +234,11 @@ class _Parser {
     }
   }
 
-  get_current_reader() {
+  /**
+   * Returns the current reader or the first available reader in the pipeline.
+   * Returns null if the pipeline is empty
+   */
+  private get_current_reader() {
     if (this.current_reader) {
       return this.current_reader;
     }
@@ -239,7 +246,13 @@ class _Parser {
     return this.pipe.next();
   }
 
-  next_instruction(): string | number | null {
+  /**
+   * Returns the next instruction available.
+   * If the current reader is empty, it automatically moves
+   * to the next reader present in the pipe. Returns null if
+   * the pipe is empty.
+   */
+  private next_instruction(): string | number | null {
     let reader = this.get_current_reader();
 
     if (reader === null) {
@@ -256,6 +269,9 @@ class _Parser {
     return instruction;
   }
 
+  /**
+   * Processes instruction return by the Directive reader
+   */
   private process_instruction(instruction: string | number) {
     if (typeof instruction === 'string') {
       return this.process_string_instruction(instruction);
@@ -264,6 +280,10 @@ class _Parser {
     }
   }
 
+  /**
+   * Parses special key words present in directives;
+   * {@link Directive}
+   */
   private process_string_instruction(instruction: string) {
     if (instruction === '\n') {
       this.row++;
@@ -287,6 +307,10 @@ class _Parser {
     throw new Error(' Passed an unknown instruction ');
   }
 
+  /**
+   * Creates a cell from numeric column index with
+   * respect to the current row;
+   */
   private process_numeric_instruction(column: number) {
     return Cell.create(column, this.row);
   }
