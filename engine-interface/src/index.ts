@@ -1,5 +1,3 @@
-
-
-export function h (){
-    return "http"
+export function h() {
+  return 'http';
 }

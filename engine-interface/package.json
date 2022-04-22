@@ -17,7 +17,7 @@
     "fix:lint": "eslint src --ext .ts --fix",
     "test": "run-s build test:*",
     "test:lint": "eslint src --ext .ts",
-    "test:prettier": "prettier \"src/**/*.ts\" --list-different",
+    "test:prettier": "prettier \"src/**/*.ts\" --list-different --write",
     "test:spelling": "cspell \"{README.md,.github/*.md,src/**/*.ts}\"",
     "test:unit": "nyc  ava --verbose",
     "check-cli": "run-s test diff-integration-tests check-integration-tests",
