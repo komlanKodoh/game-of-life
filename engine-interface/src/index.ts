@@ -2,11 +2,11 @@ import Ecosystem  from './lib/ecosystem';
 
 
 let directive = `
-1,2,6,6,
-->56, 2, 56, 89,
--> 10,  56, 12
+1,2,
 `.trim();
 
-let ecosystem = new Ecosystem( 25, 25);
+let ecosystem = new Ecosystem( 4, 1);
 
 ecosystem.add( directive );
+
+console.log( ecosystem . state )
