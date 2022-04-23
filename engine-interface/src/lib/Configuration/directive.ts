@@ -1,6 +1,6 @@
 import { ObjectMap } from '../../utils/index.generic';
-import { _Parser } from './_Parser';
-import { _Reader } from './_Reader';
+import { Parser as _Parser } from './Parser';
+import { Reader as _Reader } from './Reader';
 
 /**
  * A rendering directive used by the renderer to compute cells
