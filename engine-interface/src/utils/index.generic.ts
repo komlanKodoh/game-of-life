@@ -12,5 +12,5 @@
  * ```
  */
 export type ObjectMap<TKey extends string | number | symbol, TValue> = {
-  readonly [key in TKey]: TValue;
+  [key in TKey]: TValue;
 };
