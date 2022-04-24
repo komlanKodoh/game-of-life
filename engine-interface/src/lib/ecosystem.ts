@@ -65,4 +65,13 @@ export default class Ecosystem {
    *
    */
   kill(_cell: Cell) {}
+
+  /**
+   * Advance the simulation of one frame;
+   */
+  next(){
+    this.engine.tick();
+  }
+
+  
 }
