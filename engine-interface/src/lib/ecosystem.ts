@@ -1,6 +1,7 @@
 import Directive from './Configuration/directive';
 import Cell from './cell';
 import { Universe } from 'game-of-life';
+import { memory } from 'game-of-life/engine_bg.wasm';
 
 export default class Ecosystem {
   /**
@@ -10,8 +11,9 @@ export default class Ecosystem {
   engine: Universe;
 
   constructor(private rows: number, private columns: number) {
-    this.state = new Uint8Array(rows * columns);
-    this.engine = Universe.new(this.state, rows, columns);
+    this.engine = Universe.new( rows, columns);
+
+    this.state = new Uint8Array(memory.buffer, this.engine.get_cells ( ) , rows * columns );
   }
 
   set_rows(rows: number) {
