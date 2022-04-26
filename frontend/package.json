@@ -18,10 +18,13 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
+    "@ngrx/effects": "^13.1.0",
+    "@ngrx/store": "^13.1.0",
+    "@ngrx/store-devtools": "^13.1.0",
+    "game-of-life-engine": "file:../engine-interface",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4",
-    "game-of-life-engine": "file:../engine-interface"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.3.2",
