@@ -1,15 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Ecosystem } from 'game-of-life-engine';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import Directive from 'game-of-life-engine/build/main/lib/Configuration/directive';
+import Renderer from './renderer';
 
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
-  styleUrls: ['./canvas.component.scss']
+  styleUrls: ['./canvas.component.scss'],
 })
-export class CanvasComponent implements OnInit {
+export class CanvasComponent {
+  engine: Ecosystem = new Ecosystem(4, 4);
 
-  constructor() { }
+  @ViewChild('canvas') canvas!: ElementRef;
+  constructor() {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    let directive: Directive = `
+ 5, 7,
+
+     5, 7,
+`.trim();
+
+    this.engine.add(directive);
+
+    let renderer = new Renderer({
+      canvas: this.canvas.nativeElement,
+      engine: this.engine,
+    });
+
+    setInterval(() => {
+      renderer.render();
+      this.engine.next();
+    }, 100)
   }
-
 }

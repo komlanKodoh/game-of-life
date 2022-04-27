@@ -2,21 +2,40 @@ import Directive from './Configuration/directive';
 import Cell from './cell';
 import { Universe } from 'game-of-life';
 import { memory } from 'game-of-life/engine_bg.wasm';
+import { GameOfLifeConfig } from './game-of-life-config.type';
+import { ObjectMap } from '../utils/index.generic';
 
 export default class Ecosystem {
   /**
    * A list of all state live/death present in the current ecosystem;
    */
+  rows: number;
+  columns: number;
   engine: Universe;
   state: Uint8Array;
+  parser = new Directive.Parser();
 
-  constructor(private rows: number, private columns: number) {
-    this.engine = Universe.new(rows, columns);
+  constructor(config: GameOfLifeConfig) {
+    this.rows = config.rows;
+    this.columns = config.columns;
+
+    this.engine = Universe.new(config.rows, config.columns);
+
     this.state = new Uint8Array(
       memory.buffer,
       this.engine.get_cells(),
       this.rows * this.columns
     );
+
+    if (config.is_alive) {
+      this.process_ecosystem(config.is_alive);
+    }
+    if (config.directives) {
+      this.register_directives(config.directives);
+    }
+    if (config.directive_composition) {
+      this.integrate_directive(config.directive_composition);
+    }
   }
 
   set_rows(rows: number) {
@@ -27,15 +46,23 @@ export default class Ecosystem {
     this.columns = columns;
   }
 
+  register_directives(directives: ObjectMap<string, Directive>) {
+    Object.keys(directives).forEach((directive_name) => {
+      this.parser.register_directive(
+        directive_name,
+        directives[directive_name] as string
+      );
+    });
+  }
+
   /**
    * Loads a {@link Directive} into the ecosystem
    */
-  add(directive: Directive) {
-    const parser = new Directive.Parser();
-    parser.feed(directive);
+  integrate_directive(directive: Directive) {
+    this.parser.feed(directive);
 
     for (;;) {
-      const cell = parser.next_cell();
+      const cell = this.parser.next_cell();
 
       if (cell === null) {
         break;
@@ -65,9 +92,12 @@ export default class Ecosystem {
   }
 
   /**
-   *
+   * Kills a living cell
    */
-  kill(_cell: Cell) {}
+  kill(cell: Cell) {
+    let idx = this.get_cell_index(cell);
+    this.state.set([254], idx);
+  }
 
   /**
    * Advance the simulation of one frame;
@@ -83,7 +113,7 @@ export default class Ecosystem {
     return this.state[this.get_cell_index(cell)];
   }
 
-  forEachCell(cb: (cell: Cell, state: number) => void) {
+  for_each_cell(cb: (cell: Cell, state: number) => void) {
     for (let row = 0; row < this.rows; row++) {
       for (let column = 0; column < this.columns; column++) {
         let cell = Cell.create(row, column);
@@ -92,5 +122,17 @@ export default class Ecosystem {
       }
     }
   }
-  
+
+  process_ecosystem(cb: (cell: Cell, state: number) => boolean) {
+    this.for_each_cell((cell, state) => {
+      let is_alive = cb(cell, state);
+
+      if (is_alive) {
+        this.bless(cell);
+      }
+      if (!is_alive) {
+        this.kill(cell);
+      }
+    });
+  }
 }

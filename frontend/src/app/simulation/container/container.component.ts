@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { toggle } from '../state/panel/actions';
 import { AppState, PanelState } from '../state/panel/reducer';
 import { selectPanelState } from '../state/panel/selectors';
-import { Ecosystem } from "game-of-life-engine";
+
 import {
   trigger,
   state,
@@ -52,19 +52,7 @@ export class ContainerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let engine = new Ecosystem(5, 5 );
-
     
-
-    let directive : Directive = `
-->1, 1, 4, 6, 2, 9,
-->3, 5,
-->4, 1, 4, 3
-`.trim()
-
-    engine.add(directive )
-
-    console.log ( engine.state )
   }
 
   toggle() {

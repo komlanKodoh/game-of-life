@@ -25,23 +25,20 @@ export type GameOfLifeConfig = {
    * cell is alive if the functions returns true, else it is dead
    */
 
-  readonly is_alive: (cell: Cell) => boolean;
+  readonly is_alive?: (cell: Cell) => boolean;
 
   /**
    * A dictionary {@link Directive}. The required default Directive is
    * used as the first directive to initialize the simulation;
    */
-  readonly directives: { readonly default: Directive } & ObjectMap<
-    string,
-    Directive
-  >;
+  readonly directives?: ObjectMap<string, Directive>;
 
   /**
    * Interpolates directives given in {@link GameOfLifeConfig.directives},
    * and returns a new directive.
    * @see {@link DirectiveComposition}
    */
-  readonly directive_composition: DirectiveComposition;
+  readonly directive_composition?: DirectiveComposition;
 };
 
 /**
