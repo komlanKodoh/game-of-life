@@ -7,13 +7,16 @@ export default class Ecosystem {
   /**
    * A list of all state live/death present in the current ecosystem;
    */
-  state: Uint8Array;
   engine: Universe;
+  state: Uint8Array;
 
   constructor(private rows: number, private columns: number) {
-    this.engine = Universe.new( rows, columns);
-
-    this.state = new Uint8Array(memory.buffer, this.engine.get_cells ( ) , rows * columns );
+    this.engine = Universe.new(rows, columns);
+    this.state = new Uint8Array(
+      memory.buffer,
+      this.engine.get_cells(),
+      this.rows * this.columns
+    );
   }
 
   set_rows(rows: number) {
@@ -69,9 +72,25 @@ export default class Ecosystem {
   /**
    * Advance the simulation of one frame;
    */
-  next(){
+  next() {
     this.engine.tick();
   }
 
+  /**
+   * Returns the state of any given cell;
+   */
+  get_cell_state(cell: Cell) {
+    return this.state[this.get_cell_index(cell)];
+  }
+
+  forEachCell(cb: (cell: Cell, state: number) => void) {
+    for (let row = 0; row < this.rows; row++) {
+      for (let column = 0; column < this.columns; column++) {
+        let cell = Cell.create(row, column);
+
+        cb(cell, this.get_cell_state(cell) as number);
+      }
+    }
+  }
   
 }
