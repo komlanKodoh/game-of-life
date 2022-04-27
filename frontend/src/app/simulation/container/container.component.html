@@ -1,9 +1,11 @@
-<div class=" w-full h-full relative ">
-    <div class="absolute h-full">
-        <app-configuration-panel> </app-configuration-panel>
+<div class=" w-full h-full relative" (click)="toggle()">
+
+    <div class="absolute h-full z-20" [@isOpen_panel]="panel.isOpen" id="configuration-panel-container">
+        <app-configuration-panel> {{ panel.isOpen }} </app-configuration-panel>
     </div>
 
-    <div class="w-full h-full">
+    <div class="w-full h-full canvas-container origin-right" [@isOpen_canvas]="panel.isOpen"  id="random">
         <app-canvas></app-canvas>
     </div>
+
 </div>
