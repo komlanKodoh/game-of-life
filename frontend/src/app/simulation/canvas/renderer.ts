@@ -16,6 +16,10 @@ export default class Renderer {
     this.canvas = config.canvas;
 
     this.fitCanvas();
+
+    window.addEventListener('resize', () => {
+      this.fitCanvas()
+    })
   }
 
   fitCanvas() {
@@ -41,7 +45,6 @@ export default class Renderer {
   }
 
   render() {
-
     let state = this.engine.state;
     let ctx = this.getRenderingContext();
 
@@ -49,7 +52,9 @@ export default class Renderer {
     let RADIUS = 2;
     let PADDING = 3;
 
-    this.engine.for_each_cell((cell, state ) => {
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.engine.for_each_cell((cell, state) => {
       Renderer.rectangle(
         ctx,
         cell[1] * SIZE,
@@ -60,17 +65,13 @@ export default class Renderer {
         5
       );
 
-      ctx.fillStyle = `rgba( 0,0,0, ${ state / (255 * 2) + 0.5 })`;
-
-      console.log ( ctx.fillStyle )
-      if (state ===255 ){
-        ctx.fillStyle = "#4e4eca";
+      ctx.fillStyle = `rgba( 0,0,0, ${state / (255 * 1.5) + 0.1 })`;
+      if (state === 255) {
+        ctx.fillStyle = '#4e4eca';
       }
-
 
       ctx.fill();
     });
-
   }
 
   static rectangle(
