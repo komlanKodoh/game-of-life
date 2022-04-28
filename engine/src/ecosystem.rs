@@ -1,3 +1,5 @@
+use std::collections::btree_set::Union;
+
 use wasm_bindgen::prelude::*;
 
 use crate::cell::{self};
@@ -26,7 +28,11 @@ impl Universe {
         self.cells[idx] = cell::LIVING_CELL;
     }
 
-    fn live_neighbor_count(&self ,(row, column): cell::Position, snapshot : &Vec<cell::State> ) -> u8 {
+    fn live_neighbor_count(
+        &self,
+        (row, column): cell::Position,
+        snapshot: &Vec<cell::State>,
+    ) -> u8 {
         let mut count = 0;
 
         for delta_row in [self.rows - 1, 0, 1].iter().cloned() {
@@ -56,7 +62,7 @@ impl Universe {
 #[wasm_bindgen]
 impl Universe {
     pub fn tick(&mut self) {
-        let snapshot  = self.cells.clone();
+        let snapshot = self.cells.clone();
 
         for row in 0..self.rows {
             for col in 0..self.columns {
@@ -69,7 +75,6 @@ impl Universe {
                 );
             }
         }
-
     }
 
     /// Get the list of all cells pointers present in the universe
@@ -88,3 +93,29 @@ impl Universe {
     }
 }
 
+#[test]
+fn something() {
+    let row = 10;
+    let column = 8;
+
+    let mut  ecosystem = Universe::new(row, column);
+
+    ecosystem.bless((2,0));
+    ecosystem.bless((2,1));
+    ecosystem.bless((2,2));
+
+    ecosystem.bless((1,2));
+    ecosystem.bless((0,1));
+
+    for x in 0..row {
+        println!("{:?}", &ecosystem.cells[x * column..x * column + column]);
+    }
+
+    ecosystem.tick();
+    println!();
+
+    for x in 0..row {
+        println!("{:?}", &ecosystem.cells[x * column..x * column + column]);
+    }
+
+}

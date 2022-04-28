@@ -79,7 +79,7 @@ export default class Ecosystem {
     let row = _row % this.rows;
     let column = _column % this.columns;
 
-    return row * this.rows + column;
+    return row * this.columns + column;
   }
 
   /**
