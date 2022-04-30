@@ -42,6 +42,9 @@ export class CanvasComponent {
 ->26, -|ship.30,
 ->30, -|ships.35,
 
+->26, -|ship.60,
+->30, -|ships.65,
+
 `.trim();
 
     this.engine.integrate_directive(directive);
@@ -54,10 +57,13 @@ export class CanvasComponent {
     renderer.render();
 
     this.runner.setAction(() => {
-      renderer.render();
       this.engine.next();
     });
 
-    // runner.start()
+    new Runner(() => {
+      renderer.render()
+    }).start()
+
+    
   }
 }
