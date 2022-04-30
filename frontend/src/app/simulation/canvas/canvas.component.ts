@@ -2,6 +2,7 @@ import { Ecosystem } from 'game-of-life-engine';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Directive from 'game-of-life-engine/build/main/lib/Configuration/directive';
 import Renderer from './renderer';
+import Runner from './Runner';
 
 @Component({
   selector: 'app-canvas',
@@ -9,10 +10,11 @@ import Renderer from './renderer';
   styleUrls: ['./canvas.component.scss'],
 })
 export class CanvasComponent {
+  runner = new Runner();
   engine: Ecosystem = new Ecosystem({
-    rows: 90,
-    columns: 90,
-    // is_alive: (cell) => (cell[0] * cell[1]) % 11 === 0, 
+    rows: 100,
+    columns: 100,
+    // is_alive: (cell) => cell[0] % 5 === 0 && cell[1] % 7 === 0,
     directives: {
       square: `
 0, 1,  2,
@@ -24,11 +26,11 @@ export class CanvasComponent {
 3,
 1,2,3,
 `.trim(),
-ships: `
+      ships: `
 2,
 1,
 1,2,3
-`.trim()
+`.trim(),
     },
   });
 
@@ -40,12 +42,6 @@ ships: `
 ->26, -|ship.30,
 ->30, -|ships.35,
 
-->60, -|ships.35,
-->80, -|ships.15,
-
-->0, -|ship.35,
-
-->80, -|ship.80,
 `.trim();
 
     this.engine.integrate_directive(directive);
@@ -56,18 +52,12 @@ ships: `
     });
 
     renderer.render();
-    this.engine.next();
 
-
-    const render = () => {
+    this.runner.setAction(() => {
       renderer.render();
       this.engine.next();
-      // console.log ( this.engine.state )
-      requestAnimationFrame ( render )
-    }
+    });
 
-    requestAnimationFrame(render)
-
-
+    // runner.start()
   }
 }
