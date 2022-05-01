@@ -3,6 +3,7 @@ type PushedEvent = KeyboardEvent & { isPushed: boolean };
 export default class PushedListener {
   is_pushed: boolean = false;
 
+
   constructor(
     private relevant_key: string,
     private callback?: (e: PushedEvent) => void,
@@ -50,4 +51,5 @@ export default class PushedListener {
     if ( !this.callback) return;
     this.callback(Object.assign(event, { isPushed: this.is_pushed }));
   }
+  
 }

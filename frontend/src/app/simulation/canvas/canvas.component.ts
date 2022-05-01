@@ -39,12 +39,7 @@ export class CanvasComponent {
 
   ngAfterViewInit(): void {
     let directive: Directive = `
-->26, -|ship.30,
-->30, -|ships.35,
-
-->26, -|ship.60,
-->30, -|ships.65,
-
+->26, -|ship.20,
 `.trim();
 
     this.engine.integrate_directive(directive);

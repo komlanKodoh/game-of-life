@@ -1,3 +1,5 @@
+import Keyboard from './Keyboard';
+
 interface DragEvent {
   x: number;
   y: number;
@@ -16,17 +18,21 @@ export default class DragListener {
   previous_x = 0;
   previous_y = 0;
 
+  modifiers = new Set();
+
   is_dragging = false;
 
   constructor(
     private element: HTMLElement,
     private callback: (e: DragEvent) => void
   ) {
-      this.init();
+    this.init();
   }
 
   init() {
     this.element.addEventListener('mousedown', (e) => {
+      this.modifiers = Keyboard.keys_pushed;
+      
       this.previous_x = e.offsetX;
       this.previous_y = e.offsetY;
 
@@ -42,7 +48,7 @@ export default class DragListener {
           x: e.offsetX,
           y: e.offsetY,
 
-          displacement_x : this.previous_x - e.offsetX,
+          displacement_x: this.previous_x - e.offsetX,
           displacement_y: this.previous_y - e.offsetY,
 
           drag_star_x: this.drag_start_x,
@@ -54,7 +60,7 @@ export default class DragListener {
     });
 
     window.addEventListener('mouseup', (e) => {
-      if (this.is_dragging  === true) {
+      if (this.is_dragging === true) {
         this.previous_x = 0;
         this.previous_y = 0;
         this.is_dragging = false;

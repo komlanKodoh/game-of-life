@@ -35,16 +35,21 @@ export default class Renderer {
   }
 
   bind(binding: HTMLElement) {
+    let control_key = new PushedListener('Control');
+    let shift_key = new PushedListener('Shift');
+
     this.mouse = new Mouse(this.scene, this.canvas);
 
     new DragListener(binding, (event) => {
+      if (shift_key.is_pushed) {
+      }
+
       this.scene.x +=
         (event.displacement_x * this.scene.width) / this.canvas.width;
       this.scene.y +=
         (event.displacement_y * this.scene.height) / this.canvas.height;
     });
 
-    let control_key = new PushedListener('Control');
     window.addEventListener('wheel', (event) => {
       if (!control_key.is_pushed) return;
 
@@ -54,7 +59,9 @@ export default class Renderer {
       let previousWidth = this.scene.width;
       let previousHeight = this.scene.height;
 
-      if ( previousWidth + delta < 0 ) { return }
+      if (previousWidth + delta < 10 * this.SIZE) {
+        return;
+      }
       this.scene.resize(previousWidth + delta);
 
       this.scene.x =
@@ -82,8 +89,11 @@ export default class Renderer {
     this.canvas.width = width;
     this.canvas.height = height;
 
-    this.scene.width = width * 2;
-    this.scene.height = height * 2;
+    this.scene.width = width ;
+    this.scene.height = height ;
+
+    this.scene.x = (this.engine.columns * this.SIZE - this.scene.width) / 2;
+    this.scene.y = (this.engine.rows * this.SIZE - this.scene.height) / 2;
 
     this.scene.fit_width(this.canvas.width);
 
@@ -109,11 +119,17 @@ export default class Renderer {
   living_area_is_valid: boolean = false;
   prepare_living_area() {
     if (!this.living_area_canvas || !this.living_area_is_valid) {
-      this.living_area_canvas = document.createElement("canvas");
-      let ctx = this.living_area_canvas.getContext('2d') as CanvasRenderingContext2D;
+      this.living_area_canvas = document.createElement('canvas');
+      let ctx = this.living_area_canvas.getContext(
+        '2d'
+      ) as CanvasRenderingContext2D;
 
-      this.living_area_canvas.width = this.scene.map_dimension ( this.engine.columns * this.SIZE ) ;
-      this.living_area_canvas.height = this.scene.map_dimension( this.engine.columns * this.SIZE ) ;
+      this.living_area_canvas.width = this.scene.map_dimension(
+        this.engine.columns * this.SIZE
+      );
+      this.living_area_canvas.height = this.scene.map_dimension(
+        this.engine.columns * this.SIZE
+      );
 
       this.engine.for_each_cell((cell, state) => {
         if (state !== 0) {
