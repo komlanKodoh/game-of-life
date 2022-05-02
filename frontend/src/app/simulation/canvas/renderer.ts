@@ -363,9 +363,9 @@ export default class Renderer {
       );
 
     let color = `${state /2 } , ${state /1.3} , ${state / 1.7}`
-      ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.3})`;
+      ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.2})`;
       if (state === 255) {
-        ctx.fillStyle = '#32e771';
+        ctx.fillStyle = '#0ff55f';
       }
 
 

@@ -14,7 +14,7 @@ export class CanvasComponent {
   engine: Ecosystem = new Ecosystem({
     rows: 100,
     columns: 100,
-    // is_alive: (cell) => cell[0] % 5 === 0 && cell[1] % 7 === 0,
+    // is_alive: (cell) => cell[1] % 7 === 0,
     directives: {
       circle: `
 1,2,
