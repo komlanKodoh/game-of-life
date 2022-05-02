@@ -11,15 +11,15 @@ export default class Scene {
   scale_y : number = 1;
 
   map_x(x: number) {
-    return (x - this.x) * this.scale_x ;
+    return Math.floor( (x - this.x) * this.scale_x ) ;
   }
 
   map_y(y: number) {
-    return (y - this.y) * this.scale_y;
+    return Math.floor( (y - this.y) * this.scale_y ) ;
   }
 
   map_dimension(dimension: number) {
-    return dimension * this.scale_x;
+    return Math.floor( dimension * this.scale_x ) ;
   }
 
   fit(width: number, height: number) {

@@ -12,3 +12,10 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.canvas-cell-selector {
+  background-color: rgba(44, 238, 238, 0.42);
+  border: 2px solid rgb(62, 62, 241);
+  top: 2px;
+  left: 2px;
+}

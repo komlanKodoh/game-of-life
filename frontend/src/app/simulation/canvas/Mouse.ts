@@ -8,19 +8,20 @@ export default class Mouse {
     window.addEventListener('mousemove', (e) => {
       const boundingRect = canvas.getBoundingClientRect();
 
-      this.x = this.get_x(e.offsetX - boundingRect.x);
-      this.y = this.get_y(e.offsetY - boundingRect.y);
+
+      this.x = this.get_x(e.clientX - boundingRect.x);
+      this.y = this.get_y(e.clientY - boundingRect.y);
     });
   }
 
-  get_x(real_x: number) {
+  private get_x(real_x: number) {
     return (
       (real_x * this.scene.width) / this.canvas.getBoundingClientRect().width +
       this.scene.x
     );
   }
 
-  get_y(real_y: number) {
+  private get_y(real_y: number) {
     return (
       (real_y * this.scene.height) /
         this.canvas.getBoundingClientRect().height +

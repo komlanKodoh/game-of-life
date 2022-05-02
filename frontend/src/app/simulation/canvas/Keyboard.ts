@@ -1,4 +1,4 @@
-const keys_pushed = new Set();
+const keys_pushed = new Set<string>();
 
 window.addEventListener('keydown', (e) => {
   keys_pushed.add(e.key);
