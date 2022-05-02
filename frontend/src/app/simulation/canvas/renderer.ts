@@ -70,7 +70,7 @@ export default class Renderer {
       let previousWidth = this.scene.width;
       let previousHeight = this.scene.height;
 
-      if ((previousWidth + delta) <( 10 * this.SIZE)) {
+      if (previousWidth + delta < 10 * this.SIZE) {
         return;
       }
 
@@ -100,6 +100,17 @@ export default class Renderer {
       } else {
         this.engine.bless(cell);
       }
+    });
+
+    new DragListener(this.canvas, (event) => {
+      if (!event.modifiers.has('Shift')) {
+        return;
+      }
+
+      this.engine.bless([
+        this.to_cell_coordinate(this.mouse.y),
+        this.to_cell_coordinate(this.mouse.x),
+      ]);
     });
   }
 
@@ -153,10 +164,6 @@ export default class Renderer {
       return relevant_cells;
     };
 
-    const to_cell_coordinate = (coordinate: number) => {
-      return Math.floor(coordinate / this.SIZE);
-    };
-
     new DragListener(this.canvas, (event) => {
       if (!event.modifiers.has('Control')) return;
 
@@ -171,9 +178,8 @@ export default class Renderer {
         left: to_pixel(Math.min(...vertical_bounds)),
       });
 
-      selector.style.width = to_pixel(Math.abs(- event.x + event.drag_star_x));
-      selector.style.height = to_pixel(Math.abs( - event.y + event.drag_star_y));
-      
+      selector.style.width = to_pixel(Math.abs(-event.x + event.drag_star_x));
+      selector.style.height = to_pixel(Math.abs(-event.y + event.drag_star_y));
 
       let [vertical_low, vertical_high] = sort_number([start_x, this.mouse.x]);
 
@@ -183,10 +189,10 @@ export default class Renderer {
       ]);
 
       let bounds: Bounds = {
-        horizontal_low: to_cell_coordinate(horizontal_low),
-        horizontal_high: to_cell_coordinate(horizontal_high),
-        vertical_low: to_cell_coordinate(vertical_low),
-        vertical_high: to_cell_coordinate(vertical_high),
+        horizontal_low: this.to_cell_coordinate(horizontal_low),
+        horizontal_high: this.to_cell_coordinate(horizontal_high),
+        vertical_low: this.to_cell_coordinate(vertical_low),
+        vertical_high: this.to_cell_coordinate(vertical_high),
       };
 
       this.on_select &&
@@ -200,6 +206,8 @@ export default class Renderer {
         start_y = this.mouse.y;
       })
       .onDragEnd(() => {
+        if (!Keyboard.keys_pushed.has('Control')) return;
+
         let [vertical_low, vertical_high] = sort_number([
           start_x,
           this.mouse.x,
@@ -210,10 +218,10 @@ export default class Renderer {
         ]);
 
         let bounds: Bounds = {
-          horizontal_low: to_cell_coordinate(horizontal_low),
-          horizontal_high: to_cell_coordinate(horizontal_high),
-          vertical_low: to_cell_coordinate(vertical_low),
-          vertical_high: to_cell_coordinate(vertical_high),
+          horizontal_low: this.to_cell_coordinate(horizontal_low),
+          horizontal_high: this.to_cell_coordinate(horizontal_high),
+          vertical_low: this.to_cell_coordinate(vertical_low),
+          vertical_high: this.to_cell_coordinate(vertical_high),
         };
 
         this.on_select &&
@@ -242,6 +250,8 @@ export default class Renderer {
 
     this.scene.width = width;
     this.scene.height = height;
+
+    this.scene.resize(this.engine.columns * this.SIZE);
 
     this.scene.x = (this.engine.columns * this.SIZE - this.scene.width) / 2;
     this.scene.y = (this.engine.rows * this.SIZE - this.scene.height) / 2;
@@ -287,10 +297,17 @@ export default class Renderer {
           return;
         }
 
+        let cell_x = cell[1] * this.SIZE;
+        let cell_y = cell[0] * this.SIZE;
+
+        // if (!this.scene.isWithin(cell_x, cell_y)) {
+        //   return;
+        // }
+
         Renderer.rectangle(
           ctx,
-          this.scene.map_dimension(cell[1] * this.SIZE),
-          this.scene.map_dimension(cell[0] * this.SIZE),
+          this.scene.map_dimension(cell_x),
+          this.scene.map_dimension(cell_y),
           this.scene.map_dimension(this.SIZE - this.PADDING),
           this.scene.map_dimension(this.SIZE - this.PADDING),
           this.scene.map_dimension(this.RADIUS),
@@ -321,6 +338,11 @@ export default class Renderer {
     this.prepare_living_area();
 
     this.engine.for_each_cell((cell, state) => {
+      let cell_x = cell[1] * this.SIZE;
+      let cell_y = cell[0] * this.SIZE;
+
+      // if ( !this.scene.isWithin( cell_x, cell_y) ) { return };
+
       let post_process =
         (this.cell_rendering_directive &&
           this.cell_rendering_directive(cell, ctx)) ||
@@ -332,18 +354,20 @@ export default class Renderer {
 
       Renderer.rectangle(
         ctx,
-        this.scene.map_x(cell[1] * this.SIZE),
-        this.scene.map_y(cell[0] * this.SIZE),
+        this.scene.map_x(cell_x),
+        this.scene.map_y(cell_y),
         this.scene.map_dimension(this.SIZE - this.PADDING),
         this.scene.map_dimension(this.SIZE - this.PADDING),
         this.scene.map_dimension(this.RADIUS),
         this.scene.map_dimension(5)
       );
 
-      ctx.fillStyle = `rgba( 0,0,0, ${state / (255 * 1.5) + 0.1})`;
+    let color = `${state /2 } , ${state /1.3} , ${state / 1.7}`
+      ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.3})`;
       if (state === 255) {
-        ctx.fillStyle = '#4e4eca';
+        ctx.fillStyle = '#32e771';
       }
+
 
       ctx.fill();
 
@@ -371,5 +395,9 @@ export default class Renderer {
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
+  }
+
+  to_cell_coordinate(coordinate: number) {
+    return Math.floor(coordinate / this.SIZE);
   }
 }

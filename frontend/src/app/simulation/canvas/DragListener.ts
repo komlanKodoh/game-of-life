@@ -88,7 +88,7 @@ export default class DragListener {
     return this;
   }
 
-  onDragEnd(callback: (e: MouseEvent) => void ){
+  onDragEnd(callback: (e: MouseEvent ) => void ){
     this.callback_drag_end = callback;
     return this;
   }
