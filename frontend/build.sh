@@ -2,4 +2,4 @@
 
 cd "$(dirname "$0")"
 
-npm i && ng build && npx scully
+npm i && npx ng build && npx scully
