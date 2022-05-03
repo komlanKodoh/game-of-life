@@ -2,9 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/main/app.js",
   "scripts": {
-    "dev": "ts-node-dev ./src/app.ts"
+    "dev": "ts-node-dev ./src/app.ts",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "koa": "^2.13.4",
     "koa-jwt": "^4.0.3",
     "koa-router": "^10.1.1",
+    "koa-static": "^5.0.0",
     "typescript": "^4.6.3"
   },
   "devDependencies": {

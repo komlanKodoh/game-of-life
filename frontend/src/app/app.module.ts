@@ -4,17 +4,20 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { ScullyLibModule } from '@scullyio/ng-lib';
+import { RouterModule, Routes } from '@angular/router';
+import { ContainerComponent } from './simulation/container/container.component';
+
+const appRoutes: Routes = [{ path: '', component: ContainerComponent }];
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
+    RouterModule.forRoot(appRoutes, { enableTracing: true }),
     BrowserModule,
     SimulationModule,
-    ScullyLibModule
+    ScullyLibModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
