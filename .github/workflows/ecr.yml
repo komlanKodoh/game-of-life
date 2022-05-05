@@ -24,6 +24,8 @@ jobs:
         aws-region: us-east-1
     - name: Build image
       run: ./_build.sh
+
+  
     - name: Docker login to aws container registry
       run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
     - name: Push image to Aws container repository

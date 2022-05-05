@@ -2,6 +2,9 @@
 
 cd "$(dirname "$0")"
 
-./server/build.sh &&
-./frontend/build.sh &&
+./server/_build.sh &&
+
+./engine-interface/_build.sh &&
+./frontend/_build.sh &&
+
 docker build . -t game-of-life
