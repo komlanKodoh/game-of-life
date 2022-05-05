@@ -1,0 +1,16 @@
+{
+  "name": "engine",
+  "collaborators": [
+    "Behemoth11 <kodohdaniel@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "engine_bg.wasm",
+    "engine.js",
+    "engine_bg.js",
+    "engine.d.ts"
+  ],
+  "module": "engine.js",
+  "types": "engine.d.ts",
+  "sideEffects": false
+}
