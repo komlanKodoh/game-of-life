@@ -2,7 +2,6 @@
 
 const Config = {
     PUBLIC_DIR : process.env.PUBLIC_DIR || '',
-
 }
 
 
