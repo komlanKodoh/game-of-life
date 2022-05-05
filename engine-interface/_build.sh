@@ -2,5 +2,5 @@
 
 cd "$(dirname "$0")"
 
-npm i --production && 
+npm i && 
 npm run build 
