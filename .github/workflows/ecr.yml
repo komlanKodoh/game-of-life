@@ -15,21 +15,17 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Build image
-        run: ./_build.sh
-
-      - name: Docker login to aws container registry
-        run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
-
-      - name: Push image to Aws container repository
-        run: docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life &&
-             docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Build image
+      run: ./_build.sh
+    - name: Docker login to aws container registry
+      run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
+    - name: Push image to Aws container repository
+      run: docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life &&
+           docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life
