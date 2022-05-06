@@ -1,9 +1,8 @@
-import { InvalidCredentialError } from "./../../error/CustomErrors";
-import Router from "koa-router";
-import User from "../user";
 import Auth from ".";
-import { UserIdentifier } from "./auth.service";
+import User from "../user";
+import Router from "koa-router";
 import Config from "../../config";
+import { InvalidCredentialError } from "./../../error/CustomErrors";
 
 const router = new Router();
 

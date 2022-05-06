@@ -2,6 +2,6 @@ import Router from "koa-router";
 
 const router = new Router();
 
-router.post("/", (ctx) => { })
+router.post("/", (_ctx) => { })
 
 export default router.routes();
