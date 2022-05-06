@@ -1,12 +1,18 @@
-
 import Router from "koa-router";
+import * as UserService from "./user.service";
 
 const router = new Router();
 
-router.get("/", (ctx) => {
-  ctx.body = {
-    token: "Some random cool json ",
-  };
+router.post("/", (ctx) => {
+  let credentials = ctx.body.user;
+  UserService.createUser(credentials);
 });
 
-export default router;
+router.put("/", (ctx) => {
+  let credentials = ctx.body.user ;
+  let newCredentials = ctx.body.newUser;
+
+  UserService.updateUser(credentials,newCredentials );
+})
+
+export default router.routes();
