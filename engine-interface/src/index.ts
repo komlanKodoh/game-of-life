@@ -1,3 +1,3 @@
-import Ecosystem from './lib/ecosystem';
+import Ecosystem from './lib/Ecosystem';
 
 export { Ecosystem };

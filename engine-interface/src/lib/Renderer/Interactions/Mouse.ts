@@ -1,4 +1,4 @@
-import Scene from './Scene';
+import Scene from "../Scene";
 
 export default class Mouse {
   x: number = 0;

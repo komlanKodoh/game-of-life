@@ -1,5 +1,3 @@
-import Cell from 'game-of-life-engine/build/main/lib/cell';
-import DragListener from './DragListener';
 
 export default class Scene {
   x: number = 60;

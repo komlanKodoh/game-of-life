@@ -1,8 +1,8 @@
 import Directive from './Configuration/directive';
-import Cell from './cell';
+import Cell from './Cell';
 import { Universe } from 'game-of-life';
 import { memory } from 'game-of-life/engine_bg.wasm';
-import { GameOfLifeConfig } from './game-of-life-config.type';
+import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
 import { ObjectMap } from '../utils/index.generic';
 
 export default class Ecosystem {
@@ -87,7 +87,7 @@ export default class Ecosystem {
    */
   bless(cell: Cell) {
     let idx = this.get_cell_index(cell);
-
+    
     this.state.set([255], idx);
   }
 
@@ -96,6 +96,7 @@ export default class Ecosystem {
    */
   kill(cell: Cell) {
     let idx = this.get_cell_index(cell);
+
     this.state.set([254], idx);
   }
 

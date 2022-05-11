@@ -1,12 +1,11 @@
-import { PanelState } from './../state/panel/reducer';
-import { Ecosystem } from 'game-of-life-engine';
-import Scene from './Scene';
-import DragListener from './DragListener';
-import PushedListener from './PushedListenner';
-import Mouse from './Mouse';
-import Keyboard from './Keyboard';
-import { to_pixel, sort_number } from 'src/utils';
-import Cell from 'game-of-life-engine/build/main/lib/cell';
+import { sort_number, to_pixel } from "../../utils";
+import Cell from "../Cell";
+import Ecosystem from "../Ecosystem";
+import Scene from "./Scene";
+import DragListener from "./Interactions/DragListener";
+import Keyboard from "./Interactions/Keyboard";
+import Mouse from "./Interactions/Mouse";
+
 
 interface Config {
   canvas: HTMLCanvasElement;
@@ -51,8 +50,8 @@ export default class Renderer {
     });
   }
 
-  bind(binding: HTMLElement) {
-    this.mouse = new Mouse(this.scene, this.canvas);
+  bind(binding: HTMLCanvasElement) {
+    this.mouse = new Mouse(this.scene, binding);
 
     this.configure_zoom_control();
     this.configure_drag_behavior();
@@ -135,34 +134,6 @@ export default class Renderer {
     selector.classList.add('canvas-cell-selector');
     this.canvas.parentNode?.appendChild(selector);
 
-    const get_relevant_cells = (
-      vertical_bounds: [number, number],
-      horizontal_bounds: [number, number]
-    ) => {
-      let cell_start_row = Math.floor(Math.min(...vertical_bounds) / this.SIZE);
-      let cell_start_column = Math.floor(
-        Math.min(...horizontal_bounds) / this.SIZE
-      );
-
-      let cell_end_row = Math.ceil(Math.max(...vertical_bounds) / this.SIZE);
-      let cell_end_column = Math.ceil(
-        Math.max(...horizontal_bounds) / this.SIZE
-      );
-
-      let relevant_cells: Cell[] = [];
-
-      for (let row = cell_start_row; row <= cell_end_row; row++) {
-        for (
-          let column = cell_start_column;
-          column <= cell_end_column;
-          column++
-        ) {
-          relevant_cells.push([row, column]);
-        }
-      }
-
-      return relevant_cells;
-    };
 
     new DragListener(this.canvas, (event) => {
       if (!event.modifiers.has('Control')) return;
@@ -300,9 +271,6 @@ export default class Renderer {
         let cell_x = cell[1] * this.SIZE;
         let cell_y = cell[0] * this.SIZE;
 
-        // if (!this.scene.isWithin(cell_x, cell_y)) {
-        //   return;
-        // }
 
         Renderer.rectangle(
           ctx,
@@ -311,7 +279,6 @@ export default class Renderer {
           this.scene.map_dimension(this.SIZE - this.PADDING),
           this.scene.map_dimension(this.SIZE - this.PADDING),
           this.scene.map_dimension(this.RADIUS),
-          this.scene.map_dimension(5)
         );
 
         ctx.fillStyle = `rgba( 0 ,0,0, 0.1)`;
@@ -359,7 +326,6 @@ export default class Renderer {
         this.scene.map_dimension(this.SIZE - this.PADDING),
         this.scene.map_dimension(this.SIZE - this.PADDING),
         this.scene.map_dimension(this.RADIUS),
-        this.scene.map_dimension(5)
       );
 
     let color = `${state /2 } , ${state /1.3} , ${state / 1.7}`
@@ -381,8 +347,7 @@ export default class Renderer {
     y: number,
     width: number,
     height: number,
-    radius: number,
-    padding: number
+    radius: number
   ) {
     ctx.beginPath();
     ctx.moveTo(x + radius, y);

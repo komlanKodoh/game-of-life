@@ -1,7 +1,7 @@
-import { ObjectMap } from '../utils/index.generic';
+import { ObjectMap } from '../../utils/index.generic';
 
-import Directive from './Configuration/directive';
-import Cell from './cell';
+import Directive from './directive';
+import Cell from '../Cell';
 
 /**
  * Config Object used to initialize a GameOfLifeSimulation simulation.

@@ -1,5 +1,5 @@
 import Pipeline from '../../utils/Pipeline';
-import Cell from '../cell';
+import Cell from '../Cell';
 import { Reader as _Reader } from './Reader';
 import { Directive } from './directive';
 import { ObjectMap } from '../../utils/index.generic';

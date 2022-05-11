@@ -1,4 +1,3 @@
-
 import { getToken, parseToken } from "./auth.service";
 
 describe("Authentication service test", () => {
@@ -8,10 +7,10 @@ describe("Authentication service test", () => {
   });
 
   it("Should parse token", () => {
-      let token  =getToken({id: "ID"});
-      let userIdentifier = parseToken(token);
+    let token = getToken({ id: "ID" });
+    let userIdentifier = parseToken(token);
 
-      expect(userIdentifier).toBeDefined();
-      expect(userIdentifier.id).toBeDefined();
+    expect(userIdentifier).toBeDefined();
+    expect(userIdentifier.id).toBeDefined();
   });
 });

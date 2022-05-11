@@ -10,7 +10,6 @@ import Middleware from "./middlewares";
 import Ecosystem from "./routes/ecosystem";
 import ErrorHandler from "./error/error.register";
 
-
 const app = new Koa();
 const apiRouter = new Router({ prefix: "/api" });
 
