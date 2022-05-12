@@ -2,9 +2,11 @@ name: Rust
 
 on:
   push:
-    branches: [ * ]
-  pull_request:
-    branches: [ * ]
+    branches: 
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!master'   # excludes master
 
 env:
   CARGO_TERM_COLOR: always
