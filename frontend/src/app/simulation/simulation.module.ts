@@ -10,6 +10,7 @@ import { panelReducer } from './state/panel/reducer';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { BrowserModule } from '@angular/platform-browser';
     ConfigurationPanelComponent,
   ],
   imports: [
+    SharedModule,
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,

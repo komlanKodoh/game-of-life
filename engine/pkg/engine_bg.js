@@ -40,6 +40,22 @@ export class Universe {
         wasm.__wbg_universe_free(ptr);
     }
     /**
+    * Brings cells at given position back alive
+    * @param {number} row
+    * @param {number} column
+    */
+    bless(row, column) {
+        wasm.universe_bless(this.ptr, row, column);
+    }
+    /**
+    * kills a living cell
+    * @param {number} row
+    * @param {number} column
+    */
+    kill(row, column) {
+        wasm.universe_kill(this.ptr, row, column);
+    }
+    /**
     */
     tick() {
         wasm.universe_tick(this.ptr);

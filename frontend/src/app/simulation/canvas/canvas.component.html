@@ -1,13 +1,17 @@
-
-<canvas #canvas class=" bg-gray-900 h-full w-full">
+<canvas #canvas class=" bg-zinc-900 h-full w-full">
 
 </canvas>
 
-<div class="absolute top-0 right-0 text-white text-4xl" >
-
-    <button (click)="runner.start()" >Start</button> &nbsp; &nbsp;
-    <button (click)="runner.pause()">Pause</button>
+<div class="absolute top-1 right-1 text-white text-4xl grid grid-cols-2 grid-rows-2 gag-1">
+    <app-icon-plus class="w-8 col-start-2 bg-green-500 p-3 rounded shadow-lg shadow-black"></app-icon-plus>
+    <app-icon-minus class="w-8 col-start-1 bg-green-500 p-3 rounded shadow-lg shadow-black"></app-icon-minus>
 </div>
+
+<div class="absolute top-1 left-1 text-white text-4xl grid grid-cols-2 grid-rows-2 gap-1 ">
+    <app-icon-forward class="w-8 col-start-1 bg-green-500 p-2 rounded shadow-lg shadow-black active:shadow-none" (click)="runner.moveForward()"></app-icon-forward>
+    <app-pause-run class="w-8 p-2 col-start-2 row-start-2 bg-green-500 rounded shadow-lg shadow-black" [paused]="!runner.isRunning" (click)="runner.toggle()" ></app-pause-run>
+</div>
+
 
 <canvas #tempCanvas class=" hidde w-0 h-0 black position absolute z-50 top-0 left-1/2 -translate-x-1/2 ">
 

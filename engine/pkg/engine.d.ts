@@ -5,6 +5,18 @@
 export class Universe {
   free(): void;
 /**
+* Brings cells at given position back alive
+* @param {number} row
+* @param {number} column
+*/
+  bless(row: number, column: number): void;
+/**
+* kills a living cell 
+* @param {number} row
+* @param {number} column
+*/
+  kill(row: number, column: number): void;
+/**
 */
   tick(): void;
 /**

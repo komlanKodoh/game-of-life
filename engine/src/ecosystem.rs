@@ -1,5 +1,3 @@
-use std::collections::btree_set::Union;
-
 use wasm_bindgen::prelude::*;
 
 use crate::cell::{self};
@@ -22,11 +20,6 @@ impl Universe {
         self.cells[idx]
     }
 
-    /// Brings cells at given position back alive
-    pub fn bless(&mut self, cell_position: cell::Position) {
-        let idx = self.get_linear_index(cell_position);
-        self.cells[idx] = cell::LIVING_CELL;
-    }
 
     fn live_neighbor_count(
         &self,
@@ -61,6 +54,18 @@ impl Universe {
 
 #[wasm_bindgen]
 impl Universe {
+    /// Brings cells at given position back alive
+    pub fn bless(&mut self, row: usize, column: usize) {
+        let idx = self.get_linear_index((row, column));
+        self.cells[idx] = cell::LIVING_CELL;
+    }
+
+    /// kills a living cell 
+    pub fn kill(&mut self, row: usize, column: usize) {
+        let idx = self.get_linear_index((row, column));
+        self.cells[idx] = cell::get_next_state(self.cells[idx], 0);
+    }
+
     pub fn tick(&mut self) {
         let snapshot = self.cells.clone();
 
@@ -98,14 +103,14 @@ fn something() {
     let row = 10;
     let column = 8;
 
-    let mut  ecosystem = Universe::new(row, column);
+    let mut ecosystem = Universe::new(row, column);
 
-    ecosystem.bless((2,0));
-    ecosystem.bless((2,1));
-    ecosystem.bless((2,2));
+    ecosystem.bless(2, 0);
+    ecosystem.bless(2, 1);
+    ecosystem.bless(2, 2);
 
-    ecosystem.bless((1,2));
-    ecosystem.bless((0,1));
+    ecosystem.bless(1, 2);
+    ecosystem.bless(0, 1);
 
     for x in 0..row {
         println!("{:?}", &ecosystem.cells[x * column..x * column + column]);
@@ -117,5 +122,4 @@ fn something() {
     for x in 0..row {
         println!("{:?}", &ecosystem.cells[x * column..x * column + column]);
     }
-
 }
