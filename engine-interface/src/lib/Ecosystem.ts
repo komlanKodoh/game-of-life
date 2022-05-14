@@ -86,18 +86,14 @@ export default class Ecosystem {
    * Brings a cell back to live
    */
   bless(cell: Cell) {
-    let idx = this.get_cell_index(cell);
-    
-    this.state.set([255], idx);
+    this.engine.kill(...cell);
   }
 
   /**
    * Kills a living cell
    */
   kill(cell: Cell) {
-    let idx = this.get_cell_index(cell);
-
-    this.state.set([254], idx);
+    this.engine.kill(...cell);
   }
 
   /**
@@ -114,6 +110,9 @@ export default class Ecosystem {
     return this.state[this.get_cell_index(cell)];
   }
 
+  /**
+   * Iterate over all cells in the universe
+   */
   for_each_cell(cb: (cell: Cell, state: number) => void) {
     for (let row = 0; row < this.rows; row++) {
       for (let column = 0; column < this.columns; column++) {
@@ -124,6 +123,9 @@ export default class Ecosystem {
     }
   }
 
+  /**
+   * Process all cells in the universe and assigns the {@link Cell} PrimaryState returned by the callback;
+   */
   process_ecosystem(cb: (cell: Cell, state: number) => boolean) {
     this.for_each_cell((cell, state) => {
       let is_alive = cb(cell, state);
