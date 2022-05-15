@@ -43,8 +43,6 @@ export default class Renderer {
     this.engine = config.engine;
     this.canvas = config.canvas;
 
-    this.bind(config.canvas);
-
     this.fitCanvas();
 
     window.addEventListener('resize', () => {
@@ -58,8 +56,8 @@ export default class Renderer {
    * - select;
    * - cell state toggle;
    */
-  bind(binding: HTMLCanvasElement) {
-    this.mouse = new Mouse(this.scene, binding);
+  bind_all() {
+    this.mouse = new Mouse(this.scene, this.canvas);
 
     this.configure_zoom_control();
     this.configure_drag_behavior();
@@ -68,9 +66,8 @@ export default class Renderer {
   }
 
   /** Configures scene zoom controls and behaviors */
-  private configure_zoom_control() {
+  configure_zoom_control() {
     window.addEventListener('wheel', (event) => {
-      console.log(' wheel is moving ');
       if (!Keyboard.keys_pushed.has('Control')) return;
 
       this.living_area_is_valid = false;
@@ -99,18 +96,15 @@ export default class Renderer {
   }
 
   /** configure toggle between dead/alive cell state; */
-  private configure_cell_state_control() {
+  configure_cell_state_control() {
     window.addEventListener('click', () => {
-      const cell_column = Math.floor(this.mouse.x / this.SIZE);
-      const cell_row = Math.floor(this.mouse.y / this.SIZE);
+      const cell_column = Math.floor(this.mouse.x / this.SIZE) % this.engine.columns;
+      const cell_row = Math.floor(this.mouse.y / this.SIZE) % this.engine.rows;
 
-      const cell: Cell = [cell_row, cell_column];
+      console.log ( cell_column, cell_row )
 
-      if (this.engine.get_cell_state(cell) === 255) {
-        this.engine.kill(cell);
-      } else {
-        this.engine.bless(cell);
-      }
+      this.engine.toggle( [cell_row, cell_column] )
+
     });
 
     new DragListener(this.canvas, (event) => {
@@ -126,7 +120,7 @@ export default class Renderer {
   }
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
-  private configure_drag_behavior() {
+  configure_drag_behavior() {
     new DragListener(this.canvas, (event) => {
       if (event.modifiers.size > 0) {
         return;
@@ -139,7 +133,7 @@ export default class Renderer {
   }
 
   on_select?: (arg: { bounds: Bounds; done: boolean }) => void;
-  private configure_select_behavior() {
+  configure_select_behavior() {
     let start_x = 0;
     let start_y = 0;
 
@@ -202,6 +196,7 @@ export default class Renderer {
         const bounds: Bounds = {
           horizontal_low: this.to_cell_coordinate(horizontal_low),
           horizontal_high: this.to_cell_coordinate(horizontal_high),
+
           vertical_low: this.to_cell_coordinate(vertical_low),
           vertical_high: this.to_cell_coordinate(vertical_high),
         };
@@ -326,7 +321,6 @@ export default class Renderer {
 
     this.prepare_living_area();
 
-    console.log(  this.engine.state )
     this.engine.for_each_cell((cell, state) => {
       const cell_x = cell[1] * this.SIZE;
       const cell_y = cell[0] * this.SIZE;

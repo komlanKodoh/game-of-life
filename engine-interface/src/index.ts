@@ -1,11 +1,11 @@
 import { Universe } from 'game-of-life';
+
 import Cell from './lib/Cell';
 import Directive from './lib/Configuration/directive';
 import {
-  GameOfLifeConfig,
   DirectiveComposition,
+  GameOfLifeConfig,
 } from './lib/Configuration/game-of-life-config.type';
-
 import Ecosystem from './lib/Ecosystem';
 import Renderer, {
   Bounds,

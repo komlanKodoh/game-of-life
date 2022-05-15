@@ -1,31 +1,24 @@
 import { Universe } from 'game-of-life';
-import { memory } from 'game-of-life/engine_bg.wasm';
-
 import { ObjectMap } from '../utils/index.generic';
 
 import Cell from './Cell';
 import Directive from './Configuration/directive';
 import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
+import { Bounds } from './Renderer';
 
 export default class Ecosystem {
   rows: number;
   columns: number;
   engine: Universe;
 
-  state: Uint8Array;
   parser = new Directive.Parser();
 
   constructor(config: GameOfLifeConfig) {
     this.rows = config.rows;
     this.columns = config.columns;
-    
+
     this.engine = Universe.new(config.rows, config.columns);
 
-    this.state = new Uint8Array(
-      memory.buffer,
-      this.engine.get_cells(),
-      this.rows * this.columns
-    );
 
     if (config.is_alive) {
       this.process_ecosystem(config.is_alive);
@@ -70,18 +63,6 @@ export default class Ecosystem {
 
       this.bless(cell);
     }
-
-    console.log ( this.state )
-  }
-
-  /**
-   * Returns a cell index in the linear world;
-   */
-  private get_cell_index([_row, _column]: Cell) {
-    const row = _row % this.rows;
-    const column = _column % this.columns;
-
-    return row * this.columns + column;
   }
 
   /**
@@ -99,29 +80,44 @@ export default class Ecosystem {
   }
 
   /**
+   * Toggle a cell between alive and dead state
+   */
+  toggle(cell: Cell){
+    this.engine.toggle(...cell)
+  }
+
+  /**
    * Advance the simulation of one frame;
    */
   next() {
-    console.log ( this. state )
     this.engine.tick();
   }
 
   /**
    * Returns the state of any given cell;
    */
-  get_cell_state(cell: Cell) {
-    return this.state[this.get_cell_index(cell)];
+  private get_cell_state(cell: Cell) {
+    return this.engine.get_cell_state(...cell);
   }
 
   /**
    * Iterate over all cells in the universe
    */
-  for_each_cell(cb: (cell: Cell, state: number) => void) {
-    for (let row = 0; row < this.rows; row++) {
-      for (let column = 0; column < this.columns; column++) {
-        const cell = Cell.create(row, column);
+  for_each_cell(cb: (cell: Cell, state: number) => void, bounds ?: Bounds ) {
 
-        cb(cell, this.get_cell_state(cell) as number);
+    if ( !bounds ){
+      bounds = {
+        horizontal_low: 0,
+        horizontal_high: this.rows,
+
+        vertical_low : 0,
+        vertical_high: this.columns,
+      }
+    }
+
+    for (let row = bounds.horizontal_low; row < bounds.horizontal_high; row++) {
+      for (let column = bounds.vertical_low; column < bounds.vertical_high; column++) {
+        cb([row, column], this.get_cell_state([row, column ]) as number);
       }
     }
   }
