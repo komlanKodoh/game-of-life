@@ -8,7 +8,7 @@ import Mouse from './Interactions/Mouse';
 import Scene from './Scene';
 
 /** Renderer configuration */
-interface Config {
+export interface RenderConfig {
   canvas: HTMLCanvasElement;
   engine: Ecosystem;
 }
@@ -21,7 +21,7 @@ export type Bounds = {
 };
 
 /** Change cell rendering behaviors by manipulation render context */
-type CellRenderingDirective = (
+export type CellRenderingDirective = (
   cell: Cell,
   ctx: CanvasRenderingContext2D
 ) => false | (() => void);
@@ -39,7 +39,7 @@ export default class Renderer {
   RADIUS = 2;
   PADDING = 3;
 
-  constructor(config: Config) {
+  constructor(config: RenderConfig) {
     this.engine = config.engine;
     this.canvas = config.canvas;
 
@@ -59,7 +59,6 @@ export default class Renderer {
    * - cell state toggle;
    */
   bind(binding: HTMLCanvasElement) {
-    console.log('\n\n\n I am binding some shit \n\n\n ');
     this.mouse = new Mouse(this.scene, binding);
 
     this.configure_zoom_control();
@@ -327,6 +326,7 @@ export default class Renderer {
 
     this.prepare_living_area();
 
+    console.log(  this.engine.state )
     this.engine.for_each_cell((cell, state) => {
       const cell_x = cell[1] * this.SIZE;
       const cell_y = cell[0] * this.SIZE;
@@ -351,6 +351,7 @@ export default class Renderer {
 
       const color = `${state / 2} , ${state / 1.3} , ${state / 1.7}`;
       ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.2})`;
+
       if (state === 255) {
         ctx.fillStyle = '#0ff55f';
       }

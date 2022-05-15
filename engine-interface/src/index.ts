@@ -1,10 +1,36 @@
+import { Universe } from 'game-of-life';
+import Cell from './lib/Cell';
+import Directive from './lib/Configuration/directive';
+import {
+  GameOfLifeConfig,
+  DirectiveComposition,
+} from './lib/Configuration/game-of-life-config.type';
+
 import Ecosystem from './lib/Ecosystem';
-import Renderer from './lib/Renderer';
+import Renderer, {
+  Bounds,
+  CellRenderingDirective,
+  RenderConfig,
+} from './lib/Renderer';
+import Mouse from './lib/Renderer/Interactions/Mouse';
+import Scene from './lib/Renderer/Scene';
 import Runner from './lib/Runner';
+import { ObjectMap } from './utils/index.generic';
 
-export { Ecosystem, Runner, Renderer };
+// modules and functions
+export { Ecosystem, Runner, Renderer, Scene, Mouse };
 
+// types
+export {
+  Cell,
+  Bounds,
+  Universe,
+  ObjectMap,
+  RenderConfig,
+  GameOfLifeConfig,
+  DirectiveComposition,
+  CellRenderingDirective,
+};
 
-const ecosystem = new Ecosystem({rows: 10, columns: 10});
-
-console.log( ecosystem )
+// namespaces
+export { Directive };

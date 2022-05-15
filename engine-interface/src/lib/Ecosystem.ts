@@ -18,7 +18,7 @@ export default class Ecosystem {
   constructor(config: GameOfLifeConfig) {
     this.rows = config.rows;
     this.columns = config.columns;
-
+    
     this.engine = Universe.new(config.rows, config.columns);
 
     this.state = new Uint8Array(
@@ -70,6 +70,8 @@ export default class Ecosystem {
 
       this.bless(cell);
     }
+
+    console.log ( this.state )
   }
 
   /**
@@ -86,7 +88,7 @@ export default class Ecosystem {
    * Brings a cell back to live
    */
   bless(cell: Cell) {
-    this.engine.kill(...cell);
+    this.engine.bless(...cell);
   }
 
   /**
@@ -100,6 +102,7 @@ export default class Ecosystem {
    * Advance the simulation of one frame;
    */
   next() {
+    console.log ( this. state )
     this.engine.tick();
   }
 
