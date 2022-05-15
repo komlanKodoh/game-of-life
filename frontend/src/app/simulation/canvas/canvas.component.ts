@@ -4,7 +4,6 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import Directive from 'game-of-life-engine/build/main/lib/Configuration/directive';
 import { Bounds } from 'game-of-life-engine/build/main/lib/Renderer';
 
-
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
@@ -12,7 +11,7 @@ import { Bounds } from 'game-of-life-engine/build/main/lib/Renderer';
 })
 export class CanvasComponent {
   runner = new Runner();
-  renderer !: Renderer;
+  renderer!: Renderer;
 
   engine: Ecosystem = new Ecosystem({
     rows: 100,
@@ -35,26 +34,23 @@ export class CanvasComponent {
 1,2,3,
 `.trim(),
       ships: `
-2,
-1,
-1,2,3
+      2,
+      1,
+      1,2,3
 `.trim(),
     },
+    directive_composition: `
+    ->26, -|ship.20,
+    ->30, -|ships.45,
+    `.trim(),
   });
 
   @ViewChild('canvas') canvas!: ElementRef;
   @ViewChild('tempCanvas') tempCanvas!: ElementRef;
-  
+
   constructor() {}
 
   ngAfterViewInit(): void {
-    let directive: Directive = `
-->26, -|ship.20,
-->30, -|ships.45,
-`.trim();
-
-    this.engine.integrate_directive(directive);
-
     this.renderer = new Renderer({
       canvas: this.canvas.nativeElement,
       engine: this.engine,
@@ -94,6 +90,4 @@ export class CanvasComponent {
       this.renderer.render();
     }).start();
   }
-
-
 }

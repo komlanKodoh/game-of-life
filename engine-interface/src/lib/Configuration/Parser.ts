@@ -1,16 +1,15 @@
-import Pipeline from '../../utils/Pipeline';
+import Queue from '../../utils/Queue';
+import { ObjectMap } from '../../utils/index.generic';
 import Cell from '../Cell';
+
 import { Reader as _Reader } from './Reader';
 import { Directive } from './directive';
-import { ObjectMap } from '../../utils/index.generic';
 
 export class Parser {
   private row = 0;
   private current_reader: _Reader | null = null;
   private directive_registry: ObjectMap<string, Directive> = {};
-  private pipe = new Pipeline<_Reader>();
-
-  constructor() {}
+  private pipe = new Queue<_Reader>();
 
   /**
    * Adds a directive to the list of directive to be parsed;
@@ -25,13 +24,13 @@ export class Parser {
    */
   next_cell() {
     for (;;) {
-      let instruction = this.next_instruction();
+      const instruction = this.next_instruction();
 
       if (instruction === null) {
         return null;
       }
 
-      let cell = this.process_instruction(instruction);
+      const cell = this.process_instruction(instruction);
 
       if (cell === null) {
         continue;
@@ -42,13 +41,13 @@ export class Parser {
   }
 
   /**
-   * Register a directive. 
-   * Directive registered can be used as embedded directive in 
+   * Register a directive.
+   * Directive registered can be used as embedded directive in
    * main directive passed through the feed method. Directive can
    * be lazily registered but must be registered before being encountered
-   * by the parser  
+   * by the parser
    */
-  register_directive(name: string ,directive: Directive) {
+  register_directive(name: string, directive: Directive) {
     this.directive_registry[name] = directive;
   }
 
@@ -71,13 +70,13 @@ export class Parser {
    * the pipe is empty.
    */
   private next_instruction(): string | number | null {
-    let reader = this.get_current_reader();
+    const reader = this.get_current_reader();
 
     if (reader === null) {
       return null;
     }
 
-    let instruction = reader.next();
+    const instruction = reader.next();
 
     if (instruction === null) {
       this.current_reader = this.pipe.next();
@@ -109,18 +108,17 @@ export class Parser {
     }
 
     if (instruction === '->') {
-      let target_row = this.get_current_reader()?.next_chunk() as string;
+      const target_row = this.get_current_reader()?.next_chunk() as string;
 
       this.row = +target_row;
       return null;
     }
 
     if (instruction === '-|') {
-      let [directive_name, offset_column_as_string] = this.get_current_reader()
-        ?.next_chunk()
-        ?.split('.') as [string, string];
+      const [directive_name, offset_column_as_string] =
+        this.get_current_reader()?.next_chunk()?.split('.') as [string, string];
 
-      let offset_column = +offset_column_as_string;
+      const offset_column = +offset_column_as_string;
 
       // we send the current reader back to the pipe. so the directive can be
       // directly executed.
@@ -129,12 +127,13 @@ export class Parser {
       // We modify the set a preprocessor to the directive so every column
       // present in the directive can be rewritten;
 
-      let directive = this.directive_registry[directive_name];
+      const directive = this.directive_registry[directive_name];
 
-
-      if ( !directive ) { 
-        throw new Error("Nested Directive found while parsing but not registered.")
-       };
+      if (!directive) {
+        throw new Error(
+          'Nested Directive found while parsing but not registered.'
+        );
+      }
 
       this.current_reader = new _Reader(directive).set_post_processor(
         (result) => {

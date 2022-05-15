@@ -1,4 +1,5 @@
 import { next_occurrence } from '../../utils';
+
 import { Directive, NUMBER_MAP, SYMBOL_MAP } from './directive';
 
 export class Reader<TReturn = number | string> {
@@ -33,12 +34,12 @@ export class Reader<TReturn = number | string> {
   }
 
   /**
-   * Adds a post processor to the reader. 
-   * Every result is passed through the processor. 
-   * The result returned by the post_processor is then 
+   * Adds a post processor to the reader.
+   * Every result is passed through the processor.
+   * The result returned by the post_processor is then
    * sent to the caller of the function;
    */
-  set_post_processor(post_processor: (next: number | string) => TReturn){
+  set_post_processor(post_processor: (next: number | string) => TReturn) {
     this.post_processor = post_processor;
     return this;
   }

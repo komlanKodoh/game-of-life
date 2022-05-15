@@ -2,20 +2,20 @@ export default class Runner {
   /**
    * Wether or not the runner is in a running state;
    */
-  isRunning: boolean = false;
+  isRunning = false;
 
   constructor(
     /**
      * Action that must be executed at every iteration of the runner
      */
-    private action?: (...args: any) => void
+    private action?: () => void
   ) {}
 
   /**
    * Set the action that the runner should perform on every iteration
    * @param action Action that must be executed at every iteration of the runner
    */
-  setAction(action: (...args: any) => void) {
+  setAction(action: () => void) {
     this.action = action;
   }
 

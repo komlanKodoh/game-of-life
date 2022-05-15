@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { SharedModule } from '../shared/shared.module';
+import { ComponentsModule } from './components/components.module';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule,
     CommonModule,
     BrowserModule,
+    ComponentsModule,
     BrowserAnimationsModule,
     StoreModule.forRoot({ panel: panelReducer }),
     StoreDevtoolsModule.instrument({

@@ -1,10 +1,11 @@
 import { sort_number, to_pixel } from '../../utils';
 import Cell from '../Cell';
 import Ecosystem from '../Ecosystem';
-import Scene from './Scene';
+
 import DragListener from './Interactions/DragListener';
 import Keyboard from './Interactions/Keyboard';
 import Mouse from './Interactions/Mouse';
+import Scene from './Scene';
 
 /** Renderer configuration */
 interface Config {
@@ -58,6 +59,7 @@ export default class Renderer {
    * - cell state toggle;
    */
   bind(binding: HTMLCanvasElement) {
+    console.log('\n\n\n I am binding some shit \n\n\n ');
     this.mouse = new Mouse(this.scene, binding);
 
     this.configure_zoom_control();
@@ -69,13 +71,14 @@ export default class Renderer {
   /** Configures scene zoom controls and behaviors */
   private configure_zoom_control() {
     window.addEventListener('wheel', (event) => {
+      console.log(' wheel is moving ');
       if (!Keyboard.keys_pushed.has('Control')) return;
 
       this.living_area_is_valid = false;
 
-      let delta = event.deltaY;
-      let previousWidth = this.scene.width;
-      let previousHeight = this.scene.height;
+      const delta = event.deltaY;
+      const previousWidth = this.scene.width;
+      const previousHeight = this.scene.height;
 
       if (previousWidth + delta < 10 * this.SIZE) {
         return;
@@ -99,10 +102,10 @@ export default class Renderer {
   /** configure toggle between dead/alive cell state; */
   private configure_cell_state_control() {
     window.addEventListener('click', () => {
-      let cell_column = Math.floor(this.mouse.x / this.SIZE);
-      let cell_row = Math.floor(this.mouse.y / this.SIZE);
+      const cell_column = Math.floor(this.mouse.x / this.SIZE);
+      const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
-      let cell: Cell = [cell_row, cell_column];
+      const cell: Cell = [cell_row, cell_column];
 
       if (this.engine.get_cell_state(cell) === 255) {
         this.engine.kill(cell);
@@ -141,17 +144,17 @@ export default class Renderer {
     let start_x = 0;
     let start_y = 0;
 
-    let selector = document.createElement('div');
+    const selector = document.createElement('div');
 
-    selector.style.opacity = "0";
+    selector.style.opacity = '0';
     selector.classList.add('canvas-cell-selector');
     this.canvas.parentNode?.appendChild(selector);
 
     new DragListener(this.canvas, (event) => {
       if (!event.modifiers.has('Control')) return;
 
-      let vertical_bounds = [event.drag_star_x, event.x];
-      let horizontal_bounds = [event.drag_star_y, event.y];
+      const vertical_bounds = [event.drag_star_x, event.x];
+      const horizontal_bounds = [event.drag_star_y, event.y];
 
       Object.assign(selector.style, {
         opacity: 1,
@@ -164,10 +167,10 @@ export default class Renderer {
       selector.style.width = to_pixel(Math.abs(-event.x + event.drag_star_x));
       selector.style.height = to_pixel(Math.abs(-event.y + event.drag_star_y));
 
-      let [v_low, v_high] = sort_number([start_x, this.mouse.x]);
-      let [h_low, h_high] = sort_number([start_y, this.mouse.y]);
+      const [v_low, v_high] = sort_number([start_x, this.mouse.x]);
+      const [h_low, h_high] = sort_number([start_y, this.mouse.y]);
 
-      let bounds: Bounds = {
+      const bounds: Bounds = {
         horizontal_low: this.to_cell_coordinate(h_low),
         horizontal_high: this.to_cell_coordinate(h_high),
 
@@ -188,16 +191,16 @@ export default class Renderer {
       .onDragEnd(() => {
         if (!Keyboard.keys_pushed.has('Control')) return;
 
-        let [vertical_low, vertical_high] = sort_number([
+        const [vertical_low, vertical_high] = sort_number([
           start_x,
           this.mouse.x,
         ]);
-        let [horizontal_low, horizontal_high] = sort_number([
+        const [horizontal_low, horizontal_high] = sort_number([
           start_y,
           this.mouse.y,
         ]);
 
-        let bounds: Bounds = {
+        const bounds: Bounds = {
           horizontal_low: this.to_cell_coordinate(horizontal_low),
           horizontal_high: this.to_cell_coordinate(horizontal_high),
           vertical_low: this.to_cell_coordinate(vertical_low),
@@ -220,7 +223,6 @@ export default class Renderer {
     });
   }
 
-
   /**
    * Every time we call this function we invalidate the rerendered living area as it is likely that,
    * the scene will change in size.
@@ -228,15 +230,15 @@ export default class Renderer {
   fitCanvas() {
     this.living_area_is_valid = false;
 
-    let { width, height } = this.canvas.getBoundingClientRect();
+    const { width, height } = this.canvas.getBoundingClientRect();
 
     // Resize the canvas to have the same real dimension as its real css rendered dimensions;
     this.canvas.width = width;
     this.canvas.height = height;
 
     // Assign scene width to current canvas width and scene heigh to current canvas height;
-    // the actual value are irrelevant and this action helps the scene and the canvas have the 
-    // same aspect ratio. We will in the following line resize the scene so that it has the same 
+    // the actual value are irrelevant and this action helps the scene and the canvas have the
+    // same aspect ratio. We will in the following line resize the scene so that it has the same
     // width as the engine.
     this.scene.width = width;
     this.scene.height = height;
@@ -259,7 +261,7 @@ export default class Renderer {
       return this.ctx;
     }
 
-    let maybe_ctx = this.canvas.getContext('2d');
+    const maybe_ctx = this.canvas.getContext('2d');
 
     if (!maybe_ctx) {
       throw new Error('Could not initialize context');
@@ -270,11 +272,11 @@ export default class Renderer {
   }
 
   living_area_canvas?: HTMLCanvasElement;
-  living_area_is_valid: boolean = false;
+  living_area_is_valid = false;
   private prepare_living_area() {
     if (!this.living_area_canvas || !this.living_area_is_valid) {
       this.living_area_canvas = document.createElement('canvas');
-      let ctx = this.living_area_canvas.getContext(
+      const ctx = this.living_area_canvas.getContext(
         '2d'
       ) as CanvasRenderingContext2D;
 
@@ -290,8 +292,8 @@ export default class Renderer {
           return;
         }
 
-        let cell_x = cell[1] * this.SIZE;
-        let cell_y = cell[0] * this.SIZE;
+        const cell_x = cell[1] * this.SIZE;
+        const cell_y = cell[0] * this.SIZE;
 
         Renderer.rectangle(
           ctx,
@@ -318,7 +320,7 @@ export default class Renderer {
   }
 
   render() {
-    let ctx = this.getRenderingContext();
+    const ctx = this.getRenderingContext();
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     ctx.lineWidth = this.scene.map_dimension(this.SIZE / 10);
@@ -326,10 +328,10 @@ export default class Renderer {
     this.prepare_living_area();
 
     this.engine.for_each_cell((cell, state) => {
-      let cell_x = cell[1] * this.SIZE;
-      let cell_y = cell[0] * this.SIZE;
+      const cell_x = cell[1] * this.SIZE;
+      const cell_y = cell[0] * this.SIZE;
 
-      let post_process =
+      const post_process =
         (this.cell_rendering_directive &&
           this.cell_rendering_directive(cell, ctx)) ||
         false;
@@ -347,7 +349,7 @@ export default class Renderer {
         this.scene.map_dimension(this.RADIUS)
       );
 
-      let color = `${state / 2} , ${state / 1.3} , ${state / 1.7}`;
+      const color = `${state / 2} , ${state / 1.3} , ${state / 1.7}`;
       ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.2})`;
       if (state === 255) {
         ctx.fillStyle = '#0ff55f';

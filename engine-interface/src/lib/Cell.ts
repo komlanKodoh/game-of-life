@@ -17,7 +17,7 @@ namespace Cell {
   /**
    * Creates a cell given its row and column
    */
-  export function create(row: number, column: number){
+  export function create(row: number, column: number) {
     return [row, column] as Cell;
   }
 }

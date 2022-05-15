@@ -1,4 +1,3 @@
-
 /**
  * Returns the next index in a string where the target string is found
  *
@@ -19,9 +18,10 @@ export const next_occurrence = (str: string, target: string, start: number) => {
 /**
  * Transform a number value to a pixel string value
  */
-export const to_pixel = ( measure: number) => `${measure}px`;
+export const to_pixel = (measure: number) => `${measure}px`;
 
 /**
  * Sorts an array of numbers;
  */
-export const sort_number = <T extends number [] > (arr: T) => arr.sort((a, b) => a - b) as T ;
+export const sort_number = <T extends number[]>(arr: T) =>
+  arr.sort((a, b) => a - b) as T;

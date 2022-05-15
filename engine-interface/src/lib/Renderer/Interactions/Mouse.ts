@@ -1,13 +1,12 @@
-import Scene from "../Scene";
+import Scene from '../Scene';
 
 export default class Mouse {
-  x: number = 0;
-  y: number = 0;
+  x = 0;
+  y = 0;
 
   constructor(private scene: Scene, private canvas: HTMLCanvasElement) {
     window.addEventListener('mousemove', (e) => {
       const boundingRect = canvas.getBoundingClientRect();
-
 
       this.x = this.get_x(e.clientX - boundingRect.x);
       this.y = this.get_y(e.clientY - boundingRect.y);

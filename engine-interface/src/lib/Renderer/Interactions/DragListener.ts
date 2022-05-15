@@ -24,8 +24,8 @@ export default class DragListener {
 
   is_dragging = false;
 
-  callback_drag_start ?: ( e: MouseEvent ) => void
-  callback_drag_end ?: ( e: MouseEvent) => void  
+  callback_drag_start?: (e: MouseEvent) => void;
+  callback_drag_end?: (e: MouseEvent) => void;
 
   constructor(
     private element: HTMLElement,
@@ -51,18 +51,17 @@ export default class DragListener {
 
     this.element.addEventListener('mousemove', (e) => {
       if (this.is_dragging === true) {
-
         this.callback({
           x: e.offsetX,
           y: e.offsetY,
-          
+
           drag_star_x: this.drag_start_x,
           drag_star_y: this.drag_start_y,
-          
+
           displacement_x: this.previous_x - e.offsetX,
           displacement_y: this.previous_y - e.offsetY,
-          
-          modifiers: this.modifiers
+
+          modifiers: this.modifiers,
         });
 
         this.previous_x = e.offsetX;
@@ -79,16 +78,15 @@ export default class DragListener {
 
         this.callback_drag_end && this.callback_drag_end(e);
       }
-      
     });
   }
 
-  onDragStart(callback: (e: MouseEvent) => void ){
-    this.callback_drag_start = callback
+  onDragStart(callback: (e: MouseEvent) => void) {
+    this.callback_drag_start = callback;
     return this;
   }
 
-  onDragEnd(callback: (e: MouseEvent ) => void ){
+  onDragEnd(callback: (e: MouseEvent) => void) {
     this.callback_drag_end = callback;
     return this;
   }

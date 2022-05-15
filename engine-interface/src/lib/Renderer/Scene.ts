@@ -1,13 +1,12 @@
-
 export default class Scene {
-  x: number = 60;
-  y: number = 60;
+  x = 60;
+  y = 60;
 
   width: number = 15 * 60;
   height: number = 15 * 100;
 
-  scale_x: number = 1;
-  scale_y: number = 1;
+  scale_x = 1;
+  scale_y = 1;
 
   map_x(x: number) {
     return Math.floor((x - this.x) * this.scale_x);
@@ -51,10 +50,11 @@ export default class Scene {
   }
 
   isWithin(x: number, y: number) {
-
     return (
-      this.y <= y && y <= this.y + this.height &&
-      this.x <= x && x <= this.x + this.width
+      this.y <= y &&
+      y <= this.y + this.height &&
+      this.x <= x &&
+      x <= this.x + this.width
     );
   }
 }

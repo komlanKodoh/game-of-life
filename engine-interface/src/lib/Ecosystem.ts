@@ -1,17 +1,17 @@
-import Directive from './Configuration/directive';
-import Cell from './Cell';
 import { Universe } from 'game-of-life';
 import { memory } from 'game-of-life/engine_bg.wasm';
-import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
+
 import { ObjectMap } from '../utils/index.generic';
 
+import Cell from './Cell';
+import Directive from './Configuration/directive';
+import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
+
 export default class Ecosystem {
-  /**
-   * A list of all state live/death present in the current ecosystem;
-   */
   rows: number;
   columns: number;
   engine: Universe;
+
   state: Uint8Array;
   parser = new Directive.Parser();
 
@@ -76,8 +76,8 @@ export default class Ecosystem {
    * Returns a cell index in the linear world;
    */
   private get_cell_index([_row, _column]: Cell) {
-    let row = _row % this.rows;
-    let column = _column % this.columns;
+    const row = _row % this.rows;
+    const column = _column % this.columns;
 
     return row * this.columns + column;
   }
@@ -116,7 +116,7 @@ export default class Ecosystem {
   for_each_cell(cb: (cell: Cell, state: number) => void) {
     for (let row = 0; row < this.rows; row++) {
       for (let column = 0; column < this.columns; column++) {
-        let cell = Cell.create(row, column);
+        const cell = Cell.create(row, column);
 
         cb(cell, this.get_cell_state(cell) as number);
       }
@@ -128,7 +128,7 @@ export default class Ecosystem {
    */
   process_ecosystem(cb: (cell: Cell, state: number) => boolean) {
     this.for_each_cell((cell, state) => {
-      let is_alive = cb(cell, state);
+      const is_alive = cb(cell, state);
 
       if (is_alive) {
         this.bless(cell);

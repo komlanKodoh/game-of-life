@@ -1,37 +1,38 @@
 import test from 'ava';
+
 import Directive from './directive';
 
 test('Parser should produce correct cells', (ctx) => {
-  let sample = `
+  const sample = `
 1,2
 `.trim();
-  let parser = new Directive.Parser();
+  const parser = new Directive.Parser();
   parser.feed(sample);
 
   ctx.deepEqual(parser.next_cell(), [0, 1]);
 });
 
 test('Should process jump expression successfully', (ctx) => {
-  let sample = `
+  const sample = `
 ->9, 1,2
 `.trim();
-  let parser = new Directive.Parser();
+  const parser = new Directive.Parser();
   parser.feed(sample);
 
   ctx.deepEqual(parser.next_cell(), [9, 1]);
 });
 
 test('Should process nested directive successfully', (ctx) => {
-  let square = `
+  const square = `
 1,2,3,
 1,  3,
 1,2,3,
 `.trim();
-  let sample = `
+  const sample = `
 -|square.2,
 `.trim();
 
-  let parser = new Directive.Parser();
+  const parser = new Directive.Parser();
 
   parser.register_directive('square', square);
 
