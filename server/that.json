@@ -1,0 +1,28 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "GrantsAccessToIAMRoles",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": [
+        "sts:AssumeRole",
+        "ec2:DescribeIamInstanceProfileAssociations",
+        "ec2:DescribeInstanceAttribute",
+        "ec2:DescribeInstances",
+        "ec2:DescribeNetworkAcls",
+        "ec2:DescribeRouteTables",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs",
+        "ec2:DescribeVpcEndpoints",
+        "iam:GetInstanceProfile",
+        "iam:GetRole",
+        "iam:SimulateCustomPolicy",
+        "iam:SimulatePrincipalPolicy"
+      ]
+    }
+  ]
+}

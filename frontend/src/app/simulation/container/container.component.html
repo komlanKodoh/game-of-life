@@ -1,11 +1,17 @@
 <div class=" w-full h-full relative bg-gray-700 overflow-hidden">
 
-    <div #configPanel class="absolute w-72 h-full z-20 " [@isOpen_panel]="panel.isOpen" id="configuration-panel-container">
+    <div #configPanel class="absolute w-72 h-full z-20 " [@isOpen_panel]="panel.isOpen"
+        id="configuration-panel-container">
         <app-configuration-panel> {{ panel.isOpen }} </app-configuration-panel>
     </div>
 
-    <div #appCanvas class="w-full h-full bg-zinc-900 canvas-container origin-left rounded" [@isOpen_canvas]="panel.isOpen"  id="random">
-        <app-canvas></app-canvas>
+    <div #appCanvas class="w-full h-full transition-transform bg-zinc-900 canvas-container origin-left rounded"
+        [@isOpen_canvas]="panel.isOpen" id="random">
+        <app-canvas (AreaSelectionEvent)="showCanvasPopup($event)" class=""></app-canvas>
     </div>
+
+    <app-popup class="fixed top-0 left-0 z-20" [position]="canvasPopupStyle"[configuration]="canvasPopupConfig" [visible]="canvasPopupIsVisible">
+       <button (click)="saveComponent()" class="bg-green-500 active:bg-green-200"> save component </button>
+    </app-popup>
 
 </div>

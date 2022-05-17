@@ -5,6 +5,9 @@ import Cell from '../Cell';
 import { Reader as _Reader } from './Reader';
 import { Directive } from './directive';
 
+/**
+ * Helps parse a directive and transform into instruction meaningful to the game-of-life engine
+ */
 export class Parser {
   private row = 0;
   private current_reader: _Reader | null = null;
@@ -12,16 +15,14 @@ export class Parser {
   private pipe = new Queue<_Reader>();
 
   /**
-   * Adds a directive to the list of directive to be parsed;
+   * Adds a directive to the queue of directive to be parsed;
    */
   feed(directive: Directive) {
     this.pipe.add(new _Reader(directive));
     this.current_reader = this.pipe.next();
   }
 
-  /**
-   * Returns the next cell available in the pipe
-   */
+  /** Returns the next cell available in the pipe */
   next_cell() {
     for (;;) {
       const instruction = this.next_instruction();

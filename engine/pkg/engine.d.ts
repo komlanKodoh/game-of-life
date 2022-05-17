@@ -11,19 +11,26 @@ export class Universe {
 */
   bless(row: number, column: number): void;
 /**
-* kills a living cell 
+* kills a living cell
 * @param {number} row
 * @param {number} column
 */
   kill(row: number, column: number): void;
 /**
+* @param {number} row
+* @param {number} column
 */
-  tick(): void;
+  toggle(row: number, column: number): void;
 /**
-* Get the list of all cells pointers present in the universe
+* Returns the corresponding cell state when invoked with a given cell position
+* @param {number} row
+* @param {number} column
 * @returns {number}
 */
-  get_cells(): number;
+  get_cell_state(row: number, column: number): number;
+/**
+*/
+  tick(): void;
 /**
 * @param {number} rows
 * @param {number} columns

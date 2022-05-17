@@ -1,0 +1,64 @@
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+
+@Component({
+  selector: 'app-popup',
+  templateUrl: './popup.component.html',
+  styleUrls: ['./popup.component.scss'],
+})
+export class PopupComponent implements OnInit {
+  @Input('visible') isVisible = false;
+  @Input() configuration: Bounds = {};
+  @ViewChild('wrapper') wrapper!: ElementRef;
+
+  @Input() position: string = '';
+  controlledStyle = '';
+
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isVisible'] || changes['position']) {
+      this.updatePopupPosition();
+    }
+  }
+
+  updatePopupPosition() {
+    let modifications: (keyof Bounds)[] = [];
+
+    let boundingRect = this.wrapper.nativeElement.getBoundingClientRect();
+
+    if (boundingRect.x + boundingRect.width> window.innerWidth) {
+      modifications.push('left');
+    }
+
+    if (boundingRect.y + boundingRect.height > window.innerHeight) {
+      modifications.push('top');
+    }
+
+    this.controlledStyle = this.getStyle(modifications);
+  }
+
+  getStyle(modifications: (keyof Bounds)[]) {
+    let style = '';
+
+    modifications.forEach((modification) => {
+      style += this.configuration[modification];
+    });
+
+    return style;
+  }
+}
+
+type Bounds = {
+  top?: string;
+  bottom?: string;
+
+  left?: string;
+  right?: string;
+};

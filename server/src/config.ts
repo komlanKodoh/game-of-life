@@ -1,6 +1,13 @@
+import dynamoose from 'dynamoose';
+
+dynamoose.aws.sdk.config.update({
+  "region": process.env.AWS_REGION,
+  "accessKeyId": process.env.AWS_ACCESS_KEY_ID ,
+  "secretAccessKey": process.env.AWS_ACCESS_KEY_SECRET ,
+});
 
 const Config = {
-  PUBLIC_DIR: process.env.PUBLIC_DIR || "",
+  PUBLIC_DIR: process.env.PUBLIC_DIR || "/game-of-life/public/",
 
   USER_TABLE : "game-of-life-users",
   ECOSYSTEM_TABLE : "game-of-life-ecosystems",

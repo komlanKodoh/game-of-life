@@ -1,3 +1,4 @@
+import { StoreRoot } from './state/index';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from './canvas/canvas.component';
@@ -11,7 +12,7 @@ import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { SharedModule } from '../shared/shared.module';
-import { ComponentsModule } from './components/components.module';
+import { ComponentsModule } from './configuration-panel/components.module';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { ComponentsModule } from './components/components.module';
     BrowserModule,
     ComponentsModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot({ panel: panelReducer }),
+    StoreModule.forRoot(StoreRoot),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

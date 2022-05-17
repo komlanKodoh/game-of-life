@@ -1,8 +1,20 @@
-import { Ecosystem, Renderer, Runner } from 'game-of-life-engine';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-
-import Directive from 'game-of-life-engine/build/main/lib/Configuration/directive';
-import { Bounds } from 'game-of-life-engine/build/main/lib/Renderer';
+import {
+  Bounds,
+  Directive,
+  Ecosystem,
+  Renderer,
+  Runner,
+  Serializer,
+} from 'game-of-life-engine';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { configuration } from './config';
+import { AreaSelectionEvent } from './type';
 
 @Component({
   selector: 'app-canvas',
@@ -13,42 +25,12 @@ export class CanvasComponent {
   runner = new Runner();
   renderer!: Renderer;
 
-  engine: Ecosystem = new Ecosystem({
-    rows: 50,
-    columns: 80,
-    // is_alive: (cell) => cell[1] % 7 === 0,
-    directives: {
-      circle: `
-1,2,
-0,3,
-0,3,
-1,2,
-`.trim(),
-      square: `
-0,1,
-0,1,
-`.trim(),
-      ship: `
-2,
-3,
-1,2,3,
-`.trim(),
-      ships: `
-      2,
-      1,
-      1,2,3
-`.trim(),
-    },
-    directive_composition: `
-    ->26, -|ship.20,
-    ->30, -|ships.45,
-    `.trim(),
-  });
+  engine: Ecosystem = new Ecosystem(configuration);
 
   @ViewChild('canvas') canvas!: ElementRef;
   @ViewChild('tempCanvas') tempCanvas!: ElementRef;
 
-  constructor() {}
+  @Output() AreaSelectionEvent = new EventEmitter<AreaSelectionEvent>();
 
   ngAfterViewInit(): void {
     this.renderer = new Renderer({
@@ -60,7 +42,17 @@ export class CanvasComponent {
 
     this.renderer.on_select = ({ bounds: _bounds, done }) => {
       bounds = _bounds;
+      
+      this.AreaSelectionEvent.emit({
+        bounds,
+        directive: new Serializer().generate_string_directive(
+          this.engine,
+          bounds
+        ),
+      });
     };
+
+    this.renderer.bind_all();
 
     this.renderer.cell_rendering_directive = (cell, ctx) => {
       if (!bounds) {

@@ -108,15 +108,15 @@ export default class Ecosystem {
     if ( !bounds ){
       bounds = {
         horizontal_low: 0,
-        horizontal_high: this.rows,
+        horizontal_high: this.rows - 1,
 
         vertical_low : 0,
-        vertical_high: this.columns,
+        vertical_high: this.columns - 1,
       }
     }
 
-    for (let row = bounds.horizontal_low; row < bounds.horizontal_high; row++) {
-      for (let column = bounds.vertical_low; column < bounds.vertical_high; column++) {
+    for (let row = bounds.horizontal_low; row <= bounds.horizontal_high; row++) {
+      for (let column = bounds.vertical_low; column <= bounds.vertical_high; column++) {
         cb([row, column], this.get_cell_state([row, column ]) as number);
       }
     }

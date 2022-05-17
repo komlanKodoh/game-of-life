@@ -27,7 +27,7 @@ export type CellRenderingDirective = (
 ) => false | (() => void);
 
 export default class Renderer {
-  mouse!: Mouse;
+  mouse: Mouse;
   engine: Ecosystem;
   canvas: HTMLCanvasElement;
 
@@ -44,6 +44,7 @@ export default class Renderer {
     this.canvas = config.canvas;
 
     this.fitCanvas();
+    this.mouse = new Mouse(this.scene, this.canvas);
 
     window.addEventListener('resize', () => {
       this.fitCanvas();
@@ -57,7 +58,6 @@ export default class Renderer {
    * - cell state toggle;
    */
   bind_all() {
-    this.mouse = new Mouse(this.scene, this.canvas);
 
     this.configure_zoom_control();
     this.configure_drag_behavior();
@@ -93,15 +93,26 @@ export default class Renderer {
 
       this.scene.fit(this.canvas.width, this.canvas.height);
     });
+
+    return this;
   }
 
   /** configure toggle between dead/alive cell state; */
   configure_cell_state_control() {
+    let skip_click = 0;
+
+     new DragListener(this.canvas, () => null ).onDragStart(() => {
+      skip_click ++;
+    });
+
     window.addEventListener('click', () => {
+      if ( skip_click > 0 ){
+        skip_click --
+        return;
+      }
+
       const cell_column = Math.floor(this.mouse.x / this.SIZE) % this.engine.columns;
       const cell_row = Math.floor(this.mouse.y / this.SIZE) % this.engine.rows;
-
-      console.log ( cell_column, cell_row )
 
       this.engine.toggle( [cell_row, cell_column] )
 
@@ -117,6 +128,8 @@ export default class Renderer {
         this.to_cell_coordinate(this.mouse.x),
       ]);
     });
+
+    return this;
   }
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
@@ -130,6 +143,8 @@ export default class Renderer {
       this.scene.y +=
         (event.displacement_y * this.scene.height) / this.canvas.height;
     });
+
+    return this
   }
 
   on_select?: (arg: { bounds: Bounds; done: boolean }) => void;
@@ -160,34 +175,36 @@ export default class Renderer {
       selector.style.width = to_pixel(Math.abs(-event.x + event.drag_star_x));
       selector.style.height = to_pixel(Math.abs(-event.y + event.drag_star_y));
 
-      const [v_low, v_high] = sort_number([start_x, this.mouse.x]);
-      const [h_low, h_high] = sort_number([start_y, this.mouse.y]);
+      // const [v_low, v_high] = sort_number([start_x, this.mouse.x]);
+      // const [h_low, h_high] = sort_number([start_y, this.mouse.y]);
 
-      const bounds: Bounds = {
-        horizontal_low: this.to_cell_coordinate(h_low),
-        horizontal_high: this.to_cell_coordinate(h_high),
+      // const bounds: Bounds = {
+      //   horizontal_low: this.to_cell_coordinate(h_low),
+      //   horizontal_high: this.to_cell_coordinate(h_high),
 
-        vertical_low: this.to_cell_coordinate(v_low),
-        vertical_high: this.to_cell_coordinate(v_high),
-      };
+      //   vertical_low: this.to_cell_coordinate(v_low),
+      //   vertical_high: this.to_cell_coordinate(v_high),
+      // };
 
-      this.on_select &&
-        this.on_select({
-          bounds,
-          done: false,
-        });
+      // this.on_select &&
+      //   this.on_select({
+      //     bounds,
+      //     done: false,
+      //   });
     })
       .onDragStart(() => {
         start_x = this.mouse.x;
         start_y = this.mouse.y;
       })
-      .onDragEnd(() => {
-        if (!Keyboard.keys_pushed.has('Control')) return;
+      .onDragEnd(({modifiers }) => {
+
+        if (!modifiers.has('Control')) return;
 
         const [vertical_low, vertical_high] = sort_number([
           start_x,
           this.mouse.x,
         ]);
+
         const [horizontal_low, horizontal_high] = sort_number([
           start_y,
           this.mouse.y,
@@ -215,6 +232,8 @@ export default class Renderer {
         height: '0px',
       });
     });
+
+    return this;
   }
 
   /**

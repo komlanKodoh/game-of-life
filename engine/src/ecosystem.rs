@@ -1,6 +1,10 @@
 use wasm_bindgen::prelude::*;
+use web_sys::console;
 
-use crate::cell::{self};
+use crate::{
+    cell::{self},
+    utils::set_panic_hook,
+};
 
 #[wasm_bindgen]
 pub struct Universe {
@@ -13,13 +17,6 @@ impl Universe {
     fn get_linear_index(&self, (row, column): cell::Position) -> usize {
         row * self.columns + column
     }
-
-    /// Returns the corresponding cell state when invoked with a given cell position
-    pub fn get_cell_state(&self, cell_position: cell::Position) -> cell::State {
-        let idx = self.get_linear_index(cell_position);
-        self.cells[idx]
-    }
-
 
     fn live_neighbor_count(
         &self,
@@ -60,10 +57,26 @@ impl Universe {
         self.cells[idx] = cell::LIVING_CELL;
     }
 
-    /// kills a living cell 
+    /// kills a living cell
     pub fn kill(&mut self, row: usize, column: usize) {
         let idx = self.get_linear_index((row, column));
         self.cells[idx] = cell::get_next_state(self.cells[idx], 0);
+    }
+
+    pub fn toggle(&mut self, row: usize, column: usize) {
+        let idx = self.get_linear_index((row, column));
+
+        if self.cells[idx] == 255 {
+            self.cells[idx] = 0;
+        } else {
+            self.cells[idx] = 255;
+        }
+    }
+
+    /// Returns the corresponding cell state when invoked with a given cell position
+    pub fn get_cell_state(&self, row: usize, column: usize) -> cell::State {
+        let idx = self.get_linear_index((row, column));
+        self.cells[idx]
     }
 
     pub fn tick(&mut self) {
@@ -82,14 +95,14 @@ impl Universe {
         }
     }
 
-    /// Get the list of all cells pointers present in the universe
-    pub fn get_cells(&mut self) -> *const u8 {
-        self.cells.as_ptr()
-    }
-
     pub fn new(rows: usize, columns: usize) -> Universe {
-        let cells = vec![0; rows * columns];
+        set_panic_hook();
 
+        let cells = vec![0; rows * columns];
+        
+        console::log_1(&cells.len().to_string().into());
+        console::log_1 ( &rows.to_string().into());
+        console::log_1( &columns.to_string().into() );
         Universe {
             columns,
             cells,

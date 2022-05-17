@@ -2,6 +2,9 @@ import { next_occurrence } from '../../utils';
 
 import { Directive, NUMBER_MAP, SYMBOL_MAP } from './directive';
 
+/**
+ * Helps reading relevant keywords present in directives;
+ */
 export class Reader<TReturn = number | string> {
   current_char_index = -1;
   post_processor?: (next: number | string) => TReturn;
@@ -25,36 +28,16 @@ export class Reader<TReturn = number | string> {
     } else {
       throw new Error(`Invalid character found in directive : ${char}`);
     }
-
+    
     if (result === null) {
       return null;
     }
-
+    
     return this.post_process(result);
   }
-
+  
   /**
-   * Adds a post processor to the reader.
-   * Every result is passed through the processor.
-   * The result returned by the post_processor is then
-   * sent to the caller of the function;
-   */
-  set_post_processor(post_processor: (next: number | string) => TReturn) {
-    this.post_processor = post_processor;
-    return this;
-  }
-
-  /**
-   * Utility wrapper over post processor;
-   * Executes if function is present else no modification;
-   */
-  post_process(result: number | string) {
-    return this.post_processor ? this.post_processor(result) : result;
-  }
-
-  /**
-   * Return the string content from the current index to the next breaking
-   * character;
+   * Returns all of what is present in directive before a "," is encountered
    */
   next_chunk() {
     return this.next_chunk_before(',');
@@ -71,6 +54,32 @@ export class Reader<TReturn = number | string> {
 
     return end ? this.directive.slice(start, end) : null;
   }
+
+  /**
+   * Adds a post processor to the reader.
+   * Every result is passed through the processor.
+   * The result returned by the post_processor is then
+   * sent to the caller of the next function;
+   */
+  set_post_processor(post_processor: (next: number | string) => TReturn) {
+    this.post_processor = post_processor;
+    return this;
+  }
+
+
+  /**
+   * Utility wrapper over post processor;
+   * Executes if function is present else no modification;
+   */
+  private post_process(result: number | string) {
+    return this.post_processor ? this.post_processor(result) : result;
+  }
+
+  /**
+   * Return the string content from the current index to the next breaking
+   * character;
+   */
+
 
   /**
    * Finds the next number from the parse {@link Directive}

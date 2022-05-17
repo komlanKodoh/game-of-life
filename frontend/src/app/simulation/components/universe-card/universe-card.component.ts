@@ -14,16 +14,22 @@ export class UniverseCardComponent implements OnInit {
   @ViewChild('canvas') canvas!: ElementRef;
   private engine!: Ecosystem;
 
-  constructor() {}
+  constructor() {
 
+    
+  }
+  
   ngOnInit(): void {}
-
+  
   ngAfterViewInit() {
+    console.log ( this.config )
     this.engine = new Ecosystem(this.config);
 
     new Renderer({
       canvas: this.canvas.nativeElement,
       engine: this.engine,
     }).render();
+
+
   }
 }

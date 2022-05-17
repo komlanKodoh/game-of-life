@@ -4,6 +4,8 @@ interface DragEvent {
   x: number;
   y: number;
 
+  e: MouseEvent;
+
   drag_star_y: number;
   drag_star_x: number;
 
@@ -20,12 +22,11 @@ export default class DragListener {
   previous_x = 0;
   previous_y = 0;
 
-  modifiers = new Set<string>();
-
   is_dragging = false;
+  modifiers: Set<string> | null | undefined ;
 
-  callback_drag_start?: (e: MouseEvent) => void;
-  callback_drag_end?: (e: MouseEvent) => void;
+  callback_drag_start?: (e: DragEvent) => void;
+  callback_drag_end?: (e: DragEvent) => void;
 
   constructor(
     private element: HTMLElement,
@@ -36,6 +37,7 @@ export default class DragListener {
 
   init() {
     this.element.addEventListener('mousedown', (e) => {
+      this.modifiers = null;
       this.is_dragging = true;
 
       this.previous_x = e.offsetX;
@@ -44,25 +46,16 @@ export default class DragListener {
       this.drag_start_y = e.offsetY;
       this.drag_start_x = e.offsetX;
 
-      this.modifiers = Keyboard.keys_pushed;
-
-      this.callback_drag_start && this.callback_drag_start(e);
     });
 
     this.element.addEventListener('mousemove', (e) => {
+      if ( this.modifiers === null ) {
+        this.modifiers = new Set(Keyboard.keys_pushed);
+        this.callback_drag_start && this.callback_drag_start(this.new_drag_event(e));
+      }
+
       if (this.is_dragging === true) {
-        this.callback({
-          x: e.offsetX,
-          y: e.offsetY,
-
-          drag_star_x: this.drag_start_x,
-          drag_star_y: this.drag_start_y,
-
-          displacement_x: this.previous_x - e.offsetX,
-          displacement_y: this.previous_y - e.offsetY,
-
-          modifiers: this.modifiers,
-        });
+        this.callback(this.new_drag_event(e));
 
         this.previous_x = e.offsetX;
         this.previous_y = e.offsetY;
@@ -74,19 +67,42 @@ export default class DragListener {
         this.previous_x = 0;
         this.previous_y = 0;
         this.is_dragging = false;
-        this.modifiers = new Set();
 
-        this.callback_drag_end && this.callback_drag_end(e);
+        this.callback_drag_end && this.callback_drag_end(this.new_drag_event(e));
+        this.modifiers = null;
+
+        return false;
       }
+
+      return true;
     });
   }
 
-  onDragStart(callback: (e: MouseEvent) => void) {
+  new_drag_event(e: MouseEvent): DragEvent {
+    if (!this.modifiers) throw new Error("new drag outside drag event context");
+
+    return {
+      e,
+
+      x: e.offsetX,
+      y: e.offsetY,
+
+      drag_star_x: this.drag_start_x,
+      drag_star_y: this.drag_start_y,
+
+      displacement_x: this.previous_x - e.offsetX,
+      displacement_y: this.previous_y - e.offsetY,
+
+      modifiers: this.modifiers,
+    };
+  }
+
+  onDragStart(callback: (e: DragEvent) => void) {
     this.callback_drag_start = callback;
     return this;
   }
 
-  onDragEnd(callback: (e: MouseEvent) => void) {
+  onDragEnd(callback: (e: DragEvent) => void) {
     this.callback_drag_end = callback;
     return this;
   }

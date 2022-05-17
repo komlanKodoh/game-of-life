@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TransversalGridComponent } from './transversal-grid/transversal-grid.component';
 import { RangeComponent } from './range/range.component';
 import { PauseRunComponent } from './pause-run/pause-run.component';
+import { PopupComponent } from './popup/popup.component';
 
 
 
@@ -11,14 +12,16 @@ import { PauseRunComponent } from './pause-run/pause-run.component';
   declarations: [
     TransversalGridComponent,
     RangeComponent,
-    PauseRunComponent
+    PauseRunComponent,
+    PopupComponent,
   ],
   imports: [
     CommonModule,
 
   ],
   exports: [
-    PauseRunComponent
+    PauseRunComponent,
+    PopupComponent,
   ]
 })
 export class ComponentsModule { }
