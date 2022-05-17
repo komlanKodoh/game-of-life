@@ -1,4 +1,4 @@
-name: Rust
+name: Application deployment to aws ecr -> ecs
 
 on:
   push:
