@@ -10,4 +10,5 @@ export const startApp = (app: Koa) => {
   app.listen(PORT, () => {
     console.log(`Server listening on port : ${PORT}`);
   });
+
 };
