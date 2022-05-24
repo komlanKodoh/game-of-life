@@ -15,6 +15,17 @@ jobs:
 
 
     steps:
+
+    - name: Build image
+      run: ./_build.sh
+
+
+  deploy: 
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps: 
+
     - uses: actions/checkout@v3
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -23,16 +34,13 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Build image
-      run: ./_build.sh
-
   
     - name: Docker login to aws container registry
       run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
+
     - name: Push image to Aws container repository
       run: docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life &&
            docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life
-
+    
     - name: Update deployment
       run : aws ecs update-service --cluster personnal-cluster --service game-of-life-service --force-new-deployment
-    
