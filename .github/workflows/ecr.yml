@@ -52,8 +52,9 @@ jobs:
 
   registry-cleanup: 
     needs: [deploy]
+    runs-on: ubuntu-latest
 
     steps: 
-    -name : Remove all untagged images
+    - name : Remove all untagged images
       run : IMAGES_TO_DELETE=$( aws ecr list-images --region $ECR_REGION --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json ) && 
             aws ecr batch-delete-image --region $ECR_REGION --repository-name $ECR_REPO --image-ids "$IMAGES_TO_DELETE" || true
