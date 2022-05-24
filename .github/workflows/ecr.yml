@@ -52,6 +52,7 @@ jobs:
 
   registry-cleanup: 
     needs: [deploy]
+    runs-on: ubuntu-latest
 
     steps: 
     -name : Remove all untagged images
