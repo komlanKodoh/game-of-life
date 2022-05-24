@@ -25,7 +25,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: us-east-2
 
     - name: Docker login to aws container registry
       run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
@@ -45,7 +45,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: us-east-2
   
     - name: Update deployment
       run : aws ecs update-service --cluster personnal-cluster --service game-of-life-service --force-new-deployment
