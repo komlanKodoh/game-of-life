@@ -1,3 +1,6 @@
 
 
-docker run -p 3000:3000 game-of-life
+docker-compose up -d  &&
+sleep 4 &&
+curl http://localhost:3000 &&
+docker-compose kill -s SIGINT
