@@ -6,7 +6,7 @@ import Directive from './Configuration/directive';
 export class Serializer {
   constructor() {}
 
-  generate_string_directive(engine: Ecosystem, bounds?: Bounds) {
+  static generate_string_directive(engine: Ecosystem, bounds?: Bounds) {
     let directive: Directive = '';
 
     let current_row = bounds?.horizontal_low || 0;
