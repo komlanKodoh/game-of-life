@@ -47,10 +47,10 @@ export class CanvasComponent {
       bounds = _bounds;
 
       this.AreaSelectionEvent.emit({
-        columns: bounds.vertical_high - bounds.vertical_low,
-        rows: bounds.horizontal_high - bounds.horizontal_low,
+        columns: bounds.vertical_high - bounds.vertical_low + 1,
+        rows: bounds.horizontal_high - bounds.horizontal_low + 1,
 
-        directive_composition: new Serializer().generate_string_directive(
+        directive_composition: Serializer.generate_string_directive(
           this.engine,
           bounds
         ),
