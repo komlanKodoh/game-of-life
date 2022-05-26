@@ -15,6 +15,9 @@ import {
 } from '@angular/core';
 import { configuration } from './config';
 import { AreaSelectionEvent } from './type';
+import { Store } from '@ngrx/store';
+import { AppState } from '../state/clipboard/reducer';
+import { toggle } from '../state/panel/actions';
 
 @Component({
   selector: 'app-canvas',
@@ -42,10 +45,12 @@ export class CanvasComponent {
 
     this.renderer.on_select = ({ bounds: _bounds, done }) => {
       bounds = _bounds;
-      
+
       this.AreaSelectionEvent.emit({
-        bounds,
-        directive: new Serializer().generate_string_directive(
+        columns: bounds.vertical_high - bounds.vertical_low,
+        rows: bounds.horizontal_high - bounds.horizontal_low,
+
+        directive_composition: new Serializer().generate_string_directive(
           this.engine,
           bounds
         ),
@@ -82,4 +87,11 @@ export class CanvasComponent {
       this.renderer.render();
     }).start();
   }
+
+  constructor(private store: Store<AppState>) {};
+
+  toggle(){
+    this.store.dispatch(toggle())
+  }
+
 }

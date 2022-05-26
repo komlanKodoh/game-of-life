@@ -22,23 +22,29 @@ import { add } from '../state/ecosystems/actions';
   selector: 'app-container',
   animations: [
     trigger('isOpen_panel', [
+      transition('* <=> *', [animate('0.5s ease-in-out')]),
       state(
         'false',
         style({
           transform: 'translateX(-100%)',
         })
       ),
-      transition('* <=> *', [animate('0.5s ease-in-out')]),
+      state(
+        'true',
+        style({
+          opacity: 1,
+        })
+      ),
     ]),
 
     trigger('isOpen_canvas', [
+      transition('* <=> *', [animate('0.5s ease-in-out')]),
       state(
         'true',
         style({
           transform: 'translateX(18em) scale(var(--scale))',
         })
       ),
-      transition('* <=> *', [animate('0.5s ease-in-out')]),
     ]),
   ],
 
@@ -54,7 +60,7 @@ export class ContainerComponent {
     left: 'transform: translate( -100% , 0px) ;',
     top: 'transform: translate( 0px, -100% ) ;',
   };
-  canvasPopupStyle = 'transform: translate( 0px, 0px) ;';
+  canvasPopupStyle = 'transform: translate( 0px, 0px) ; opacity: 0; ';
 
   clipboard!: ClipboardData;
 
@@ -87,8 +93,8 @@ export class ContainerComponent {
 
   updateScale() {
     let panelWidth =
-    this.configPanel.nativeElement.getBoundingClientRect().width;
-    let canvasWidth = window.innerWidth  ;
+      this.configPanel.nativeElement.getBoundingClientRect().width;
+    let canvasWidth = window.innerWidth;
 
     this.scale = (canvasWidth - panelWidth) / canvasWidth;
 
@@ -96,22 +102,17 @@ export class ContainerComponent {
   }
 
   showCanvasPopup(event: AreaSelectionEvent) {
-    this.canvasPopupStyle = `transform : translate(${Mouse.x}px, ${Mouse.y}px);`;
+    this.canvasPopupStyle = `transform : translate(${Mouse.x}px, ${Mouse.y}px); opacity: 1;`;
 
     this.canvasPopupIsVisible = true;
     this.store.dispatch(
-      write({ contentType: 'directive', content: event.directive })
+      write({ contentType: 'directive', content: event })
     );
   }
 
   saveComponent() {
-    this.store.dispatch(
-      add({
-        rows: 5,
-        columns: 10,
-        name: 'dummy',
-        directive_composition: this.clipboard.content,
-      })
-    );
+    if (!this.clipboard.content) return;
+
+    this.store.dispatch(add({ ...this.clipboard.content, name: 'dummy' }));
   }
 }

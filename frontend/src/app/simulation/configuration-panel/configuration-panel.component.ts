@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AppState, EcosystemDefinition } from '../state/ecosystems/reducer';
+import { toggle } from '../state/panel/actions';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -17,4 +18,8 @@ export class ConfigurationPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  toggle(){
+    this.store.dispatch(toggle())
+  }
 }
