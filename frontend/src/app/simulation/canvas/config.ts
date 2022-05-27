@@ -1,6 +1,6 @@
 export const configuration = {
-  rows: 100,
-  columns: 100,
+  rows: 200,
+  columns: 200,
   // is_alive: (cell) => cell[1] % 7 === 0,
   directives: {
     circle: `
@@ -25,7 +25,7 @@ export const configuration = {
 `.trim(),
   },
   directive_composition: `
-    ->0, -|ship.0,
-    ->4, -|ships.25,
+    ->20, -|ship.10,
+    ->24, -|ships.35,
     `.trim(),
 };

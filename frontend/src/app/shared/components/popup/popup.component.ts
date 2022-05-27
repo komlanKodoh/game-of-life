@@ -42,6 +42,11 @@ export class PopupComponent implements OnInit {
     }
 
     this.controlledStyle = this.getStyle(modifications);
+
+    if ( this.isVisible ) this.controlledStyle += "opacity : 1 ; "
+    else this.controlledStyle += " opacity: 0 ;"
+
+    console.log ( this.isVisible)
   }
 
   getStyle(modifications: (keyof Bounds)[]) {

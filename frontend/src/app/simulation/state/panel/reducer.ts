@@ -10,7 +10,7 @@ export interface PanelState {
   isOpen: boolean;
 }
 
-export const initialState: PanelState = { isOpen: true };
+export const initialState: PanelState = { isOpen: false };
 
 export const panelReducer = createReducer(
   initialState,

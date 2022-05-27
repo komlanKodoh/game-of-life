@@ -28,14 +28,14 @@ export class Reader<TReturn = number | string> {
     } else {
       throw new Error(`Invalid character found in directive : ${char}`);
     }
-    
+
     if (result === null) {
       return null;
     }
-    
+
     return this.post_process(result);
   }
-  
+
   /**
    * Returns all of what is present in directive before a "," is encountered
    */
@@ -66,7 +66,6 @@ export class Reader<TReturn = number | string> {
     return this;
   }
 
-
   /**
    * Utility wrapper over post processor;
    * Executes if function is present else no modification;
@@ -79,7 +78,6 @@ export class Reader<TReturn = number | string> {
    * Return the string content from the current index to the next breaking
    * character;
    */
-
 
   /**
    * Finds the next number from the parse {@link Directive}

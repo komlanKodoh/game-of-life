@@ -1,6 +1,7 @@
 import { sort_number, to_pixel } from '../../utils';
 import Cell from '../Cell';
 import Ecosystem from '../Ecosystem';
+import { isWithinBounds } from '../Util';
 
 import DragListener from './Interactions/DragListener';
 import Keyboard from './Interactions/Keyboard';
@@ -14,10 +15,10 @@ export interface RenderConfig {
 }
 
 export type Bounds = {
-  vertical_low: number;
-  vertical_high: number;
-  horizontal_low: number;
-  horizontal_high: number;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 };
 
 /** Change cell rendering behaviors by manipulation render context */
@@ -58,7 +59,6 @@ export default class Renderer {
    * - cell state toggle;
    */
   bind_all() {
-
     this.configure_zoom_control();
     this.configure_drag_behavior();
     this.configure_select_behavior();
@@ -101,21 +101,27 @@ export default class Renderer {
   configure_cell_state_control() {
     let skip_click = 0;
 
-     new DragListener(this.canvas, () => null ).onDragStart(() => {
-      skip_click ++;
+    new DragListener(this.canvas, () => null).onDragStart(() => {
+      skip_click++;
     });
 
-    window.addEventListener('click', () => {
-      if ( skip_click > 0 ){
-        skip_click --
+    this.canvas.addEventListener('click', () => {
+      if (skip_click > 0) {
+        skip_click--;
         return;
       }
 
-      const cell_column = Math.floor(this.mouse.x / this.SIZE) % this.engine.columns;
-      const cell_row = Math.floor(this.mouse.y / this.SIZE) % this.engine.rows;
+      const cell_column = Math.floor(this.mouse.x / this.SIZE);
+      
+      const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
-      this.engine.toggle( [cell_row, cell_column] )
+      const cell: Cell = [cell_row, cell_column];
 
+      if (!isWithinBounds(cell, this.getBounds())) return;
+
+      console.log(cell, this.getBounds());
+
+      this.engine.toggle([cell_row, cell_column]);
     });
 
     new DragListener(this.canvas, (event) => {
@@ -131,6 +137,15 @@ export default class Renderer {
 
     return this;
   }
+  getBounds(): Bounds {
+    return {
+      top: 0,
+      bottom: this.engine.rows - 1,
+
+      left: 0,
+      right: this.engine.columns - 1,
+    };
+  }
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
   configure_drag_behavior() {
@@ -144,7 +159,7 @@ export default class Renderer {
         (event.displacement_y * this.scene.height) / this.canvas.height;
     });
 
-    return this
+    return this;
   }
 
   on_select?: (arg: { bounds: Bounds; done: boolean }) => void;
@@ -196,26 +211,19 @@ export default class Renderer {
         start_x = this.mouse.x;
         start_y = this.mouse.y;
       })
-      .onDragEnd(({modifiers }) => {
-
+      .onDragEnd(({ modifiers }) => {
         if (!modifiers.has('Control')) return;
 
-        const [vertical_low, vertical_high] = sort_number([
-          start_x,
-          this.mouse.x,
-        ]);
+        const [left, right] = sort_number([start_x, this.mouse.x]);
 
-        const [horizontal_low, horizontal_high] = sort_number([
-          start_y,
-          this.mouse.y,
-        ]);
+        const [top, bottom] = sort_number([start_y, this.mouse.y]);
 
         const bounds: Bounds = {
-          horizontal_low: this.to_cell_coordinate(horizontal_low),
-          horizontal_high: this.to_cell_coordinate(horizontal_high),
+          top: this.to_cell_coordinate(top),
+          bottom: this.to_cell_coordinate(bottom),
 
-          vertical_low: this.to_cell_coordinate(vertical_low),
-          vertical_high: this.to_cell_coordinate(vertical_high),
+          left: this.to_cell_coordinate(left),
+          right: this.to_cell_coordinate(right),
         };
 
         this.on_select &&
@@ -297,7 +305,7 @@ export default class Renderer {
         this.engine.columns * this.SIZE
       );
       this.living_area_canvas.height = this.scene.map_dimension(
-        this.engine.columns * this.SIZE
+        this.engine.rows * this.SIZE
       );
 
       this.engine.for_each_cell((cell, state) => {

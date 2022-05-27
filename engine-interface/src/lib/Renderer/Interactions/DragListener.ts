@@ -23,7 +23,7 @@ export default class DragListener {
   previous_y = 0;
 
   is_dragging = false;
-  modifiers: Set<string> | null | undefined ;
+  modifiers: Set<string> | null | undefined;
 
   callback_drag_start?: (e: DragEvent) => void;
   callback_drag_end?: (e: DragEvent) => void;
@@ -45,21 +45,21 @@ export default class DragListener {
 
       this.drag_start_y = e.offsetY;
       this.drag_start_x = e.offsetX;
-
     });
 
     this.element.addEventListener('mousemove', (e) => {
-      if ( this.modifiers === null ) {
+      if (!this.is_dragging) return;
+
+      if (this.modifiers === null) {
         this.modifiers = new Set(Keyboard.keys_pushed);
-        this.callback_drag_start && this.callback_drag_start(this.new_drag_event(e));
+        this.callback_drag_start &&
+          this.callback_drag_start(this.new_drag_event(e));
       }
 
-      if (this.is_dragging === true) {
-        this.callback(this.new_drag_event(e));
+      this.callback(this.new_drag_event(e));
 
-        this.previous_x = e.offsetX;
-        this.previous_y = e.offsetY;
-      }
+      this.previous_x = e.offsetX;
+      this.previous_y = e.offsetY;
     });
 
     window.addEventListener('mouseup', (e) => {
@@ -68,7 +68,14 @@ export default class DragListener {
         this.previous_y = 0;
         this.is_dragging = false;
 
-        this.callback_drag_end && this.callback_drag_end(this.new_drag_event(e));
+        // Modifiers are set to null at every mouse down. They are then set to a new value
+        // when the mouse is dragged for the first time. If the mouse is removed and while the
+        // modifiers are still null, we conclude that the mouse has not been dragged. Thus, there is
+        // no need to fire a drag end event.
+        if (this.modifiers === null) return false;
+
+        this.callback_drag_end &&
+          this.callback_drag_end(this.new_drag_event(e));
         this.modifiers = null;
 
         return false;
@@ -79,7 +86,7 @@ export default class DragListener {
   }
 
   new_drag_event(e: MouseEvent): DragEvent {
-    if (!this.modifiers) throw new Error("new drag outside drag event context");
+    if (!this.modifiers) throw new Error('new drag outside drag event context');
 
     return {
       e,

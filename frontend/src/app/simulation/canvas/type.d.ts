@@ -1,6 +1,5 @@
+import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configuration/game-of-life-config.type';
 import { Bounds, Directive } from 'game-of-life-engine';
 
-export interface AreaSelectionEvent {
-  bounds: Bounds;
-  directive: Directive;
-}
+export type AreaSelectionEvent =   GameOfLifeConfig;
+
