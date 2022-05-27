@@ -1,4 +1,5 @@
 import { Universe } from 'game-of-life';
+
 import { ObjectMap } from '../utils/index.generic';
 
 import Cell from './Cell';
@@ -18,7 +19,6 @@ export default class Ecosystem {
     this.columns = config.columns;
 
     this.engine = Universe.new(config.rows, config.columns);
-
 
     if (config.is_alive) {
       this.process_ecosystem(config.is_alive);
@@ -82,8 +82,8 @@ export default class Ecosystem {
   /**
    * Toggle a cell between alive and dead state
    */
-  toggle(cell: Cell){
-    this.engine.toggle(...cell)
+  toggle(cell: Cell) {
+    this.engine.toggle(...cell);
   }
 
   /**
@@ -103,21 +103,28 @@ export default class Ecosystem {
   /**
    * Iterate over all cells in the universe
    */
-  for_each_cell(cb: (cell: Cell, state: number) => void, bounds ?: Bounds ) {
-
-    if ( !bounds ){
+  for_each_cell(cb: (cell: Cell, state: number) => void, bounds?: Bounds) {
+    if (!bounds) {
       bounds = {
-        horizontal_low: 0,
-        horizontal_high: this.rows - 1,
+        top: 0,
+        bottom: this.rows - 1,
 
-        vertical_low : 0,
-        vertical_high: this.columns - 1,
-      }
+        left: 0,
+        right: this.columns - 1,
+      };
     }
 
-    for (let row = bounds.horizontal_low; row <= bounds.horizontal_high; row++) {
-      for (let column = bounds.vertical_low; column <= bounds.vertical_high; column++) {
-        cb([row, column], this.get_cell_state([row, column ]) as number);
+    for (
+      let row = bounds.top;
+      row <= bounds.bottom;
+      row++
+    ) {
+      for (
+        let column = bounds.left;
+        column <= bounds.right;
+        column++
+      ) {
+        cb([row, column], this.get_cell_state([row, column]) as number);
       }
     }
   }

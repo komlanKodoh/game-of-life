@@ -2,29 +2,24 @@ import { Bounds, Cell } from '..';
 import { sort_number } from '../utils';
 
 /**
- * 
- * Checks if a given cell is within the given bounds 
- * 
- * @param cell  
- * @param Bounds 
+ *
+ * Checks if a given cell is within the given bounds
+ *
+ * @param cell
+ * @param Bounds
  */
 export const isWithinBounds = (
   [row, column]: Cell,
-  { vertical_low, vertical_high, horizontal_low, horizontal_high }: Bounds
+  { left, right, top, bottom }: Bounds
 ) => {
-  return (
-    vertical_low <= column &&
-    column <= vertical_high &&
-    horizontal_low <= row &&
-    row <= horizontal_high
-  );
+  return left <= column && column <= right && top <= row && row <= bottom;
 };
 
 /**
- * Create adequate bound object from unsorted boundaries array. 
- * 
+ * Create adequate bound object from unsorted boundaries array.
+ *
  * @param raw_boundaries
- * @returns 
+ * @returns
  */
 export const createBounds = ([vertical, horizontal]: [
   vertical: [number, number],

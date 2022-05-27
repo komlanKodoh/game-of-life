@@ -1,3 +1,5 @@
+import { Bounds } from '../..';
+
 export default class Scene {
   x = 60;
   y = 60;
@@ -56,5 +58,15 @@ export default class Scene {
       this.x <= x &&
       x <= this.x + this.width
     );
+  }
+
+  getBounds(): Bounds {
+    return {
+      top: this.y,
+      bottom: this.y + this.height,
+
+      left: this.x,
+      right: this.x + this.height,
+    };
   }
 }
