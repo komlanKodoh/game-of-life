@@ -41,14 +41,19 @@ export class CanvasComponent {
       engine: this.engine,
     });
 
-    let bounds: Bounds;
+
+    let bounds: Bounds | null = null ;
+
+    this.canvas.nativeElement.addEventListener("mousedown", () => {
+      bounds = null;
+    })
 
     this.renderer.on_select = ({ bounds: _bounds, done }) => {
       bounds = _bounds;
 
       this.AreaSelectionEvent.emit({
-        columns: bounds.vertical_high - bounds.vertical_low + 1,
-        rows: bounds.horizontal_high - bounds.horizontal_low + 1,
+        columns: bounds.right - bounds.left + 1,
+        rows: bounds.bottom - bounds.top + 1,
 
         directive_composition: Serializer.generate_string_directive(
           this.engine,
@@ -65,10 +70,10 @@ export class CanvasComponent {
       }
 
       if (
-        bounds.horizontal_low <= cell[0] &&
-        cell[0] <= bounds.horizontal_high &&
-        bounds.vertical_low <= cell[1] &&
-        cell[1] <= bounds.vertical_high
+        bounds.top <= cell[0] &&
+        cell[0] <= bounds.bottom &&
+        bounds.left <= cell[1] &&
+        cell[1] <= bounds.right
       ) {
         return () => {
           ctx.strokeStyle = '#4eca6d';

@@ -1,11 +1,11 @@
-<div class=" w-full h-full relative bg-gray-700 overflow-hidden">
+<div class=" w-full h-full relative bg-zinc-800 overflow-hidden">
 
     <div #configPanel class="absolute w-72 h-full z-20 opacity-0" [@isOpen_panel]="panel.isOpen"
         id="configuration-panel-container">
         <app-configuration-panel> {{ panel.isOpen }} </app-configuration-panel>
     </div>
 
-    <div #appCanvas class="w-full h-full bg-zinc-900 canvas-container origin-left rounded"
+    <div #appCanvas class="w-full h-full bg-zinc-900 canvas-container origin-left rounded-2xl shadow-black/80 shadow-2xl" (mousedown)="close()"
         [@isOpen_canvas]="panel.isOpen" id="random">
         <app-canvas (AreaSelectionEvent)="showCanvasPopup($event)" class=""></app-canvas>
     </div>

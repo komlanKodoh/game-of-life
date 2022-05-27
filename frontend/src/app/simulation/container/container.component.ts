@@ -68,10 +68,6 @@ export class ContainerComponent {
   @ViewChild('appCanvas') appCanvas!: ElementRef;
 
   constructor(private store: Store<AppState>) {
-    window.addEventListener('click', () => {
-      this.canvasPopupIsVisible = false;
-    });
-
     this.store.pipe().subscribe((state) => {
       this.panel = state.panel;
       // @ts-ignore
@@ -79,12 +75,17 @@ export class ContainerComponent {
     });
   }
 
+
   ngAfterViewInit(): void {
     this.updateScale();
 
     window.addEventListener('resize', () => {
       this.updateScale();
     });
+  }
+
+  close():  void{
+    this.canvasPopupIsVisible = false;
   }
 
   toggle() {
