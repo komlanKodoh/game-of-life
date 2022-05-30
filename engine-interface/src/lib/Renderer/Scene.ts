@@ -1,14 +1,14 @@
 import { Bounds } from '../..';
 
 export default class Scene {
-  x = 60;
-  y = 60;
+  x = 0;
+  y = 0;
 
-  width: number = 15 * 60;
-  height: number = 15 * 100;
+  width: number = 0;
+  height: number = 0;
 
-  scale_x = 1;
-  scale_y = 1;
+  private scale_x = 1;
+  private scale_y = 1;
 
   map_x(x: number) {
     return Math.floor((x - this.x) * this.scale_x);

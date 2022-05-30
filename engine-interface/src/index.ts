@@ -12,6 +12,7 @@ import Renderer, {
   CellRenderingDirective,
   RenderConfig,
 } from './lib/Renderer';
+import DragListener from './lib/Renderer/Interactions/DragListener';
 import Mouse from './lib/Renderer/Interactions/Mouse';
 import Scene from './lib/Renderer/Scene';
 import Runner from './lib/Runner';
@@ -28,6 +29,7 @@ export {
   Universe,
   ObjectMap,
   RenderConfig,
+  DragListener,
   GameOfLifeConfig,
   DirectiveComposition,
   CellRenderingDirective,

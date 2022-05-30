@@ -36,9 +36,9 @@ export default class Renderer {
   ctx: CanvasRenderingContext2D | null = null;
   cell_rendering_directive?: CellRenderingDirective;
 
-  SIZE = 15;
+  SIZE = 20;
   RADIUS = 2;
-  PADDING = 3;
+  PADDING = 4;
 
   constructor(config: RenderConfig) {
     this.engine = config.engine;
@@ -72,12 +72,15 @@ export default class Renderer {
 
       this.living_area_is_valid = false;
 
-      const delta = event.deltaY;
+      let delta = Math.floor(event.deltaY);
       const previousWidth = this.scene.width;
       const previousHeight = this.scene.height;
+      const min_scene_width = 10 * this.SIZE;
 
-      if (previousWidth + delta < 10 * this.SIZE) {
-        return;
+      if (previousWidth + delta < min_scene_width) {
+        if (previousWidth === min_scene_width) return;
+
+        delta = min_scene_width - previousWidth;
       }
 
       this.scene.resize(previousWidth + delta);
@@ -112,14 +115,12 @@ export default class Renderer {
       }
 
       const cell_column = Math.floor(this.mouse.x / this.SIZE);
-      
+
       const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
       const cell: Cell = [cell_row, cell_column];
 
       if (!isWithinBounds(cell, this.getBounds())) return;
-
-      console.log(cell, this.getBounds());
 
       this.engine.toggle([cell_row, cell_column]);
     });
@@ -307,6 +308,11 @@ export default class Renderer {
       this.living_area_canvas.height = this.scene.map_dimension(
         this.engine.rows * this.SIZE
       );
+
+      const visible_area =
+        (this.scene.width * this.scene.height) / (this.SIZE * this.SIZE);
+      
+      if ( visible_area > 90000) return;
 
       this.engine.for_each_cell((cell, state) => {
         if (state !== 0) {
