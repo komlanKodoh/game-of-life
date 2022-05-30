@@ -47,7 +47,7 @@ export default class DragListener {
       this.drag_start_x = e.offsetX;
     });
 
-    this.element.addEventListener('mousemove', (e) => {
+    window.addEventListener('mousemove', (e) => {
       if (!this.is_dragging) return;
 
       if (this.modifiers === null) {
