@@ -52,6 +52,19 @@ export default class Renderer {
     });
   }
 
+  /** Returns the cell currently hovered by the mouse */
+  get_hovered_cell(): Cell | null{
+    const cell_column = Math.floor(this.mouse.x / this.SIZE);
+
+    const cell_row = Math.floor(this.mouse.y / this.SIZE);
+
+    const cell: Cell = [cell_row, cell_column];
+
+    if (!isWithinBounds(cell, this.getBounds())) return null ;
+
+    return cell;
+  }
+
   /** Configures all canvas interactions including :
    * - zoom;
    * - drag;
