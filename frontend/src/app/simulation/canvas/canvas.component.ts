@@ -1,23 +1,23 @@
 import {
   Bounds,
-  Directive,
-  Ecosystem,
-  Renderer,
   Runner,
+  Renderer,
+  Ecosystem,
   Serializer,
 } from 'game-of-life-engine';
 import {
+  Output,
+  ViewChild,
   Component,
   ElementRef,
   EventEmitter,
-  Output,
-  ViewChild,
 } from '@angular/core';
 import { configuration } from './config';
 import { AreaSelectionEvent } from './type';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/clipboard/reducer';
 import { toggle } from '../state/panel/actions';
+import Channel from './Channel';
 
 @Component({
   selector: 'app-canvas',
@@ -35,18 +35,24 @@ export class CanvasComponent {
 
   @Output() AreaSelectionEvent = new EventEmitter<AreaSelectionEvent>();
 
+  @Output() InitializationEvent = new EventEmitter<{ channel: Channel }>();
+
+  channel = new Channel();
+
   ngAfterViewInit(): void {
+    this.InitializationEvent.emit({channel: this.channel});
+    this.initChanelCommunication()
+
     this.renderer = new Renderer({
       canvas: this.canvas.nativeElement,
       engine: this.engine,
     });
 
+    let bounds: Bounds | null = null;
 
-    let bounds: Bounds | null = null ;
-
-    this.canvas.nativeElement.addEventListener("mousedown", () => {
+    this.canvas.nativeElement.addEventListener('mousedown', () => {
       bounds = null;
-    })
+    });
 
     this.renderer.on_select = ({ bounds: _bounds, done }) => {
       bounds = _bounds;
@@ -93,10 +99,29 @@ export class CanvasComponent {
     }).start();
   }
 
-  constructor(private store: Store<AppState>) {};
+  constructor(private store: Store<AppState>) {}
 
-  toggle(){
-    this.store.dispatch(toggle())
+  toggle() {
+    this.store.dispatch(toggle());
   }
+
+
+  initChanelCommunication(){
+    this.channel.registerListener( (event) => {
+      if ( !  event.component?.directive_composition ) return;
+
+      const cell = this.renderer.get_hovered_cell();
+
+      if ( ! cell ) return;
+
+      console.log ( cell),
+      console.log (  event.component?.directive_composition)
+      this.engine.register_directive("temp", event.component?.directive_composition );
+
+
+      this.engine.integrate_directive(`->${cell[0]}, -|temp.${cell[1]},`);
+
+    }, ["paste-component"])
+  };
 
 }

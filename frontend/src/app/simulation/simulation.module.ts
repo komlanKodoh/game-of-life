@@ -12,7 +12,10 @@ import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { SharedModule } from '../shared/shared.module';
-import { ComponentsModule } from './configuration-panel/components.module';
+import { ComponentsModule } from './components/components.module';
+import { AccountComponent } from '../account/account.component';
+import { RouterModule } from '@angular/router';
+import { AppRouterModule } from '../app-router.module';
 
 
 @NgModule({
@@ -22,6 +25,7 @@ import { ComponentsModule } from './configuration-panel/components.module';
     ConfigurationPanelComponent,
   ],
   imports: [
+    AppRouterModule,
     SharedModule,
     CommonModule,
     BrowserModule,

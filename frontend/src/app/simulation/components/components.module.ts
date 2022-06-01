@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UniverseCardComponent } from '../components/universe-card/universe-card.component';
+import { UniverseCardComponent } from './universe-card/universe-card.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 
@@ -9,10 +10,12 @@ import { UniverseCardComponent } from '../components/universe-card/universe-card
     UniverseCardComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule,
   ],
   exports: [
     UniverseCardComponent
   ]
 })
+
 export class ComponentsModule { }

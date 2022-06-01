@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { GameOfLifeConfig } from 'game-of-life-engine';
 import { AppState, EcosystemDefinition } from '../state/ecosystems/reducer';
 import { toggle } from '../state/panel/actions';
 
@@ -11,6 +12,9 @@ import { toggle } from '../state/panel/actions';
 export class ConfigurationPanelComponent implements OnInit {
   ecosystems!: EcosystemDefinition[];
 
+  @Output() DropEvent = new EventEmitter<GameOfLifeConfig>(); 
+
+
   constructor(private store: Store<AppState>) {
     this.store.pipe().subscribe((state) => {
       this.ecosystems = state.ecosystems;
@@ -21,5 +25,9 @@ export class ConfigurationPanelComponent implements OnInit {
 
   toggle(){
     this.store.dispatch(toggle())
+  };
+
+  propagateDropEvent(ecosystem: GameOfLifeConfig){
+    this.DropEvent.emit(ecosystem);
   }
 }

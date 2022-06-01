@@ -1,3 +1,4 @@
+import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configuration/game-of-life-config.type';
 import { ClipboardData } from './../state/clipboard/reducer';
 import { Component, ViewChild, ElementRef, Sanitizer } from '@angular/core';
 import { select, Store } from '@ngrx/store';
@@ -17,6 +18,7 @@ import { AreaSelectionEvent } from '../canvas/type';
 import { write } from '../state/clipboard/actions';
 import Mouse from 'src/utils/Mouse';
 import { add } from '../state/ecosystems/actions';
+import Channel from '../canvas/Channel';
 
 @Component({
   selector: 'app-container',
@@ -54,6 +56,7 @@ import { add } from '../state/ecosystems/actions';
 export class ContainerComponent {
   panel!: PanelState;
   scale!: number;
+  canvasChannel!: Channel;
 
   canvasPopupIsVisible = false;
   canvasPopupConfig = {
@@ -75,7 +78,6 @@ export class ContainerComponent {
     });
   }
 
-
   ngAfterViewInit(): void {
     this.updateScale();
 
@@ -84,7 +86,7 @@ export class ContainerComponent {
     });
   }
 
-  close():  void{
+  close(): void {
     this.canvasPopupIsVisible = false;
   }
 
@@ -106,9 +108,7 @@ export class ContainerComponent {
     this.canvasPopupStyle = `transform : translate(${Mouse.x}px, ${Mouse.y}px); opacity: 1;`;
 
     this.canvasPopupIsVisible = true;
-    this.store.dispatch(
-      write({ contentType: 'directive', content: event })
-    );
+    this.store.dispatch(write({ contentType: 'directive', content: event }));
   }
 
   saveComponent() {
@@ -116,4 +116,18 @@ export class ContainerComponent {
 
     this.store.dispatch(add({ ...this.clipboard.content, name: 'dummy' }));
   }
+
+  handleCanvasInitialization({ channel }: { channel: Channel }) {
+    this.canvasChannel = channel;
+  }
+
+  dropInCanvas(ecosystem: GameOfLifeConfig) {
+    this.canvasChannel.diffuse({
+      name: 'paste-component',
+      component: ecosystem,
+      position: 'mouse'
+    });
+  };
+
+
 }

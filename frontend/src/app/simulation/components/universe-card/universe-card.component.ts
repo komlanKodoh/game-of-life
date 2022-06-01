@@ -1,8 +1,7 @@
 import { fitDimension } from './../../../../utils/index';
 import { createDimension } from './../../../../utils/Dimension';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Ecosystem, Renderer } from 'game-of-life-engine';
-import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configuration/game-of-life-config.type';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Ecosystem, Renderer, GameOfLifeConfig, DragListener } from 'game-of-life-engine';
 
 @Component({
   selector: 'app-universe-card',
@@ -13,21 +12,18 @@ export class UniverseCardComponent implements OnInit {
   @Input() config!: GameOfLifeConfig;
   @Input() name!: string;
 
-  @ViewChild('canvas') canvas!: ElementRef;
+  @ViewChild('canvas') canvas!: ElementRef< HTMLCanvasElement > ;
   @ViewChild('container') container!: ElementRef;
+
+  @Output() DropEvent = new EventEmitter<GameOfLifeConfig>(); 
 
   private engine!: Ecosystem;
 
-  constructor() {
-
-    
-  }
+  constructor() { };
   
   ngOnInit(): void {}
   
   ngAfterViewInit() {
-
-    console.log ( this.config )
     let containerDimension = this.container.nativeElement.getBoundingClientRect();
     let canvasDimension = fitDimension( createDimension(this.config.columns, this.config.rows) , containerDimension  );
 
@@ -44,7 +40,15 @@ export class UniverseCardComponent implements OnInit {
       engine: this.engine,
     }).render();
 
-    
+    this.initDragBehavior();
+  }
 
+  initDragBehavior(){
+    new DragListener(this.canvas.nativeElement, () => {
+      console.log( "Dragging ")
+    }).onDragEnd(() => {
+      this.DropEvent.emit();
+    });
+    
   }
 }
