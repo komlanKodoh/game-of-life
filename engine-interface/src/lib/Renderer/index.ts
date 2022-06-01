@@ -184,6 +184,7 @@ export default class Renderer {
     const selector = document.createElement('div');
 
     selector.style.opacity = '0';
+    selector.style.pointerEvents = "none";
     selector.classList.add('canvas-cell-selector');
     this.canvas.parentNode?.appendChild(selector);
 
@@ -204,22 +205,6 @@ export default class Renderer {
       selector.style.width = to_pixel(Math.abs(-event.x + event.drag_star_x));
       selector.style.height = to_pixel(Math.abs(-event.y + event.drag_star_y));
 
-      // const [v_low, v_high] = sort_number([start_x, this.mouse.x]);
-      // const [h_low, h_high] = sort_number([start_y, this.mouse.y]);
-
-      // const bounds: Bounds = {
-      //   horizontal_low: this.to_cell_coordinate(h_low),
-      //   horizontal_high: this.to_cell_coordinate(h_high),
-
-      //   vertical_low: this.to_cell_coordinate(v_low),
-      //   vertical_high: this.to_cell_coordinate(v_high),
-      // };
-
-      // this.on_select &&
-      //   this.on_select({
-      //     bounds,
-      //     done: false,
-      //   });
     })
       .onDragStart(() => {
         start_x = this.mouse.x;

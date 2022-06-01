@@ -88,6 +88,8 @@ export default class DragListener {
   new_drag_event(e: MouseEvent): DragEvent {
     if (!this.modifiers) throw new Error('new drag outside drag event context');
 
+    console.log ( e.offsetX )
+    
     return {
       e,
 
