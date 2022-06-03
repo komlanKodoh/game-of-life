@@ -2,6 +2,7 @@ import { UserRepository } from "./User";
 import bcrypt from "bcrypt";
 import Config from "../../config";
 import utils from "../../utils";
+import { InvalidCredentialError } from "../../error/CustomErrors";
 
 export interface UserCredentials {
   username: string;
@@ -9,6 +10,7 @@ export interface UserCredentials {
 }
 
 export const createUser = async (userCredentials: UserCredentials) => {
+  
   let user = {
     id: utils.getUUID(),
     username: userCredentials.username,
@@ -25,11 +27,15 @@ export const deleteUser = async (credentials: UserCredentials) => {
 };
 
 export const getUser = async (credentials: UserCredentials) => {
-  let user = await UserRepository.get({ username: credentials.username });
+  let user = (
+    await UserRepository.query("username").eq(credentials.username).exec()
+  )[0];
 
-  if (!(await bcrypt.compare(credentials.password, user.password))) {
-    throw { status: 401, message: "Invalid username or password" };
-  }
+  if (!user) throw InvalidCredentialError("wrong username or password");
+
+  await bcrypt.compare(credentials.password, user.password).catch((_) => {
+    throw InvalidCredentialError("wrong username or password");
+  });
 
   return user;
 };

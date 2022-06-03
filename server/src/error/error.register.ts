@@ -1,4 +1,4 @@
-
+import { getReasonPhrase } from "http-status-codes";
 import Koa from "koa";
 
 export interface ApiError {
@@ -11,6 +11,9 @@ const Register = (app: Koa) => {
   app.use(async (ctx, next) => {
     try {
       await next();
+
+      if (ctx.body) ctx.body = { data: ctx.body };
+      
     } catch (err) {
       ctx.status = (err as ApiError).status || 500;
       ctx.body = (err as ApiError).message;
@@ -22,7 +25,7 @@ const Register = (app: Koa) => {
     ctx.body = {
       error: {
         message: err.message,
-        status: "CAPITAL_CODE",
+        status: getReasonPhrase(ctx.status),
         timestamp: new Date().toISOString(),
       },
     };

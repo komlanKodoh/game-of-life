@@ -18,7 +18,7 @@ const Config = {
 
 
 /** AWS Dynamo db configuration */
-if ( Config.isDev() ) dynamoose.aws.ddb.local("http://dynamodb-local:3500");
+if ( Config.isDev() ) dynamoose.aws.ddb.local(process.env.DYNAMODB_LOCAL);
 
 dynamoose.aws.sdk.config.update({
   "region": process.env.AWS_REGION,

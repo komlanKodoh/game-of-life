@@ -1,2 +1,26 @@
 
-GET 
+### Add item 
+POST http://localhost:3000/api/ecosystem HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxZmZhYzAzLWM5MWUtNGI3ZC1iMTBiLTA4YzM0NzQzM2U4MSIsImlhdCI6MTY1NDIyNDYxMywiZXhwIjoxNjU0MjI4MjEzfQ.vKiaGDXrjpW-logQ6BtwjJQHcSzu5yT6BSt9AtwpgDU
+content-type: application/json
+
+{
+    "ecosystem": {
+        "rows": 15,
+        "columns": 15,
+
+        "public": false,
+        "type":"ascii",
+
+        "directive_composition": "1,2,3"
+    } 
+}
+
+### Get all public items
+
+GET http://localhost:3000/api/ecosystem
+
+### Get item owned by the request maker
+
+GET http://localhost:3000/api/ecosystem/mine
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxZmZhYzAzLWM5MWUtNGI3ZC1iMTBiLTA4YzM0NzQzM2U4MSIsImlhdCI6MTY1NDIyNDYxMywiZXhwIjoxNjU0MjI4MjEzfQ.vKiaGDXrjpW-logQ6BtwjJQHcSzu5yT6BSt9AtwpgDG

@@ -18,6 +18,7 @@ ErrorHandler.Register(app);
 
 apiRouter
   .use(Middleware.bodyParser)
+  .use(Middleware.userAuthentication)
 
   .use("/user", User.Routes)
   .use("/auth", Auth.Routes)
