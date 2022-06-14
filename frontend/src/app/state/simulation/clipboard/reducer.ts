@@ -2,9 +2,6 @@ import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configurati
 import { createReducer, createSelector, on } from '@ngrx/store';
 import * as clipBoardAction from './actions';
 
-export interface AppState {
-  clipboard: Clipboard;
-}
 
 export type ClipboardData = {
   contentType: string;

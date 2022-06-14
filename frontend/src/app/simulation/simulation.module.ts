@@ -1,20 +1,13 @@
-import { StoreRoot } from './state/index';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from './canvas/canvas.component';
 import { ConfigurationPanelComponent } from './configuration-panel/configuration-panel.component';
 import { ContainerComponent } from './container/container.component';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { panelReducer } from './state/panel/reducer';
-import { environment } from 'src/environments/environment';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from './components/components.module';
-import { AccountComponent } from '../account/account.component';
-import { RouterModule } from '@angular/router';
 import { AppRouterModule } from '../app-router.module';
 
 
@@ -31,11 +24,6 @@ import { AppRouterModule } from '../app-router.module';
     BrowserModule,
     ComponentsModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot(StoreRoot),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
   ],
 
   exports: [CanvasComponent, ConfigurationPanelComponent, ContainerComponent],

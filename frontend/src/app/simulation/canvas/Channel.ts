@@ -11,6 +11,10 @@ type EventsDefinition = {
     name: 'copy-component';
     component: GameOfLifeConfig;
   };
+  'save-as-component':{
+    name: 'save-as-component',
+    component: GameOfLifeConfig;
+  }
 };
 
 type Events = (keyof EventsDefinition)[];
@@ -26,8 +30,8 @@ export default class Channel {
   private listeners: Listener<Events>[] = [];
 
   public registerListener<T extends Events>(
+    targets: T,
     callback: (e: ChannelEvent<T>) => void,
-    targets: T
   ) {
     let cb = callback as EventHandler<Events>;
 

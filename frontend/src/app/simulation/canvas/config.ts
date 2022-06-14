@@ -25,7 +25,7 @@ export const configuration = {
 `.trim(),
   },
   directive_composition: `
-    ->20, -|ship.10,
-    ->24, -|ships.35,
+    ->50, -|ship.30,
+    ->54, -|ships.55,
     `.trim(),
 };

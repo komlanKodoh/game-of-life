@@ -1,8 +1,13 @@
+import { EcosystemRecord } from './../../state/user/reducer';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { GameOfLifeConfig } from 'game-of-life-engine';
-import { AppState, EcosystemDefinition } from '../state/ecosystems/reducer';
-import { toggle } from '../state/panel/actions';
+import { GameOfLifeConfig, Ecosystem } from 'game-of-life-engine';
+import { AppState } from 'src/app/state';
+import { selectEcosystems } from 'src/app/state/simulation/ecosystems/selectors';
+import { Profile } from 'src/app/state/user/reducer';
+import { EcosystemDefinition } from '../../state/simulation/ecosystems/reducer';
+import { togglePanel } from '../../state/simulation/panel/actions';
+import { EcosystemService } from 'src/app/account/ecosystem.service';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -10,24 +15,37 @@ import { toggle } from '../state/panel/actions';
   styleUrls: ['./configuration-panel.component.scss'],
 })
 export class ConfigurationPanelComponent implements OnInit {
-  ecosystems!: EcosystemDefinition[];
+  ecosystems!: EcosystemRecord[];
+  marketplaceEcosystems!: EcosystemRecord[];
 
-  @Output() DropEvent = new EventEmitter<GameOfLifeConfig>(); 
+  userProfile!: Profile | undefined | null;
 
+  @Output() DropEvent = new EventEmitter<GameOfLifeConfig>();
 
-  constructor(private store: Store<AppState>) {
-    this.store.pipe().subscribe((state) => {
-      this.ecosystems = state.ecosystems;
+  constructor(
+    private store: Store<AppState>,
+    private ecosystemService: EcosystemService
+  ) {
+    this.store.pipe().subscribe((store) => {
+      this.ecosystems = store.user?.ecosystems;
+      this.userProfile = store.user?.profile;
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+  
+  ngAfterViewInit(){
+    this.ecosystemService.getEcosystems().subscribe(({ data }) => {
+      this.marketplaceEcosystems = data;
+    });
 
-  toggle(){
-    this.store.dispatch(toggle())
-  };
+  }
+  toggle() {
+    this.store.dispatch(togglePanel());
+  }
 
-  propagateDropEvent(ecosystem: GameOfLifeConfig){
+  propagateDropEvent(ecosystem: GameOfLifeConfig) {
     this.DropEvent.emit(ecosystem);
   }
 }

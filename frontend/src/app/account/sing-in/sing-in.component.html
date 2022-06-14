@@ -1,0 +1,13 @@
+<app-overlay>
+    <form class=" p-2 w-[65ch] max-w-full m-auto" [formGroup]="singInForm">
+
+        <h1 class=" text-center " >Create new account </h1>
+
+        <input type="text" class=" rounded block " formControlName="username"> 
+        <input type="password" class="block" formControlName="password"> 
+
+        <button (click)="register()">Create in account </button>
+
+        <a [routerLink]="['/']" >Close  </a>
+    </form>
+</app-overlay>

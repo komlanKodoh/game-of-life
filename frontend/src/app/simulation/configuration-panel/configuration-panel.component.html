@@ -1,19 +1,37 @@
 <div class=" bg-green-400 w-full h-full overflow-auto">
+
+
     <!-- Side bar header  -->
     <div class="flex py-2 justify-between items-center">
-        <h1 class="bg-slate-900 text-gray-200 py-1 px-2">Marketplace </h1>
-
-        <a [routerLink]="['/account']" class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-white bg-slate-900 mx-2">
-            <span class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"> D </span>
+        <a [routerLink]=" ['/login'] "
+            class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-white bg-slate-900 mx-2">
+            <span *ngIf="userProfile" class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                {{userProfile.username[0] }} </span>
         </a>
     </div>
 
-    <div class="h-1 bg-gray-900 w-11/12 m-auto my-8 "></div>
 
-    <ul class="px-2">
-        <li *ngFor="let ecosystem of ecosystems" class="my-2">
-            <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem" name="something"> </app-universe-card>
-        </li>
-    </ul>
+ 
+    <mat-tab-group dynamicHeight>
+        
+                <mat-tab label="MarketPlace" class="h-full w-full">
+                    <ul class="px-2 w-full">
+                        <li *ngFor="let ecosystem of  marketplaceEcosystems" class="my-2">
+                            <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem"
+                                > </app-universe-card>
+                        </li>
+                    </ul>
+                </mat-tab>
 
+        <mat-tab label="Private" class="h-full w-full">
+            <ul class="px-2 w-full">
+                <li *ngFor="let ecosystem of ecosystems" class="my-2">
+                    <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem"
+                        > </app-universe-card>
+                </li>
+            </ul>
+        </mat-tab>
+
+
+    </mat-tab-group>
 </div>
