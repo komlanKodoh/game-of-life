@@ -1,5 +1,9 @@
 
-<h2 class="bg-gray-200 text-slate-900 shadow-xl shadow-slate-500 w-fit px-4 py-1" >{{name}}</h2>
+<h2 class="bg-gray-200 text-slate-900 text-sm shadow-xl whitespace-nowrap shadow-slate-500 w-fit px-4 py-1">{{config.name}}</h2>
+
+<a [routerLink]="['/ecosystem', config.name]" class="row-start-2 self-end"  ariaCurrentWhenActive="page">
+    <app-icon-expend class=""></app-icon-expend>
+</a>
 
 <div #container class=" pt-[50%] col-start-2 row-start-2 bg-slate-900 relative">
     <canvas #canvas class="bg-slate-900 center-absolute "></canvas>

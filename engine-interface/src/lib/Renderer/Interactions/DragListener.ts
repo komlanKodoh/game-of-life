@@ -47,7 +47,7 @@ export default class DragListener {
       this.drag_start_x = e.offsetX;
     });
 
-    this.element.addEventListener('mousemove', (e) => {
+    window.addEventListener('mousemove', (e) => {
       if (!this.is_dragging) return;
 
       if (this.modifiers === null) {
@@ -88,6 +88,8 @@ export default class DragListener {
   new_drag_event(e: MouseEvent): DragEvent {
     if (!this.modifiers) throw new Error('new drag outside drag event context');
 
+    console.log ( e.offsetX )
+    
     return {
       e,
 

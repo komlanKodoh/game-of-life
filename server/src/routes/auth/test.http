@@ -1,0 +1,5 @@
+
+
+// Ge a user token ( used for login ) 
+GET http://localhost:3000/api/auth/token?username=daniel&password=pass
+

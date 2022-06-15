@@ -1,23 +1,24 @@
 import {
   Bounds,
-  Directive,
-  Ecosystem,
-  Renderer,
   Runner,
+  Renderer,
+  Ecosystem,
   Serializer,
+  GameOfLifeConfig,
 } from 'game-of-life-engine';
 import {
+  Output,
+  ViewChild,
   Component,
   ElementRef,
   EventEmitter,
-  Output,
-  ViewChild,
 } from '@angular/core';
 import { configuration } from './config';
 import { AreaSelectionEvent } from './type';
 import { Store } from '@ngrx/store';
-import { AppState } from '../state/clipboard/reducer';
-import { toggle } from '../state/panel/actions';
+import { togglePanel } from '../../state/simulation/panel/actions';
+import Channel from './Channel';
+import { AppState } from 'src/app/state';
 
 @Component({
   selector: 'app-canvas',
@@ -33,25 +34,37 @@ export class CanvasComponent {
   @ViewChild('canvas') canvas!: ElementRef;
   @ViewChild('tempCanvas') tempCanvas!: ElementRef;
 
-  @Output() AreaSelectionEvent = new EventEmitter<AreaSelectionEvent>();
+  @Output() InitializationEvent = new EventEmitter<{ channel: Channel }>();
+
+  optionPromptIsVisible = false;
+  tempSelection: GameOfLifeConfig | null = null;
+
+  channel = new Channel();
 
   ngAfterViewInit(): void {
+    // window.addEventListener("mousedown", () => {
+    //   this.optionPromptIsVisible = false;
+    // });
+
+    this.InitializationEvent.emit({ channel: this.channel });
+    this.initChanelCommunication();
+
     this.renderer = new Renderer({
       canvas: this.canvas.nativeElement,
       engine: this.engine,
     });
 
+    let bounds: Bounds | null = null;
 
-    let bounds: Bounds | null = null ;
-
-    this.canvas.nativeElement.addEventListener("mousedown", () => {
+    this.canvas.nativeElement.addEventListener('mousedown', () => {
       bounds = null;
-    })
+    });
 
     this.renderer.on_select = ({ bounds: _bounds, done }) => {
       bounds = _bounds;
 
-      this.AreaSelectionEvent.emit({
+      this.optionPromptIsVisible = true;
+      this.tempSelection = {
         columns: bounds.right - bounds.left + 1,
         rows: bounds.bottom - bounds.top + 1,
 
@@ -59,7 +72,7 @@ export class CanvasComponent {
           this.engine,
           bounds
         ),
-      });
+      };
     };
 
     this.renderer.bind_all();
@@ -93,10 +106,39 @@ export class CanvasComponent {
     }).start();
   }
 
-  constructor(private store: Store<AppState>) {};
+  saveCurrentSelection() {
+    console.log( this.tempSelection )
+    if (this.tempSelection)
+      this.channel.diffuse({
+        name: 'save-as-component',
+        component: this.tempSelection,
+      });
+  };
 
-  toggle(){
-    this.store.dispatch(toggle())
+  constructor(private store: Store<AppState>) {}
+
+  toggle() {
+    this.store.dispatch(togglePanel());
   }
 
+  initChanelCommunication() {
+    this.channel.registerListener(
+      ['paste-component'],
+      (event) => {
+        if (!event.component?.directive_composition) return;
+
+        const cell = this.renderer.get_hovered_cell();
+
+        if (!cell) return;
+
+        console.log(cell), console.log(event.component?.directive_composition);
+        this.engine.register_directive(
+          'temp',
+          event.component?.directive_composition
+        );
+
+        this.engine.integrate_directive(`->${cell[0]}, -|temp.${cell[1]},`);
+      },
+    );
+  }
 }

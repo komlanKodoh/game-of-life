@@ -1,0 +1,27 @@
+<app-overlay>
+    <form class=" py-6 px-10 w-[65ch] bg-black  text-white max-w-full m-auto relative" [formGroup]="loginForm">
+        <a [routerLink]="['/']" class="absolute top-0 right-0 p-5"> Close </a>
+
+        <h1 class=" text-center ">Login account </h1>
+
+        <mat-form-field class="w-full" appearance="fill" color>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="username">
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label> password </mat-label>
+            <input matInput type="password" class="block" formControlName="password">
+        </mat-form-field>
+
+
+        <br />
+
+        <button (click)="login()" mat-flat-button color="primary" class="w-full block">Login</button> <br />
+
+
+        <span class="block my-4"> Don't have an account ?
+            <a [routerLink]="['/sign-in']" class=" text-purple-600 ">create account </a>
+        </span>
+    </form>
+</app-overlay>

@@ -10,7 +10,13 @@ export class User extends Document {
 
 const UserSchema = new dynamoose.Schema({
   id: String,
-  username: String,
+  username: {
+    type: String,
+    index: {
+      name: "username-index",
+      global: true
+  }
+  },
   password: String,
 });
 

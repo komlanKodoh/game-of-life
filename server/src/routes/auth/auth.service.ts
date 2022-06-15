@@ -6,15 +6,26 @@ export interface UserIdentifier {
   id: string;
 }
 
+export interface Token {
+  value: string,
+  expires?: number
+}
+
 export const getToken = (userIdentifier: UserIdentifier) => {
   let data = {
     id: userIdentifier.id,
   };
+  
   const token = jwt.sign(data, Config.JWT_SECRET_KEY, {
     expiresIn: Config.JWT_VALIDITY_TIME,
   });
 
-  return token;
+  const {exp: expires } = jwt.decode( token ) as { exp: number };
+
+  return {
+    value: token,
+    expires
+  } as Token ;
 };
 
 export const parseToken = (token: string) => {
@@ -22,7 +33,7 @@ export const parseToken = (token: string) => {
     let data = jwt.verify(token, Config.JWT_SECRET_KEY) as UserIdentifier;
     return { id: data.id } as UserIdentifier;
   } catch (e: any) {
-    throw InvalidCredentialError(e.name);
+    throw InvalidCredentialError();
   }
 };
 
@@ -37,5 +48,10 @@ export const getRefreshToken = (userIdentifier: UserIdentifier) => {
     expiresIn: Config.REFRESH_TOKEN_VALIDITY_TIME,
   });
 
-  return token;
+  const {exp: expires } = jwt.decode( token ) as { exp: number };
+
+  return {
+    value: token,
+    expires
+  } as Token;
 };

@@ -2,7 +2,6 @@ import Koa from "koa";
 import utils from "./utils";
 import Config from "./config";
 import serve from "koa-static";
-import Router from "koa-router";
 import Logger from "koa-logger";
 import Auth from "./routes/auth";
 import User from "./routes/user";
@@ -12,12 +11,13 @@ import HealthCheck from "./routes/health-check";
 import ErrorHandler from "./error/error.register";
 
 const app = new Koa();
-const apiRouter = new Router({ prefix: "/api" });
+const apiRouter = new utils.api.Router({ prefix: "/api" });
 
 ErrorHandler.Register(app);
 
 apiRouter
   .use(Middleware.bodyParser)
+  .use(Middleware.userAuthentication)
 
   .use("/user", User.Routes)
   .use("/auth", Auth.Routes)

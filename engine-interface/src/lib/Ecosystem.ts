@@ -39,11 +39,19 @@ export default class Ecosystem {
     this.columns = columns;
   }
 
+  /** Register directive than can then be used in main directive composition */
+  register_directive(name: string, directive: Directive) {
+    this.parser.register_directive(name, directive);
+  }
+  
+  /** register a group of rendering directive ( component ) that can then be used
+   * in the main directive composition.
+   */
   register_directives(directives: ObjectMap<string, Directive>) {
     Object.keys(directives).forEach((directive_name) => {
       this.parser.register_directive(
         directive_name,
-        directives[directive_name] as string
+        directives[directive_name] as Directive
       );
     });
   }
@@ -114,16 +122,8 @@ export default class Ecosystem {
       };
     }
 
-    for (
-      let row = bounds.top;
-      row <= bounds.bottom;
-      row++
-    ) {
-      for (
-        let column = bounds.left;
-        column <= bounds.right;
-        column++
-      ) {
+    for (let row = bounds.top; row <= bounds.bottom; row++) {
+      for (let column = bounds.left; column <= bounds.right; column++) {
         cb([row, column], this.get_cell_state([row, column]) as number);
       }
     }

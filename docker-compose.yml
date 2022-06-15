@@ -27,3 +27,4 @@ services:
       AWS_REGION: 'eu-west-1'
       PORT: 3000
       PUBLIC_DIR: '/game-of-life/public'
+      DYNAMODB_LOCAL: "http://dynamodb-local:3500"

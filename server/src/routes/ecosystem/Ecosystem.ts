@@ -3,8 +3,11 @@ import { Document } from "dynamoose/dist/Document";
 import Config from "../../config";
 
 export class Ecosystem extends Document {
-  id!: string;
+  name!: string;
   owner_id!: string;
+
+  public!: boolean;
+  type!: "ascii" | "buffer";
 
   rows!: number;
   columns!: number;
@@ -13,20 +16,29 @@ export class Ecosystem extends Document {
   directives?: [name: string, definition: string][];
 }
 
-const EcosystemSchema = new dynamoose.Schema({
-  id: String,
-  owner_id: String,
+const EcosystemSchema = new dynamoose.Schema(
+  {
+    name: String,
+    owner_id: String,
 
-  rows: Number,
-  columns: Number,
+    type: String,
+    public: Boolean,
 
-  directive_composition: String,
-  directives: {
-    type: Array,
-    schema: [{ type: [String] }],
-    required: false,
+    rows: Number,
+    columns: Number,
+
+    directive_composition: String,
+    directives: {
+      type: Array,
+      schema: [{ type: [String] }],
+      required: false,
+    },
   },
-});
+  {
+    saveUnknown: false,
+    timestamps: true,
+  }
+);
 
 export const EcosystemRepository = dynamoose.model<Ecosystem>(
   Config.ECOSYSTEM_TABLE,

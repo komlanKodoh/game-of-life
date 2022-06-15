@@ -8,7 +8,7 @@ describe("Authentication service test", () => {
 
   it("Should parse token", () => {
     let token = getToken({ id: "ID" });
-    let userIdentifier = parseToken(token);
+    let userIdentifier = parseToken(token.value);
 
     expect(userIdentifier).toBeDefined();
     expect(userIdentifier.id).toBeDefined();

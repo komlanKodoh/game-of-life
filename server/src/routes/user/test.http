@@ -1,10 +1,21 @@
 
 
-POST http://localhost:3000/api/user/
+### Test user creation
+POST http://localhost:3000/api/user/ HTTP/1.1
+content-type: application/json
 
-Content-type: application/json
 
-{
-    "username": "daniel",
-    "password": "pass"
+{ 
+    "user" : {
+        "username": "daniel",
+        "password": "pass"
+    }
 }
+
+### Get user from authorization header
+GET http://localhost:3000/api/user/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxZmZhYzAzLWM5MWUtNGI3ZC1iMTBiLTA4YzM0NzQzM2U4MSIsImlhdCI6MTY1NDIxODY0MiwiZXhwIjoxNjU0MjIyMjQyfQ.dfBUX5p3E-EUBr4K-vFCY_hPFItTJ7aZFPBNRxUSRSA
+
+### Get user from user Id
+
+GET http://localhost:3000/api/user/81ffac03-c91e-4b7d-b10b-08c347433e81
