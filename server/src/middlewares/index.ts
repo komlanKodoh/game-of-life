@@ -1,13 +1,14 @@
-import Koa from "koa";
+
 import parse from "co-body";
 import Auth from "../routes/auth";
 import { InvalidCredentialError } from "../error/CustomErrors";
+import { RouterContext } from "../utils/api";
 
-type Middleware = (ctx: Koa.Context, next: () => Promise<any>) => void;
+type Middleware = (ctx: RouterContext, next: () => Promise<any>) => void;
 
 const bodyParser: Middleware = async (ctx, next) => {
   try {
-    ctx.body = await parse(ctx);
+    ctx.request.body = await parse(ctx);
   } catch (e) {}
 
   await next();

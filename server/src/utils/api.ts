@@ -18,5 +18,9 @@ export function wrapResponseData<T>(data: T) {
   return { data };
 }
 
+type ContextAddon = { user?: { id: string }, request: { body?: any } };
+export type RouterContext = Koa.Context & ContextAddon;
+
 /** Custom router */
-export class Router extends KoaRouter<any, { user?: { id: string } }> {}
+export class Router extends KoaRouter<any, ContextAddon> {}
+

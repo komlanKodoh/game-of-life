@@ -30,9 +30,8 @@ router.get("/refreshToken", async (ctx) => {
   if (!refreshToken) throw InvalidCredentialError("Token Invalid or absent");
 
   let newToken = Auth.Service.refreshToken(refreshToken);
-  ctx.body = {
-    data: { token: newToken },
-  };
+  ctx.body =  newToken;
+
 });
 
 export default router.routes();

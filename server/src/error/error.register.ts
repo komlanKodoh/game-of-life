@@ -13,6 +13,7 @@ const Register = (app: Koa) => {
       await next();
 
       if (ctx.body) ctx.body = { data: ctx.body };
+      ctx.status = 200;
       
     } catch (err) {
       ctx.status = (err as ApiError).status || 500;

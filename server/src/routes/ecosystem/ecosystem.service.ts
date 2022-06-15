@@ -15,7 +15,7 @@ export const createEcosystem = (
   ecosystem: Ecosystem
 ) => {
   EcosystemRepository.create({
-    id: utils.getUUID(),
+    name: utils.getUUID(),
     owner_id: userIdentifier.id,
 
     rows: ecosystem.rows,

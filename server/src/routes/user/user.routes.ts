@@ -7,13 +7,13 @@ import * as UserService from "./user.service";
 const router = new utils.api.Router();
 
 router.post("/", async (ctx) => {
-  let credentials = ctx.body.user;
+  let credentials = ctx.request.body.user;
   await UserService.createUser(credentials);
 });
 
 router.put("/", async (ctx) => {
-  let credentials = ctx.body.user ;
-  let newCredentials = ctx.body.newUser;
+  let credentials = ctx.request.body.user ;
+  let newCredentials = ctx.request.body.newUser;
 
   await UserService.updateUser(credentials,newCredentials );
 })
