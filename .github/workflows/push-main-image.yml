@@ -56,6 +56,9 @@ jobs:
   registry-cleanup: 
     needs: [deploy]
     runs-on: ubuntu-latest
+    env:
+      ECR_REGION: us-east-2
+      ECR_REPO: game-of-life
 
     steps: 
     - name : Remove all untagged images
