@@ -2,32 +2,49 @@
 
 
     <!-- Side bar header  -->
-    <div class="flex py-2 justify-between items-center">
-        <a [routerLink]=" ['/login'] "
-            class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-white bg-slate-900 mx-2">
-            <span *ngIf="userProfile" class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+    <div class="flex py-2 justify-between items-center text-black">
+
+        <div *ngIf="userProfile" [matMenuTriggerFor]="menu"
+            class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-slate-200 bg-slate-900 mx-2">
+            <span class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 {{userProfile.username[0] }} </span>
-        </a>
+        </div>
+
+        <div *ngIf="!userProfile"
+            class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-slate-200 bg-slate-900 mx-2">
+
+            <a [routerLink]=" ['/login'] " *ngIf="!userProfile"
+                class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                ? </a>
+        </div>
     </div>
 
 
- 
+
+    <mat-menu #menu="matMenu" xPosition="after" class="bg-black">
+        <button mat-menu-item>
+            <span>Logout<mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
+            </span>
+        </button>
+    </mat-menu>
+
     <mat-tab-group dynamicHeight>
-        
-                <mat-tab label="MarketPlace" class="h-full w-full">
-                    <ul class="px-2 w-full">
-                        <li *ngFor="let ecosystem of  marketplaceEcosystems" class="my-2">
-                            <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem"
-                                > </app-universe-card>
-                        </li>
-                    </ul>
-                </mat-tab>
+
+        <mat-tab label="MarketPlace" class="h-full w-full">
+
+            <ul class="px-2 w-full">
+                <li *ngFor="let ecosystem of  marketplaceEcosystems" class="my-2">
+                    <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
+                    </app-universe-card>
+                </li>
+            </ul>
+        </mat-tab>
 
         <mat-tab label="Private" class="h-full w-full">
             <ul class="px-2 w-full">
                 <li *ngFor="let ecosystem of ecosystems" class="my-2">
-                    <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem"
-                        > </app-universe-card>
+                    <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
+                    </app-universe-card>
                 </li>
             </ul>
         </mat-tab>

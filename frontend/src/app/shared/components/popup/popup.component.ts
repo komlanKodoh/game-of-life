@@ -18,9 +18,10 @@ export class PopupComponent implements OnInit {
   @ViewChild('wrapper') wrapper!: ElementRef;
 
   @Input() position: string = '';
-  controlledStyle = '';
+  controlledStyle = 'opacity: 0;';
 
   ngOnInit(): void {}
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isVisible'] || changes['position']) {
@@ -45,8 +46,6 @@ export class PopupComponent implements OnInit {
 
     if ( this.isVisible ) this.controlledStyle += "opacity : 1 ; "
     else this.controlledStyle += " opacity: 0 ;"
-
-    console.log ( this.isVisible)
   }
 
   getStyle(modifications: (keyof Bounds)[]) {

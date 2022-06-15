@@ -1,13 +1,27 @@
 <app-overlay>
-    <form class=" p-2 w-[65ch] max-w-full m-auto" [formGroup]="singInForm">
+    <form class=" py-6 px-10 w-[65ch] bg-black  text-white max-w-full m-auto relative" [formGroup]="singInForm">
+        <a [routerLink]="['/']" class="absolute top-0 right-0 p-5"> Close </a>
 
-        <h1 class=" text-center " >Create new account </h1>
+        <h1 class=" text-center "> Create account </h1>
 
-        <input type="text" class=" rounded block " formControlName="username"> 
-        <input type="password" class="block" formControlName="password"> 
+        <mat-form-field class="w-full" appearance="fill" color>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="username">
+        </mat-form-field>
 
-        <button (click)="register()">Create in account </button>
+        <mat-form-field class="w-full">
+            <mat-label> password </mat-label>
+            <input matInput type="password" class="block" formControlName="password">
+        </mat-form-field>
 
-        <a [routerLink]="['/']" >Close  </a>
+
+        <br />
+
+        <button (click)="register()" mat-flat-button color="primary" class="w-full block">Create account</button> <br />
+
+
+        <span class="block my-4"> Already have an account ?
+            <a [routerLink]="['/login']" class=" text-purple-600 ">Log in </a>
+        </span>
     </form>
 </app-overlay>

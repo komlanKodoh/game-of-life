@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
@@ -30,7 +31,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatFormFieldModule,
     MatFormFieldModule,
     MatProgressBarModule,
-    
+    MatMenuModule,
+
     // MatRadioModule,
     // MatDatepickerModule,
     // MatCheckboxModule,
@@ -38,7 +40,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     // MatDatepickerModule,
     // MatSliderModule,
     // MatSlideToggleModule,
-    // MatIconModule,
+    MatIconModule,
   ],
 })
 export class MaterialModule {}

@@ -42,6 +42,10 @@ export class CanvasComponent {
   channel = new Channel();
 
   ngAfterViewInit(): void {
+    // window.addEventListener("mousedown", () => {
+    //   this.optionPromptIsVisible = false;
+    // });
+
     this.InitializationEvent.emit({ channel: this.channel });
     this.initChanelCommunication();
 
