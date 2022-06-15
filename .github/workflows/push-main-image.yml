@@ -2,65 +2,64 @@ name: Application deployment to aws ecr -> ecs
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
+  ECR_REGION: us-east-2
+  ECR_REPO: game-of-life
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Build image
-      run: ./_build.sh
+      - name: Build image
+        run: ./_build.sh
 
-    - name: Test docker image
-      run: ./_integration.sh
+      - name: Test docker image
+        run: ./_integration.sh
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
 
-    - name: Docker login to aws container registry
-      run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
+      - name: Docker login to aws container registry
+        run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
 
-    - name: Push image to Aws container repository
-      run: docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life:main &&
-           docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life:main
-    
-  deploy: 
+      - name: Push image to Aws container repository
+        run:
+          docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life:main &&
+          docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life:main
+
+  deploy:
     needs: [build]
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
-  
-    - name: Update deployment
-      run : aws ecs update-service --force-new-deployment --service game-of-life-service  --cluster game-of-life 
+      - name: Update deployment
+        run: aws ecs update-service --force-new-deployment --service game-of-life-service  --cluster game-of-life
 
-  registry-cleanup: 
+  registry-cleanup:
     needs: [deploy]
     runs-on: ubuntu-latest
-    env:
-      ECR_REGION: us-east-2
-      ECR_REPO: game-of-life
 
-    steps: 
-    - name : Remove all untagged images
-      run : IMAGES_TO_DELETE=$( aws ecr list-images --region $ECR_REGION --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json ) && 
-            aws ecr batch-delete-image --region $ECR_REGION --repository-name $ECR_REPO --image-ids "$IMAGES_TO_DELETE" || true
+    steps:
+      - name: Remove all untagged images
+        run:
+          IMAGES_TO_DELETE=$( aws ecr list-images --region $ECR_REGION --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json ) &&
+          aws ecr batch-delete-image --region $ECR_REGION --repository-name $ECR_REPO --image-ids "$IMAGES_TO_DELETE" || true
