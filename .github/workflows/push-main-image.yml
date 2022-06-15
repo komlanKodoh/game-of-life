@@ -20,6 +20,9 @@ jobs:
     - name: Build image
       run: ./_build.sh
 
+    - name: Test docker image
+      run: ./_integration.sh
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -31,8 +34,8 @@ jobs:
       run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 738382426119.dkr.ecr.us-east-2.amazonaws.com
 
     - name: Push image to Aws container repository
-      run: docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life &&
-           docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life
+      run: docker tag game-of-life 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life:main &&
+           docker push 738382426119.dkr.ecr.us-east-2.amazonaws.com/game-of-life:main
     
   deploy: 
     needs: [build]
@@ -48,7 +51,7 @@ jobs:
         aws-region: us-east-2
   
     - name: Update deployment
-      run : aws ecs update-service --cluster game-of-life --service game-of-life-service --force-new-deployment
+      run : aws ecs update-service --force-new-deployment --service game-of-life-service  --cluster game-of-life 
 
   registry-cleanup: 
     needs: [deploy]
