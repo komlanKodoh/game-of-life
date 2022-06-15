@@ -12,7 +12,7 @@ const Register = (app: Koa) => {
     try {
       await next();
 
-      if (ctx.body) ctx.body = { data: ctx.body };
+      if (ctx.response.is("json")) ctx.body = { data: ctx.body };
       ctx.status = 200;
       
     } catch (err) {
