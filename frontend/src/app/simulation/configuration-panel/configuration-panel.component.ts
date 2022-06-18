@@ -8,6 +8,7 @@ import { Profile } from 'src/app/state/user/reducer';
 import { EcosystemDefinition } from '../../state/simulation/ecosystems/reducer';
 import { togglePanel } from '../../state/simulation/panel/actions';
 import { EcosystemService } from 'src/app/account/ecosystem.service';
+import { UserService } from 'src/app/account/user.service';
 
 @Component({
   selector: 'app-configuration-panel',
@@ -24,7 +25,8 @@ export class ConfigurationPanelComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private ecosystemService: EcosystemService
+    private userService: UserService,
+    private ecosystemService: EcosystemService,
   ) {
     this.store.pipe().subscribe((store) => {
       this.ecosystems = store.user?.ecosystems;
@@ -40,9 +42,15 @@ export class ConfigurationPanelComponent implements OnInit {
       this.marketplaceEcosystems = data;
     });
 
+
+
   }
   toggle() {
     this.store.dispatch(togglePanel());
+  }
+
+  logout(){
+    this.userService.logout();
   }
 
   propagateDropEvent(ecosystem: GameOfLifeConfig) {

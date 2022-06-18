@@ -40,14 +40,28 @@ export const userReducer = createReducer(
     return { ...state, token: payload };
   }),
 
+  on(userActions.logUserOut, () => {
+    return {
+      profile: null,
+      token: null,
+      ecosystems: [],
+    };
+  }),
+
   on(userActions.saveEcosystem, (state, { config, name }) => {
-    console.log ( config )
     const record: EcosystemRecord = {
       name,
       ...config,
-      status: 'saving'
+      status: 'saving',
     };
 
     return { ...state, ecosystems: [...state.ecosystems, record] };
+  }),
+
+  on(userActions.loadEcosystems, (state, { payload }) => {
+    return {
+      ...state,
+      ecosystems: [...state.ecosystems, ...payload],
+    };
   })
 );

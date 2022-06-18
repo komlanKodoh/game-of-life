@@ -1,3 +1,4 @@
+import { logUserOut, loadEcosystems } from './../state/user/actions';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -7,14 +8,22 @@ import { setUserProfile, setUserToken } from '../state/user/actions';
 import { Profile, Token, User } from '../state/user/reducer';
 import { selectUser } from '../state/user/selectors';
 import { AccountModule } from './account.module';
+import { EcosystemService } from './ecosystem.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private static tokenExpiryCheckInterval: ReturnType<typeof setTimeout>;
+  // in seconds
+  private static TOKEN_EXPIRY_CHECK_DELAY = 10 * 60;
   private user!: User | null;
 
-  constructor(private http: HttpClient, private appState: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    private ecosystemService: EcosystemService,
+    private appState: Store<AppState>
+  ) {
     this.appState.select(selectUser).subscribe((user) => (this.user = user));
   }
 
@@ -54,7 +63,22 @@ export class UserService {
     }
   }
 
-  logout() {}
+  async logout(): Promise<null | string> {
+    try {
+      await lastValueFrom(
+        this.http.get('/api/auth/logout', {
+          responseType: 'text',
+        })
+      );
+
+      this.appState.dispatch(logUserOut());
+      this.stopTokenExpiryChecks();
+
+      return null;
+    } catch (e: any) {
+      return e.error.error.message;
+    }
+  }
 
   async updateUserData() {
     if (!this.user?.token) return;
@@ -67,7 +91,11 @@ export class UserService {
       })
     )) as { data: Profile };
 
+    this.startTokenExpiryChecks();
     this.appState.dispatch(setUserProfile(data));
+    this.ecosystemService.getMyEcosystems().subscribe(({ data }) => {
+      this.appState.dispatch(loadEcosystems({ payload: data }));
+    });
     return null;
   }
 
@@ -75,7 +103,7 @@ export class UserService {
     try {
       this.http
         .get<{ data: Token }>('/api/auth/refreshToken')
-        .subscribe(({data}) => {
+        .subscribe(({ data }) => {
           this.appState.dispatch(setUserToken(data));
           this.updateUserData();
         });
@@ -88,5 +116,27 @@ export class UserService {
 
   getToken() {
     return this.user?.token?.value;
+  }
+
+  startTokenExpiryChecks() {
+    if (!this.user?.token) return;
+    this.stopTokenExpiryChecks();
+
+    UserService.tokenExpiryCheckInterval = setInterval(() => {
+      if (!this.user?.token)
+        throw ' Interval called whilst user user toke does not exist';
+
+      if (
+        this.user.token.expires - new Date().getTime() / 1000 <=
+        UserService.TOKEN_EXPIRY_CHECK_DELAY
+      ) {
+        this.refreshToken();
+      }
+    }, UserService.TOKEN_EXPIRY_CHECK_DELAY * 1000);
+  }
+
+  stopTokenExpiryChecks() {
+    UserService.tokenExpiryCheckInterval &&
+      clearInterval(UserService.tokenExpiryCheckInterval);
   }
 }

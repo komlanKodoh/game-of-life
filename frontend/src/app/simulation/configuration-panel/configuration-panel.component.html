@@ -21,29 +21,31 @@
 
 
 
-    <mat-menu #menu="matMenu" xPosition="after" class="bg-black">
-        <button mat-menu-item>
-            <span>Logout<mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
-            </span>
+    <mat-menu #menu="matMenu" xPosition="after" class="bg-black w-36">
+        <button (click)="logout()" mat-menu-item>
+            <div class="flex justify-between items-center align-middle">
+                Logout
+                <mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
+            </div>
         </button>
     </mat-menu>
 
-    <mat-tab-group dynamicHeight>
+    <mat-tab-group preserveContent>
 
-        <mat-tab label="MarketPlace" class="h-full w-full">
+        <mat-tab label="MarketPlace" class="h-full w-full ">
 
-            <ul class="px-2 w-full">
+            <ul class="px-2 w-full overflow-hidden">
                 <li *ngFor="let ecosystem of  marketplaceEcosystems" class="my-2">
-                    <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
+                    <app-universe-card to="public" (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
                     </app-universe-card>
                 </li>
             </ul>
         </mat-tab>
 
-        <mat-tab label="Private" class="h-full w-full">
-            <ul class="px-2 w-full">
+        <mat-tab label="Private" class="h-full w-full overflow-hidden ">
+            <ul class="px-2 w-full overflow-hidden">
                 <li *ngFor="let ecosystem of ecosystems" class="my-2">
-                    <app-universe-card (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
+                    <app-universe-card to="user" (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
                     </app-universe-card>
                 </li>
             </ul>

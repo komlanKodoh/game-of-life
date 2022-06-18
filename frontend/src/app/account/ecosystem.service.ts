@@ -8,20 +8,27 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class EcosystemService {
-  constructor(private http: HttpClient, private userService: UserService) {}
+  constructor(private http: HttpClient) {}
 
   saveRecord(ecosystem: GameOfLifeConfig, name: string) {
-    return this.http.post('/api/ecosystem', {
-      ecosystem: { ...ecosystem, name, public: true, type: 'ascii' },
-    });
+    return this.http.post(
+      '/api/ecosystem',
+      {
+        ecosystem: { ...ecosystem, name, public: false, type: 'ascii' },
+      },
+      { responseType: 'text' }
+    );
   }
 
-  getMyEcosystems(name: string) {
-    return this.http.get<{ data: GameOfLifeConfig }>('/api/ecosystem/mine', {
-      params: {
-        name,
-      },
-    });
+  getMyEcosystems(name?: string) {
+    return this.http.get<{ data: EcosystemRecord[] }>(
+      '/api/ecosystem/mine',
+      {}
+    );
+  }
+
+  getEcosystem(name: string) {
+    return this.http.get<{ data: EcosystemRecord }>(`/api/ecosystem/unique/${name}`);
   }
 
   getEcosystems() {

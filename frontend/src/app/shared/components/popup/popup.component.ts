@@ -18,7 +18,7 @@ export class PopupComponent implements OnInit {
   @ViewChild('wrapper') wrapper!: ElementRef;
 
   @Input() position: string = '';
-  controlledStyle = 'opacity: 0;';
+  controlledStyle = 'opacity: 0;  pointer-events: none; height: 0;';
 
   ngOnInit(): void {}
 
@@ -30,6 +30,8 @@ export class PopupComponent implements OnInit {
   }
 
   updatePopupPosition() {
+    if ( ! this.wrapper ) return;
+
     let modifications: (keyof Bounds)[] = [];
 
     let boundingRect = this.wrapper.nativeElement.getBoundingClientRect();
@@ -45,7 +47,7 @@ export class PopupComponent implements OnInit {
     this.controlledStyle = this.getStyle(modifications);
 
     if ( this.isVisible ) this.controlledStyle += "opacity : 1 ; "
-    else this.controlledStyle += " opacity: 0 ;"
+    else this.controlledStyle += " opacity: 0; pointer-events: none;  height: 0;"
   }
 
   getStyle(modifications: (keyof Bounds)[]) {

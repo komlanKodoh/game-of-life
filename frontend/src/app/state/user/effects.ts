@@ -14,13 +14,14 @@ import { EcosystemService } from 'src/app/account/ecosystem.service';
 
 @Injectable()
 export class EcosystemRecordEffects {
+
   saveEcosystemRecord$ = createEffect(() =>
     this.actions$.pipe(
       ofType(saveEcosystem.type),
       mergeMap((action: Parameters<typeof saveEcosystem>[0]) =>
         this.ecosystemService.saveRecord(action.config, action.name).pipe(
           map((response) => saveEcosystemSuccess({ name: action.name })),
-          catchError(() => of(saveEcosystemFailure({ name: action.name })))
+          catchError((e) => of(saveEcosystemFailure({ name: action.name })))
         )
       )
     )

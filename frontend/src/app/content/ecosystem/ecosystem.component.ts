@@ -18,8 +18,7 @@ export class EcosystemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ecosystem.getMyEcosystems(this.name).subscribe((system) => {
-      console.log(system);
+    this.ecosystem.getEcosystem(this.name).subscribe((system) => {
     });
   }
 }

@@ -1,8 +1,22 @@
 import { EcosystemRecord } from './../../../state/user/reducer';
 import { fitDimension } from './../../../../utils/index';
 import { createDimension } from './../../../../utils/Dimension';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Ecosystem, Renderer, GameOfLifeConfig, DragListener } from 'game-of-life-engine';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  Ecosystem,
+  Renderer,
+  GameOfLifeConfig,
+  DragListener,
+} from 'game-of-life-engine';
+import { computed } from 'mobx-angular';
 
 @Component({
   selector: 'app-universe-card',
@@ -11,28 +25,35 @@ import { Ecosystem, Renderer, GameOfLifeConfig, DragListener } from 'game-of-lif
 })
 export class UniverseCardComponent implements OnInit {
   @Input() config!: EcosystemRecord;
+  @Input() to!: 'public' | 'user';
 
-  @ViewChild('canvas') canvas!: ElementRef< HTMLCanvasElement > ;
+  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('container') container!: ElementRef;
 
-  @Output() DropEvent = new EventEmitter<GameOfLifeConfig>(); 
+  @Output() DropEvent = new EventEmitter<GameOfLifeConfig>();
 
   private engine!: Ecosystem;
 
-  constructor() { };
-  
+  constructor() {
+
+  }
+
   ngOnInit(): void {}
-  
+
   ngAfterViewInit() {
-    let containerDimension = this.container.nativeElement.getBoundingClientRect();
-    let canvasDimension = fitDimension( createDimension(this.config.columns, this.config.rows) , containerDimension  );
+    let containerDimension =
+      this.container.nativeElement.getBoundingClientRect();
+    let canvasDimension = fitDimension(
+      createDimension(this.config.columns, this.config.rows),
+      containerDimension
+    );
 
-    console.log( containerDimension, canvasDimension, this.container.nativeElement )
     this.canvas.nativeElement.width = canvasDimension.width;
-    this.canvas.nativeElement.height =  canvasDimension.height;
+    this.canvas.nativeElement.height = canvasDimension.height;
 
-    if ( containerDimension.height === canvasDimension.height) this.canvas.nativeElement.style.height = "100%";
-    else this.canvas.nativeElement.style.width = "100%";
+    if (containerDimension.height === canvasDimension.height)
+      this.canvas.nativeElement.style.height = '100%';
+    else this.canvas.nativeElement.style.width = '100%';
 
     this.engine = new Ecosystem(this.config);
 
@@ -44,12 +65,13 @@ export class UniverseCardComponent implements OnInit {
     this.initDragBehavior();
   }
 
-  initDragBehavior(){
-    new DragListener(this.canvas.nativeElement, () => {
-      console.log( "Dragging ")
-    }).onDragEnd(() => {
+  initDragBehavior() {
+    new DragListener(this.canvas.nativeElement, () => {}).onDragEnd(() => {
       this.DropEvent.emit();
     });
-    
+  }
+
+  @computed({}) get target(){
+    return `/ecosystem/${this.config.name}`;
   }
 }

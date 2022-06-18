@@ -30,6 +30,8 @@
     "@scullyio/scully": "^2.1.0",
     "@scullyio/scully-plugin-puppeteer": "^2.1.0",
     "game-of-life-engine": "file:../engine-interface",
+    "mobx": "^6.6.0",
+    "mobx-angular": "^4.5.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

@@ -13,12 +13,11 @@ import {
   ElementRef,
   EventEmitter,
 } from '@angular/core';
-import { configuration } from './config';
-import { AreaSelectionEvent } from './type';
-import { Store } from '@ngrx/store';
-import { togglePanel } from '../../state/simulation/panel/actions';
 import Channel from './Channel';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state';
+import { configuration } from './config';
+import { togglePanel } from '../../state/simulation/panel/actions';
 
 @Component({
   selector: 'app-canvas',
@@ -42,9 +41,9 @@ export class CanvasComponent {
   channel = new Channel();
 
   ngAfterViewInit(): void {
-    // window.addEventListener("mousedown", () => {
-    //   this.optionPromptIsVisible = false;
-    // });
+    window.addEventListener("mouseup", () => {
+      this.optionPromptIsVisible = false;
+    });
 
     this.InitializationEvent.emit({ channel: this.channel });
     this.initChanelCommunication();
@@ -107,13 +106,12 @@ export class CanvasComponent {
   }
 
   saveCurrentSelection() {
-    console.log( this.tempSelection )
     if (this.tempSelection)
       this.channel.diffuse({
         name: 'save-as-component',
         component: this.tempSelection,
       });
-  };
+  }
 
   constructor(private store: Store<AppState>) {}
 
@@ -122,23 +120,27 @@ export class CanvasComponent {
   }
 
   initChanelCommunication() {
-    this.channel.registerListener(
-      ['paste-component'],
-      (event) => {
-        if (!event.component?.directive_composition) return;
+    this.channel.registerListener(['paste-component'], (event) => {
+      if (!event.component?.directive_composition) return;
 
-        const cell = this.renderer.get_hovered_cell();
+      const cell = this.renderer.get_hovered_cell();
 
-        if (!cell) return;
+      if (!cell) return;
 
-        console.log(cell), console.log(event.component?.directive_composition);
-        this.engine.register_directive(
-          'temp',
-          event.component?.directive_composition
-        );
+      this.engine.register_directive(
+        'temp',
+        event.component?.directive_composition
+      );
 
-        this.engine.integrate_directive(`->${cell[0]}, -|temp.${cell[1]},`);
-      },
-    );
+      this.engine.integrate_directive(`->${cell[0]}, -|temp.${cell[1]},`);
+    });
+  }
+
+  zoom() {
+    this.renderer.zoom(-200, false);
+  }
+
+  unZoom() {
+    this.renderer.zoom(200, false);
   }
 }

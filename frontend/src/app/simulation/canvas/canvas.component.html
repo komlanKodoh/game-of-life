@@ -1,8 +1,8 @@
 <canvas #canvas class=" bg-zinc-900 h-full w-full"></canvas>
 
 <div class="absolute top-1 right-1 text-white text-4xl grid grid-cols-2 grid-rows-2 gag-1">
-    <app-icon-plus class="w-8 col-start-2 bg-green-500 p-3 rounded shadow-lg shadow-black"></app-icon-plus>
-    <app-icon-minus class="w-8 col-start-1 bg-green-500 p-3 rounded shadow-lg shadow-black"></app-icon-minus>
+    <app-icon-plus (click)="zoom()" class="w-8 col-start-2 bg-green-500 p-3 rounded shadow-lg shadow-black"></app-icon-plus>
+    <app-icon-minus (click)="unZoom()" class="w-8 col-start-1 bg-green-500 p-3 rounded shadow-lg shadow-black"></app-icon-minus>
 </div>
 
 <div class="absolute top-1 left-1 text-white text-4xl grid grid-cols-2 grid-rows-2 gap-1 ">
@@ -11,7 +11,6 @@
     <app-pause-run class="w-8 p-2 col-start-2 row-start-2 bg-green-500 rounded shadow-lg shadow-black"
         [paused]="!runner.isRunning" (click)="runner.toggle()"></app-pause-run>
 </div>
-
 
 <app-icon-menu (click)="toggle()"
     class="bg-green-500 p-2 rounded shadow-lg shadow-black active:shadow-none absolute bottom-5 w-8 left-1/2 -translate-x-1/2 ">
