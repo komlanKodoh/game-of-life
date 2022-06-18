@@ -5,6 +5,7 @@ import Middleware from "../../middlewares";
 import {
   BadRequestError,
   InvalidCredentialError,
+  NotFoundError,
 } from "../../error/CustomErrors";
 
 const router = new utils.api.Router();
@@ -23,6 +24,22 @@ router.get("/", async (ctx) => {
     .limit(limit)
     .exec();
 });
+
+router.get("/unique/:name", async (ctx) => {
+  let name = ctx.params.name as string;
+  let user = ctx.user;
+
+  let ecosystem = (await EcosystemRepository.query({ name }).exec())[0];
+
+  if ( !ecosystem ) throw NotFoundError("Ecosystem with given name does not exist");
+
+  console.log( ecosystem.owner_id, user?.id)
+  if ( ecosystem.public === false && (!user || ecosystem.owner_id !== user.id )) throw InvalidCredentialError("Ecosystem is private and user does not have necessary permission");
+
+  ctx.body = ecosystem;
+});
+
+
 
 router.use(Middleware.requireUser);
 

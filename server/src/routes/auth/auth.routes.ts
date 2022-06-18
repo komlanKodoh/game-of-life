@@ -31,7 +31,13 @@ router.get("/refreshToken", async (ctx) => {
 
   let newToken = Auth.Service.refreshToken(refreshToken);
   ctx.body =  newToken;
-
 });
 
+
+router.get("/logout", async (ctx) => {
+  ctx.cookies.set(
+    Config.REFRESH_TOKEN_COOKIE_NAME,
+    "see you"
+  );
+})
 export default router.routes();

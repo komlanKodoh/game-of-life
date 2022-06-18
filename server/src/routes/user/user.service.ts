@@ -1,8 +1,9 @@
+
 import { UserRepository } from "./User";
 import bcrypt from "bcrypt";
 import Config from "../../config";
 import utils from "../../utils";
-import { InvalidCredentialError } from "../../error/CustomErrors";
+import { InvalidCredentialError, ResourceConflicting } from "../../error/CustomErrors";
 
 export interface UserCredentials {
   username: string;
@@ -17,7 +18,11 @@ export const createUser = async (userCredentials: UserCredentials) => {
     password: await bcrypt.hash(userCredentials.password, Config.HASH_STRENGTH),
   };
 
-  UserRepository.create(user);
+  const existingUser = (await UserRepository.query("username").eq(user.username).exec())[0];
+
+  if ( existingUser ) throw ResourceConflicting("User with username already exists");
+
+  await UserRepository.create(user);
 };
 
 export const deleteUser = async (credentials: UserCredentials) => {

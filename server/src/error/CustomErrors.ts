@@ -12,7 +12,12 @@ export const BadRequestError: CustomError = (message: string) => ({
   message,
 });
 
-export const NotFoundError : CustomError = (message: string) => ({
+export const NotFoundError: CustomError = (message: string) => ({
   status: 404,
-  message
-})
+  message,
+});
+
+export const ResourceConflicting: CustomError = (message: string) => ({
+  status: 409,
+  message,
+});

@@ -41,6 +41,8 @@ router.get("/", async (ctx) => {
 
   const user = (await UserRepository.query("id").eq(ctx.user.id).exec())[0] as User;
 
+  if ( !user ) throw InvalidCredentialError("User does not exist");
+  
   ctx.body = {
     id: user.id,
     username: user.username
