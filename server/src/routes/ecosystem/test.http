@@ -1,7 +1,7 @@
 
 ### Add item 
 POST http://localhost:3000/api/ecosystem HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFjYzBiNzY0LWZiZWEtNDE0MS1hNjdkLWQ3ZDY1ZWJhMTE4MSIsImlhdCI6MTY1NTQxNzg0MiwiZXhwIjoxNjU1NDIxNDQyfQ.YtS1FwMkZxA4ccdaSJlO6nNhGTGfFLyBQLWb9GeI51w
+Authorization: qwerty eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFjYzBiNzY0LWZiZWEtNDE0MS1hNjdkLWQ3ZDY1ZWJhMTE4MSIsImlhdCI6MTY1NTQxNzg0MiwiZXhwIjoxNjU1NDIxNDQyfQ.YtS1FwMkZxA4ccdaSJlO6nNhGTGfFLyBQLWb9GeI51w
 content-type: application/json
 
 {
@@ -25,4 +25,4 @@ GET http://localhost:3000/api/ecosystem?name=3
 ### Get item owned by the request maker
 
 GET http://localhost:3000/api/ecosystem/mine?name=3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFjYzBiNzY0LWZiZWEtNDE0MS1hNjdkLWQ3ZDY1ZWJhMTE4MSIsImlhdCI6MTY1NTQxNzg0MiwiZXhwIjoxNjU1NDIxNDQyfQ.YtS1FwMkZxA4ccdaSJlO6nNhGTGfFLyBQLWb9GeI51w
+Authorization: qwerty eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFjYzBiNzY0LWZiZWEtNDE0MS1hNjdkLWQ3ZDY1ZWJhMTE4MSIsImlhdCI6MTY1NTQxNzg0MiwiZXhwIjoxNjU1NDIxNDQyfQ.YtS1FwMkZxA4ccdaSJlO6nNhGTGfFLyBQLWb9GeI51w

@@ -11,6 +11,7 @@ export class Ecosystem extends Document {
 
   rows!: number;
   columns!: number;
+  description!: string;
 
   directive_composition!: string;
   directives?: [name: string, definition: string][];
@@ -26,6 +27,7 @@ const EcosystemSchema = new dynamoose.Schema(
 
     rows: Number,
     columns: Number,
+    description:String,
 
     directive_composition: String,
     directives: {

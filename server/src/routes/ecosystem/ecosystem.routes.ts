@@ -52,6 +52,14 @@ router.post("/", async (ctx) => {
   });
 });
 
+router.put("/", async ( ctx) => {
+  const ecosystem: Ecosystem = ctx.request.body.ecosystem;
+
+  if ( !ctx.user ||  ecosystem.owner_id !== ctx.user.id ) throw InvalidCredentialError();
+
+  await EcosystemRepository.update(ecosystem);
+})
+
 router.get("/mine", async (ctx) => {
   let limit = ctx.query.limit || 15;
 
