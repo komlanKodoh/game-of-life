@@ -109,6 +109,14 @@ export default class Ecosystem {
   }
 
   /**
+   * Returns the state of a given cell at the previous iteration
+   */
+
+   private get_previous_cell_state(cell: Cell) {
+    return this.engine.get_cell_state(...cell);
+  }
+
+  /**
    * Iterate over all cells in the universe
    */
   for_each_cell(cb: (cell: Cell, state: number) => void, bounds?: Bounds) {

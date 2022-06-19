@@ -60,7 +60,7 @@ export default class Renderer {
 
     const cell: Cell = [cell_row, cell_column];
 
-    if (!isWithinBounds(cell, this.getBounds())) return null;
+    if (!isWithinBounds(cell, this.get_bounds())) return null;
 
     return cell;
   }
@@ -104,7 +104,7 @@ export default class Renderer {
     }
 
     this.scene.resize(previousWidth + delta);
-    
+
     if (focus_mouse) {
       // Refocus of the scene on current mouse position;
       this.scene.x =
@@ -114,15 +114,16 @@ export default class Renderer {
       this.scene.y =
         this.mouse.y -
         (this.scene.height * (this.mouse.y - this.scene.y)) / previousHeight;
-
     } else {
       this.scene.x =
-        this.scene.x + this.scene.width/2 -
-        (this.scene.width * (this.scene.width/2)) / previousWidth;
+        this.scene.x +
+        this.scene.width / 2 -
+        (this.scene.width * (this.scene.width / 2)) / previousWidth;
 
       this.scene.y =
-        this.scene.y + this.scene.height / 2 -
-        (this.scene.height * (this.scene.height /2 )) / previousHeight;
+        this.scene.y +
+        this.scene.height / 2 -
+        (this.scene.height * (this.scene.height / 2)) / previousHeight;
     }
 
     this.scene.fit(this.canvas.width, this.canvas.height);
@@ -148,7 +149,7 @@ export default class Renderer {
 
       const cell: Cell = [cell_row, cell_column];
 
-      if (!isWithinBounds(cell, this.getBounds())) return;
+      if (!isWithinBounds(cell, this.get_bounds())) return;
 
       this.engine.toggle([cell_row, cell_column]);
     });
@@ -166,7 +167,8 @@ export default class Renderer {
 
     return this;
   }
-  getBounds(): Bounds {
+
+  get_bounds(): Bounds {
     return {
       top: 0,
       bottom: this.engine.rows - 1,
@@ -290,7 +292,7 @@ export default class Renderer {
   }
 
   /** Returns canvas rendering context */
-  getRenderingContext() {
+  get_rendering_context() {
     if (this.ctx) {
       return this.ctx;
     }
@@ -334,14 +336,22 @@ export default class Renderer {
         const cell_x = cell[1] * this.SIZE;
         const cell_y = cell[0] * this.SIZE;
 
-        Renderer.rectangle(
-          ctx,
+        // Renderer.rectangle(
+        //   ctx,
+        //   this.scene.map_dimension(cell_x),
+        //   this.scene.map_dimension(cell_y),
+        //   this.scene.map_dimension(this.SIZE - this.PADDING),
+        //   this.scene.map_dimension(this.SIZE - this.PADDING),
+        //   this.scene.map_dimension(this.RADIUS)
+        // );
+
+        ctx.fillRect(
           this.scene.map_dimension(cell_x),
           this.scene.map_dimension(cell_y),
           this.scene.map_dimension(this.SIZE - this.PADDING),
-          this.scene.map_dimension(this.SIZE - this.PADDING),
-          this.scene.map_dimension(this.RADIUS)
+          this.scene.map_dimension(this.SIZE - this.PADDING)
         );
+  
 
         ctx.fillStyle = `rgba( 0 ,0,0, 0.1)`;
 
@@ -351,7 +361,7 @@ export default class Renderer {
       this.living_area_is_valid = true;
     }
 
-    this.getRenderingContext().drawImage(
+    this.get_rendering_context().drawImage(
       this.living_area_canvas,
       this.scene.map_x(0),
       this.scene.map_y(0)
@@ -359,7 +369,7 @@ export default class Renderer {
   }
 
   render() {
-    const ctx = this.getRenderingContext();
+    const ctx = this.get_rendering_context();
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     ctx.lineWidth = this.scene.map_dimension(this.SIZE / 10);
@@ -379,14 +389,14 @@ export default class Renderer {
         return;
       }
 
-      Renderer.rectangle(
-        ctx,
-        this.scene.map_x(cell_x),
-        this.scene.map_y(cell_y),
-        this.scene.map_dimension(this.SIZE - this.PADDING),
-        this.scene.map_dimension(this.SIZE - this.PADDING),
-        this.scene.map_dimension(this.RADIUS)
-      );
+      // Renderer.rectangle(
+      //   ctx,
+      //   this.scene.map_x(cell_x),
+      //   this.scene.map_y(cell_y),
+      //   this.scene.map_dimension(this.SIZE - this.PADDING),
+      //   this.scene.map_dimension(this.SIZE - this.PADDING),
+      //   this.scene.map_dimension(this.RADIUS)
+      // );
 
       const color = `${state / 2} , ${state / 1.3} , ${state / 1.7}`;
       ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.2})`;
@@ -395,32 +405,37 @@ export default class Renderer {
         ctx.fillStyle = '#0ff55f';
       }
 
-      ctx.fill();
+      ctx.fillRect(
+        this.scene.map_x(cell_x),
+        this.scene.map_y(cell_y),
+        this.scene.map_dimension(this.SIZE - this.PADDING),
+        this.scene.map_dimension(this.SIZE - this.PADDING)
+      );
 
       post_process && post_process();
     });
   }
 
-  private static rectangle(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    radius: number
-  ) {
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.closePath();
-  }
+  // private static rectangle(
+  //   ctx: CanvasRenderingContext2D,
+  //   x: number,
+  //   y: number,
+  //   width: number,
+  //   height: number,
+  //   radius: number
+  // ) {
+  //   ctx.beginPath();
+  //   ctx.moveTo(x + radius, y);
+  //   ctx.lineTo(x + width - radius, y);
+  //   ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  //   ctx.lineTo(x + width, y + height - radius);
+  //   ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  //   ctx.lineTo(x + radius, y + height);
+  //   ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  //   ctx.lineTo(x, y + radius);
+  //   ctx.quadraticCurveTo(x, y, x + radius, y);
+  //   ctx.closePath();
+  // }
 
   to_cell_coordinate(coordinate: number) {
     return Math.floor(coordinate / this.SIZE);
