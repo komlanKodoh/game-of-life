@@ -43,7 +43,7 @@ export default class Ecosystem {
   register_directive(name: string, directive: Directive) {
     this.parser.register_directive(name, directive);
   }
-  
+
   /** register a group of rendering directive ( component ) that can then be used
    * in the main directive composition.
    */
@@ -69,7 +69,7 @@ export default class Ecosystem {
         break;
       }
 
-      this.bless(cell);
+      this.bless(Cell.create(cell[0] % this.rows, cell[1] % this.columns));
     }
   }
 

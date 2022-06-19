@@ -53,14 +53,14 @@ export default class Renderer {
   }
 
   /** Returns the cell currently hovered by the mouse */
-  get_hovered_cell(): Cell | null{
+  get_hovered_cell(): Cell | null {
     const cell_column = Math.floor(this.mouse.x / this.SIZE);
 
     const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
     const cell: Cell = [cell_row, cell_column];
 
-    if (!isWithinBounds(cell, this.getBounds())) return null ;
+    if (!isWithinBounds(cell, this.getBounds())) return null;
 
     return cell;
   }
@@ -82,22 +82,30 @@ export default class Renderer {
   configure_zoom_control() {
     window.addEventListener('wheel', (event) => {
       if (!Keyboard.keys_pushed.has('Control')) return;
+      this.zoom(event.deltaY, true);
+    });
 
-      this.living_area_is_valid = false;
+    return this;
+  }
 
-      let delta = Math.floor(event.deltaY);
-      const previousWidth = this.scene.width;
-      const previousHeight = this.scene.height;
-      const min_scene_width = 10 * this.SIZE;
+  /** Control camera position */
+  zoom(deltaValue: number, focus_mouse: boolean) {
+    this.living_area_is_valid = false;
 
-      if (previousWidth + delta < min_scene_width) {
-        if (previousWidth === min_scene_width) return;
+    let delta = Math.floor(deltaValue);
+    const previousWidth = this.scene.width;
+    const previousHeight = this.scene.height;
+    const min_scene_width = 10 * this.SIZE;
 
-        delta = min_scene_width - previousWidth;
-      }
+    if (previousWidth + delta < min_scene_width) {
+      if (previousWidth === min_scene_width) return;
 
-      this.scene.resize(previousWidth + delta);
+      delta = min_scene_width - previousWidth;
+    }
 
+    this.scene.resize(previousWidth + delta);
+    
+    if (focus_mouse) {
       // Refocus of the scene on current mouse position;
       this.scene.x =
         this.mouse.x -
@@ -107,10 +115,17 @@ export default class Renderer {
         this.mouse.y -
         (this.scene.height * (this.mouse.y - this.scene.y)) / previousHeight;
 
-      this.scene.fit(this.canvas.width, this.canvas.height);
-    });
+    } else {
+      this.scene.x =
+        this.scene.x + this.scene.width/2 -
+        (this.scene.width * (this.scene.width/2)) / previousWidth;
 
-    return this;
+      this.scene.y =
+        this.scene.y + this.scene.height / 2 -
+        (this.scene.height * (this.scene.height /2 )) / previousHeight;
+    }
+
+    this.scene.fit(this.canvas.width, this.canvas.height);
   }
 
   /** configure toggle between dead/alive cell state; */
@@ -184,7 +199,7 @@ export default class Renderer {
     const selector = document.createElement('div');
 
     selector.style.opacity = '0';
-    selector.style.pointerEvents = "none";
+    selector.style.pointerEvents = 'none';
     selector.classList.add('canvas-cell-selector');
     this.canvas.parentNode?.appendChild(selector);
 
@@ -204,7 +219,6 @@ export default class Renderer {
 
       selector.style.width = to_pixel(Math.abs(-event.x + event.drag_star_x));
       selector.style.height = to_pixel(Math.abs(-event.y + event.drag_star_y));
-
     })
       .onDragStart(() => {
         start_x = this.mouse.x;
@@ -309,8 +323,8 @@ export default class Renderer {
 
       const visible_area =
         (this.scene.width * this.scene.height) / (this.SIZE * this.SIZE);
-      
-      if ( visible_area > 90000) return;
+
+      if (visible_area > 90000) return;
 
       this.engine.for_each_cell((cell, state) => {
         if (state !== 0) {
