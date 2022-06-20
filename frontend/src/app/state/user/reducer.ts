@@ -14,6 +14,9 @@ export type Token = {
 
 export type EcosystemRecord = GameOfLifeConfig & {
   name: string;
+  owner_id?: string;
+  public?: boolean;
+  description?: string;
   status: 'saving-success' | 'saving-failure' | 'saving';
 };
 

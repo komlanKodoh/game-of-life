@@ -10,7 +10,6 @@ import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from './components/components.module';
 import { AppRouterModule } from '../app-router.module';
 
-
 @NgModule({
   declarations: [
     CanvasComponent,
@@ -26,6 +25,11 @@ import { AppRouterModule } from '../app-router.module';
     BrowserAnimationsModule,
   ],
 
-  exports: [CanvasComponent, ConfigurationPanelComponent, ContainerComponent],
+  exports: [
+    CanvasComponent,
+    ConfigurationPanelComponent,
+    ComponentsModule,
+    ContainerComponent,
+  ],
 })
 export class SimulationModule {}

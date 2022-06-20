@@ -1,1 +1,22 @@
-<app-overlay>Hello</app-overlay>
+<app-overlay>
+    <ng-template [ngIf]="ecosystemRecord">
+        <div class=" py-6 px-10 w-[65ch] bg-black  text-white max-w-full m-auto relative">
+            <h1 class="text-xl "> {{ ecosystemRecord?.name }} - {{ ecosystemRecord.public ? "public" : "private"}} </h1>
+
+
+            <app-universe-display class="w-full" [config]="ecosystemRecord" [ratio]="70" [visible]="true">
+            </app-universe-display> <br>
+
+            <ul>
+                <li>rows : &nbsp; <span class=" text-purple-600 "> {{ecosystemRecord.rows}}</span></li>
+                <li>columns: &nbsp; <span class=" text-purple-600 "> {{ecosystemRecord.rows}}</span> </li>
+            </ul> <br>
+
+            <p>
+                {{ecosystemRecord.description}}
+            </p>
+
+            <a *ngIf="isMine" mat-stroked-button color="primary" appearance="flat" [routerLink]="['/ecosystem-edit', name]">Edit</a>
+        </div>
+    </ng-template>
+</app-overlay>

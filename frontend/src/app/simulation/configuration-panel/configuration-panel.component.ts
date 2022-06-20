@@ -49,6 +49,11 @@ export class ConfigurationPanelComponent implements OnInit {
     this.store.dispatch(togglePanel());
   }
 
+  tabIdx: number = 0;
+  handleTabChange( idx: number ){
+    this.tabIdx = idx
+  }
+
   logout(){
     this.userService.logout();
   }

@@ -57,6 +57,9 @@ router.put("/", async ( ctx) => {
 
   if ( !ctx.user ||  ecosystem.owner_id !== ctx.user.id ) throw InvalidCredentialError();
 
+  delete ecosystem.createdAt;
+  delete ecosystem.updatedAt;
+  
   await EcosystemRepository.update(ecosystem);
 })
 

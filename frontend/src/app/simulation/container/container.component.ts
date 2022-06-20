@@ -51,7 +51,7 @@ import { UserService } from 'src/app/account/user.service';
       state(
         'true',
         style({
-          transform: 'translateX(18rem) scale(var(--scale))',
+          transform: 'translateX(24rem) scale(var(--scale))',
         })
       ),
     ]),

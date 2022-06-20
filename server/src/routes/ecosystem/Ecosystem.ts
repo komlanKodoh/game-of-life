@@ -15,6 +15,9 @@ export class Ecosystem extends Document {
 
   directive_composition!: string;
   directives?: [name: string, definition: string][];
+
+  createdAt?: any;
+  updatedAt?: any;
 }
 
 const EcosystemSchema = new dynamoose.Schema(

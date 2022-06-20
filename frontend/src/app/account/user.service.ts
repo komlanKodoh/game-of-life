@@ -27,18 +27,26 @@ export class UserService {
     this.appState.select(selectUser).subscribe((user) => (this.user = user));
   }
 
-  async createUser(username: string, password: string) {
+  async createUser(username: string, password: string): Promise<null | string> {
     try {
       await lastValueFrom(
-        this.http.post('/api/user/', {
-          user: {
-            username,
-            password,
+        this.http.post(
+          '/api/user/',
+          {
+            user: {
+              username,
+              password,
+            },
           },
-        })
+          {
+            responseType: "text"
+          }
+        )
       );
-    } catch (e: any) {
-      return e.error.error.message;
+      return null;
+    } catch (response: any) {
+      let error = JSON.parse( response.error );
+      return error.error.message;
     }
   }
 

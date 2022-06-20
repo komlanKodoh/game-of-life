@@ -1,4 +1,4 @@
-<div class=" bg-green-400 w-full h-full overflow-auto">
+<div class=" bg-green-400 w-full h-full overflow-auto scroll">
 
 
     <!-- Side bar header  -->
@@ -6,17 +6,16 @@
 
         <div *ngIf="userProfile" [matMenuTriggerFor]="menu"
             class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-slate-200 bg-slate-900 mx-2">
-            <span class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                {{userProfile.username[0] }} </span>
+            <span class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"> {{userProfile.username[0] }} </span>
         </div>
 
-        <div *ngIf="!userProfile"
-            class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-slate-200 bg-slate-900 mx-2">
+        <a *ngIf="!userProfile"
+            class="block p-7 rounded shadow-lg shadow-gray-700 relative text-xl text-slate-200 bg-slate-900 mx-2" [routerLink]=" ['/login'] ">
 
-            <a [routerLink]=" ['/login'] " *ngIf="!userProfile"
+            <span  *ngIf="!userProfile"
                 class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                ? </a>
-        </div>
+                ? </span>
+        </a>
     </div>
 
 
@@ -30,13 +29,13 @@
         </button>
     </mat-menu>
 
-    <mat-tab-group preserveContent>
+    <mat-tab-group (selectedIndexChange)="handleTabChange($event)" preserveContent>
 
         <mat-tab label="MarketPlace" class="h-full w-full ">
 
             <ul class="px-2 w-full overflow-hidden">
                 <li *ngFor="let ecosystem of  marketplaceEcosystems" class="my-2">
-                    <app-universe-card to="public" (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
+                    <app-universe-card [visible]="tabIdx===0" (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
                     </app-universe-card>
                 </li>
             </ul>
@@ -45,7 +44,7 @@
         <mat-tab label="Private" class="h-full w-full overflow-hidden ">
             <ul class="px-2 w-full overflow-hidden">
                 <li *ngFor="let ecosystem of ecosystems" class="my-2">
-                    <app-universe-card to="user" (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
+                    <app-universe-card [visible]="tabIdx===1" (DropEvent)="propagateDropEvent(ecosystem)" [config]="ecosystem">
                     </app-universe-card>
                 </li>
             </ul>

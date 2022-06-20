@@ -15,10 +15,13 @@
         </mat-form-field>
 
 
-        <br />
+        <mat-error *ngIf="error" class="m-y: 5em;" style="margin-top: 1em; margin-bottom: 1em;">
+            {{ error }}
+        </mat-error>
 
-        <button (click)="login()" mat-flat-button color="primary" class="w-full block">Login</button> <br />
-
+        <button (click)="login()" style="margin-top: 1em; margin-bottom: 2em;" mat-flat-button color="primary" class="w-full block relative " [disabled]="isLoading">Login
+            <app-loading-indicator *ngIf="isLoading" class="absolute center-absolute"> </app-loading-indicator>
+        </button>
 
         <span class="block my-4"> Don't have an account ?
             <a [routerLink]="['/sign-in']" class=" text-purple-600 ">create account </a>

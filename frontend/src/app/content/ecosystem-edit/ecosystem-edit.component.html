@@ -1,0 +1,39 @@
+<app-overlay>
+    <ng-template [ngIf]="ecosystemRecord">
+        <form [formGroup]="ecosystemRecordForm"
+            class=" py-6 px-10 w-[65ch] bg-black  text-white max-w-full m-auto relative">
+            <h1 class="text-xl "> {{ ecosystemRecord?.name }} - {{ ecosystemRecord.public ? "public" : "private"}} </h1>
+
+
+            <app-universe-display class="w-full" [config]="ecosystemRecord" [ratio]="70" [visible]="true">
+            </app-universe-display> <br>
+
+            <ul>
+                <li>rows : &nbsp; <span class=" text-purple-600 "> {{ecosystemRecord.rows}}</span></li>
+                <li>columns: &nbsp; <span class=" text-purple-600 "> {{ecosystemRecord.rows}}</span> </li>
+            </ul> <br>
+
+            <mat-form-field class="w-full">
+                <textarea class="w-full" matInput formControlName="description"
+                    placeholder="Describe the cool characteristics of this configuration">
+                </textarea>
+            </mat-form-field>
+
+            <mat-radio-group formControlName="public" aria-label="Select an option" class="flex gap-3 my-6">
+                <mat-radio-button name="public" [value]="true">Public</mat-radio-button>
+                <mat-radio-button name="public" [value]="false">Private</mat-radio-button>
+            </mat-radio-group>
+
+
+            <div class="flex">
+
+                <button mat-raised-button color="primary" style="margin-right: 1em;" class=" block p-5  m-5"
+                    (click)="save()">Save</button>
+                <button mat-stroked-button color="primary">Cancel</button>
+
+                <button mat-flat-button style="margin-left: auto;" color="warn"> Delete</button>
+            </div>
+
+        </form>
+    </ng-template>
+</app-overlay>

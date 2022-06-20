@@ -33,7 +33,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatProgressBarModule,
     MatMenuModule,
 
-    // MatRadioModule,
+    MatRadioModule,
     // MatDatepickerModule,
     // MatCheckboxModule,
     // MatAutocompleteModule,

@@ -32,6 +32,8 @@ export const deleteUser = async (credentials: UserCredentials) => {
 };
 
 export const getUser = async (credentials: UserCredentials) => {
+  if ( !credentials.username ) throw InvalidCredentialError("wrong username or password");
+
   let user = (
     await UserRepository.query("username").eq(credentials.username).exec()
   )[0];

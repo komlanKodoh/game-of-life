@@ -14,10 +14,15 @@
             <input matInput type="password" class="block" formControlName="password">
         </mat-form-field>
 
+        <mat-error *ngIf="error" class="m-y: 5em;" style="margin-top: 1em; margin-bottom: 1em;">
+            {{ error }}
+        </mat-error>
+        
 
-        <br />
-
-        <button (click)="register()" mat-flat-button color="primary" class="w-full block">Create account</button> <br />
+        <button (click)="register()" style="margin-top: 1em; margin-bottom: 2em;" mat-flat-button color="primary" class="w-full block relative " [disabled]="isLoading">
+            Create Account
+            <app-loading-indicator *ngIf="isLoading" class="absolute center-absolute"> </app-loading-indicator>
+        </button>
 
 
         <span class="block my-4"> Already have an account ?

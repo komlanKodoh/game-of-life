@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location} from "@angular/common"
 
 @Component({
   selector: 'app-overlay',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OverlayComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _location: Location) { }
 
   ngOnInit(): void {
+  }
+
+  handleClick(){
+    this._location.back();
+  }
+  handleNestedClick(e: Event){
+    e.stopPropagation();
   }
 
 }

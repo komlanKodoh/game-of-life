@@ -6,14 +6,14 @@
 </div>
 
 <div class="absolute top-1 left-1 text-white text-4xl grid grid-cols-2 grid-rows-2 gap-1 ">
-    <app-icon-forward class="w-8 col-start-1 bg-green-500 p-2 rounded shadow-lg shadow-black active:shadow-none"
+    <app-icon-forward class="w-8 col-start-1 bg-purple-500 p-2 rounded shadow-lg shadow-black active:shadow-none"
         (click)="runner.moveForward()"></app-icon-forward>
-    <app-pause-run class="w-8 p-2 col-start-2 row-start-2 bg-green-500 rounded shadow-lg shadow-black"
+    <app-pause-run class="w-8 p-2 col-start-2 row-start-2 bg-purple-500 rounded shadow-lg shadow-black"
         [paused]="!runner.isRunning" (click)="runner.toggle()"></app-pause-run>
 </div>
 
 <app-icon-menu (click)="toggle()"
-    class="bg-green-500 p-2 rounded shadow-lg shadow-black active:shadow-none absolute bottom-5 w-8 left-1/2 -translate-x-1/2 ">
+    class=" bg-green-500 p-2 rounded shadow-lg shadow-black active:shadow-none absolute bottom-5 w-8 left-1/2 -translate-x-1/2 ">
 </app-icon-menu>
 
 

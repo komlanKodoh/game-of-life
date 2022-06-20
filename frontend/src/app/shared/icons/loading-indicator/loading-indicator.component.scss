@@ -1,0 +1,70 @@
+$primary: #4fed9c;
+$secondary: #c556ea;
+$third: #ea26e4;
+
+div.elasticball {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: 2rem;
+    
+    &:before {
+      content: '';
+      width: 2rem;
+      height: 2rem;
+      bottom: 0;
+      opacity: 0;
+      border-radius: 50%;
+      position: absolute;
+      background-color: $secondary;
+      transform: scaleY(0.5) translateY(1rem);
+      animation: elasticball-bottom .5s .3s infinite;
+    }
+    
+    &__ball {
+      width: 1.5rem;
+      height: 1.5rem;
+      transform-origin: 50% 100%;
+      animation: elasticball .5s infinite cubic-bezier(1,-0.01,0,1);
+      
+      i {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 50%;
+        background-color: $secondary;
+        
+        animation: elasticball-color 2s infinite;
+      }
+    }
+  }
+  @keyframes elasticball {
+    0% {
+      transform: translateY(0) scaleY(1)
+    } 50% {
+      transform: translateY(-4rem) scaleY(.7)
+    } 100% {
+      transform: translateY(0) scaleY(1)
+    }
+  }
+  @keyframes elasticball-color {
+    0% {
+      background-color: $secondary;
+    } 30% {
+      background-color: $secondary;
+    } 50% {
+      background-color: $third;
+    } 80% {
+      background-color: $third;
+    }
+  }
+  @keyframes elasticball-bottom {
+    0% {
+      transform: scale(1, 0.5) translateY(1rem);
+      opacity: 0.3;
+    } 100% {
+      transform: scale(2, 0.5) translateY(1rem);
+      opacity: 0;
+    }
+  }
+  

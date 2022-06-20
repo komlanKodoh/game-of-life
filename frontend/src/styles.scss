@@ -1,10 +1,9 @@
-@import "./material.scss";
-
+@use "./material.scss";
 
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
@@ -12,25 +11,51 @@ body {
   height: 100vh;
 }
 
-
 .canvas-cell-selector {
-    background-color: rgba(44, 238, 238, 0.42);
-    border: 2px solid rgb(62, 62, 241);
-    top: 2px;
-    left: 2px;
+  background-color: rgba(44, 238, 238, 0.42);
+  border: 2px solid rgb(62, 62, 241);
+  top: 2px;
+  left: 2px;
 }
 
 .center-absolute {
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
-
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.scroll::-webkit-scrollbar-track {
+//   box-shadow: inset 0 0 6px rgba(22, 230, 70, 0.6);
+
+  background-color: black;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 10px;
+//   background-color: #11ed8a;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(33, 246, 239);
+  background-image: linear-gradient(
+    120deg,
+    rgb(215, 49, 237) 0%,
+    rgb(38, 183, 231) 25%,
+    rgb(70, 240, 141) 75%,
+    transparent
+  );
+}

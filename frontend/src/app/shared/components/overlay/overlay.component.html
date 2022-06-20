@@ -1,5 +1,5 @@
-<div class="flex fixed top-0 left-0 right-0 bottom-0 z-10 bg-black/80">
-    <div class=" max-w-[95%] m-auto bg-white">
+<div class="flex fixed top-0 left-0 right-0 bottom-0 z-10 bg-black/80" (click)="handleClick()">
+    <div class=" max-w-[95%] m-auto bg-white" (click)="handleNestedClick($event)">
         <ng-content></ng-content>
     </div>
 </div>

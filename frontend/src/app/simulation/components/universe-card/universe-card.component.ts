@@ -8,6 +8,8 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChange,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -25,53 +27,15 @@ import { computed } from 'mobx-angular';
 })
 export class UniverseCardComponent implements OnInit {
   @Input() config!: EcosystemRecord;
-  @Input() to!: 'public' | 'user';
-
-  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('container') container!: ElementRef;
+  @Input() visible!: boolean;
 
   @Output() DropEvent = new EventEmitter<GameOfLifeConfig>();
 
-  private engine!: Ecosystem;
+  constructor() {}
 
-  constructor() {
+  ngOnInit() {}
 
-  }
-
-  ngOnInit(): void {}
-
-  ngAfterViewInit() {
-    let containerDimension =
-      this.container.nativeElement.getBoundingClientRect();
-    let canvasDimension = fitDimension(
-      createDimension(this.config.columns, this.config.rows),
-      containerDimension
-    );
-
-    this.canvas.nativeElement.width = canvasDimension.width;
-    this.canvas.nativeElement.height = canvasDimension.height;
-
-    if (containerDimension.height === canvasDimension.height)
-      this.canvas.nativeElement.style.height = '100%';
-    else this.canvas.nativeElement.style.width = '100%';
-
-    this.engine = new Ecosystem(this.config);
-
-    new Renderer({
-      canvas: this.canvas.nativeElement,
-      engine: this.engine,
-    }).render();
-
-    this.initDragBehavior();
-  }
-
-  initDragBehavior() {
-    new DragListener(this.canvas.nativeElement, () => {}).onDragEnd(() => {
-      this.DropEvent.emit();
-    });
-  }
-
-  @computed({}) get target(){
+  @computed({}) get target() {
     return `/ecosystem/${this.config.name}`;
   }
 }

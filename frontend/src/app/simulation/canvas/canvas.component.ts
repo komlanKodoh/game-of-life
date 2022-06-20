@@ -103,6 +103,7 @@ export class CanvasComponent {
     new Runner(() => {
       this.renderer.render();
     }).start();
+    
   }
 
   saveCurrentSelection() {

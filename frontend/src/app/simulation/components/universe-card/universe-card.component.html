@@ -1,10 +1,11 @@
+<h2 class="bg-gray-200 text-slate-900 text-sm shadow-xl whitespace-nowrap shadow-slate-500 w-fit px-4 py-1 select-none">
+    {{config.name.slice(0,10)}}</h2>
 
-<h2 class="bg-gray-200 text-slate-900 text-sm shadow-xl whitespace-nowrap shadow-slate-500 w-fit px-4 py-1">{{config.name.slice(0,10)}}</h2>
-
-<a [routerLink]="[target]" class="row-start-2 self-end"  ariaCurrentWhenActive="page">
+<a [routerLink]="[target]" class="row-start-2 self-end bg-white shadow-lg rounded shadow-black/10 block w-fit" ariaCurrentWhenActive="page">
     <app-icon-expend class=""></app-icon-expend>
 </a>
 
-<div #container class=" pt-[50%] col-start-2 row-start-2 bg-slate-900 relative">
-    <canvas #canvas class="bg-slate-900 center-absolute "></canvas>
-</div>
+
+<app-universe-display [ratio]="50" (DropEvent)="DropEvent.emit($event)" class="w-full col-start-2 row-start-2 cursor-grab"
+    [config]="config" [visible]="visible">
+</app-universe-display>

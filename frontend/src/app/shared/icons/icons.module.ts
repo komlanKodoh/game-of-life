@@ -8,6 +8,7 @@ import { PauseRunComponent } from '../components/pause-run/pause-run.component';
 import { MenuComponent } from './menu/menu.component';
 import { MoreComponent } from './more/more.component';
 import { ExpendComponent } from './expend/expend.component';
+import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ExpendComponent } from './expend/expend.component';
     MenuComponent,
     MoreComponent,
     ExpendComponent,
+    LoadingIndicatorComponent,
   ],
   imports: [CommonModule],
   exports: [
@@ -27,7 +29,8 @@ import { ExpendComponent } from './expend/expend.component';
     ForwardComponent,
     MenuComponent,
     MoreComponent,
-    ExpendComponent
+    ExpendComponent,
+    LoadingIndicatorComponent
   ],
 })
 export class IconsModule {}

@@ -28,12 +28,24 @@ export class EcosystemService {
   }
 
   getEcosystem(name: string) {
-    return this.http.get<{ data: EcosystemRecord }>(`/api/ecosystem/unique/${name}`);
+    return this.http.get<{ data: EcosystemRecord }>(
+      `/api/ecosystem/unique/${name}`
+    );
   }
 
   getEcosystems() {
     return this.http.get<{ data: EcosystemRecord[] }>('/api/ecosystem', {
       params: {},
     });
+  }
+
+  updateEcosystem(ecosystem: EcosystemRecord) {
+    return this.http.put(
+      '/api/ecosystem',
+      {
+        ecosystem,
+      },
+      { responseType: 'text' }
+    );
   }
 }
