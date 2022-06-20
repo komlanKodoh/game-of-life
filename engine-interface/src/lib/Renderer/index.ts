@@ -2,6 +2,9 @@ import { sort_number, to_pixel } from '../../utils';
 import Cell from '../Cell';
 import Ecosystem from '../Ecosystem';
 import { isWithinBounds } from '../Util';
+import { Brush } from './Brushes/Brush';
+// import LowResolutionBrush from './Brushes/LowResolutionBrush';
+import MediumResolutionBrush from './Brushes/MediumResolutionBrush';
 
 import DragListener from './Interactions/DragListener';
 import Keyboard from './Interactions/Keyboard';
@@ -40,9 +43,12 @@ export default class Renderer {
   RADIUS = 2;
   PADDING = 4;
 
+  brush: Brush;
+
   constructor(config: RenderConfig) {
     this.engine = config.engine;
     this.canvas = config.canvas;
+    this.brush = new MediumResolutionBrush(this.scene, this.engine,  this.canvas,);
 
     this.fitCanvas();
     this.mouse = new Mouse(this.scene, this.canvas);
@@ -90,7 +96,7 @@ export default class Renderer {
 
   /** Control camera position */
   zoom(deltaValue: number, focus_mouse: boolean) {
-    this.living_area_is_valid = false;
+    // this.living_area_is_valid = false;
 
     let delta = Math.floor(deltaValue);
     const previousWidth = this.scene.width;
@@ -264,7 +270,6 @@ export default class Renderer {
    * the scene will change in size.
    */
   fitCanvas() {
-    this.living_area_is_valid = false;
 
     const { width, height } = this.canvas.getBoundingClientRect();
 
@@ -307,113 +312,69 @@ export default class Renderer {
     return this.ctx;
   }
 
-  living_area_canvas?: HTMLCanvasElement;
-  living_area_is_valid = false;
-  private prepare_living_area() {
-    if (!this.living_area_canvas || !this.living_area_is_valid) {
-      this.living_area_canvas = document.createElement('canvas');
-      const ctx = this.living_area_canvas.getContext(
-        '2d'
-      ) as CanvasRenderingContext2D;
+  // living_area_canvas?: HTMLCanvasElement;
+  // living_area_is_valid = false;
+  // private prepare_living_area() {
+  //   if (!this.living_area_canvas || !this.living_area_is_valid) {
+  //     this.living_area_canvas = document.createElement('canvas');
+  //     const ctx = this.living_area_canvas.getContext(
+  //       '2d'
+  //     ) as CanvasRenderingContext2D;
 
-      this.living_area_canvas.width = this.scene.map_dimension(
-        this.engine.columns * this.SIZE
-      );
-      this.living_area_canvas.height = this.scene.map_dimension(
-        this.engine.rows * this.SIZE
-      );
+  //     this.living_area_canvas.width = this.scene.map_dimension(
+  //       this.engine.columns * this.SIZE
+  //     );
+  //     this.living_area_canvas.height = this.scene.map_dimension(
+  //       this.engine.rows * this.SIZE
+  //     );
 
-      const visible_area =
-        (this.scene.width * this.scene.height) / (this.SIZE * this.SIZE);
+  //     const visible_area =
+  //       (this.scene.width * this.scene.height) / (this.SIZE * this.SIZE);
 
-      if (visible_area > 90000) return;
+  //     if (visible_area > 90000) return;
 
-      this.engine.for_each_cell((cell, state) => {
-        if (state !== 0) {
-          return;
-        }
+  //     this.engine.for_each_cell((cell, state) => {
+  //       if (state !== 0) {
+  //         return;
+  //       }
 
-        const cell_x = cell[1] * this.SIZE;
-        const cell_y = cell[0] * this.SIZE;
+  //       const cell_x = cell[1] * this.SIZE;
+  //       const cell_y = cell[0] * this.SIZE;
 
-        // Renderer.rectangle(
-        //   ctx,
-        //   this.scene.map_dimension(cell_x),
-        //   this.scene.map_dimension(cell_y),
-        //   this.scene.map_dimension(this.SIZE - this.PADDING),
-        //   this.scene.map_dimension(this.SIZE - this.PADDING),
-        //   this.scene.map_dimension(this.RADIUS)
-        // );
+  //       // Renderer.rectangle(
+  //       //   ctx,
+  //       //   this.scene.map_dimension(cell_x),
+  //       //   this.scene.map_dimension(cell_y),
+  //       //   this.scene.map_dimension(this.SIZE - this.PADDING),
+  //       //   this.scene.map_dimension(this.SIZE - this.PADDING),
+  //       //   this.scene.map_dimension(this.RADIUS)
+  //       // );
 
-        ctx.fillRect(
-          this.scene.map_dimension(cell_x),
-          this.scene.map_dimension(cell_y),
-          this.scene.map_dimension(this.SIZE - this.PADDING),
-          this.scene.map_dimension(this.SIZE - this.PADDING)
-        );
+  //       ctx.fillRect(
+  //         this.scene.map_dimension(cell_x),
+  //         this.scene.map_dimension(cell_y),
+  //         this.scene.map_dimension(this.SIZE - this.PADDING),
+  //         this.scene.map_dimension(this.SIZE - this.PADDING)
+  //       );
   
 
-        ctx.fillStyle = `rgba( 0 ,0,0, 0.1)`;
+  //       ctx.fillStyle = `rgba( 0 ,0,0, 0.1)`;
 
-        ctx.fill();
-      });
+  //       ctx.fill();
+  //     });
 
-      this.living_area_is_valid = true;
-    }
+  //     this.living_area_is_valid = true;
+  //   }
 
-    this.get_rendering_context().drawImage(
-      this.living_area_canvas,
-      this.scene.map_x(0),
-      this.scene.map_y(0)
-    );
-  }
+  //   this.get_rendering_context().drawImage(
+  //     this.living_area_canvas,
+  //     this.scene.map_x(0),
+  //     this.scene.map_y(0)
+  //   );
+  // }
 
   render() {
-    const ctx = this.get_rendering_context();
-
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    ctx.lineWidth = this.scene.map_dimension(this.SIZE / 10);
-
-    this.prepare_living_area();
-
-    this.engine.for_each_cell((cell, state) => {
-      const cell_x = cell[1] * this.SIZE;
-      const cell_y = cell[0] * this.SIZE;
-
-      const post_process =
-        (this.cell_rendering_directive &&
-          this.cell_rendering_directive(cell, ctx)) ||
-        false;
-
-      if (state === 0 && !post_process) {
-        return;
-      }
-
-      // Renderer.rectangle(
-      //   ctx,
-      //   this.scene.map_x(cell_x),
-      //   this.scene.map_y(cell_y),
-      //   this.scene.map_dimension(this.SIZE - this.PADDING),
-      //   this.scene.map_dimension(this.SIZE - this.PADDING),
-      //   this.scene.map_dimension(this.RADIUS)
-      // );
-
-      const color = `${state / 2} , ${state / 1.3} , ${state / 1.7}`;
-      ctx.fillStyle = `rgba( ${color}, ${state / (255 * 1.5) + 0.2})`;
-
-      if (state === 255) {
-        ctx.fillStyle = '#0ff55f';
-      }
-
-      ctx.fillRect(
-        this.scene.map_x(cell_x),
-        this.scene.map_y(cell_y),
-        this.scene.map_dimension(this.SIZE - this.PADDING),
-        this.scene.map_dimension(this.SIZE - this.PADDING)
-      );
-
-      post_process && post_process();
-    });
+    this.brush.render();
   }
 
   // private static rectangle(

@@ -112,8 +112,8 @@ export default class Ecosystem {
    * Returns the state of a given cell at the previous iteration
    */
 
-   private get_previous_cell_state(cell: Cell) {
-    return this.engine.get_cell_state(...cell);
+   public get_previous_cell_state(cell: Cell) {
+    return this.engine.get_previous_cell_state(...cell);
   }
 
   /**
