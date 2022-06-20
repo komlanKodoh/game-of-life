@@ -17,6 +17,7 @@ export class Universe {
 */
   kill(row: number, column: number): void;
 /**
+* Toggle state of given cell position
 * @param {number} row
 * @param {number} column
 */
@@ -29,6 +30,14 @@ export class Universe {
 */
   get_cell_state(row: number, column: number): number;
 /**
+* Returns the corresponding previous cell state when invoked with a given cell position for
+* @param {number} row
+* @param {number} column
+* @returns {number}
+*/
+  get_previous_cell_state(row: number, column: number): number;
+/**
+* Compute next state of game-of-life simulation
 */
   tick(): void;
 /**

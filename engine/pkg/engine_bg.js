@@ -1,5 +1,25 @@
 import * as wasm from './engine_bg.wasm';
 
+const heap = new Array(32).fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+function getObject(idx) { return heap[idx]; }
+
+let heap_next = heap.length;
+
+function dropObject(idx) {
+    if (idx < 36) return;
+    heap[idx] = heap_next;
+    heap_next = idx;
+}
+
+function takeObject(idx) {
+    const ret = getObject(idx);
+    dropObject(idx);
+    return ret;
+}
+
 const lTextDecoder = typeof TextDecoder === 'undefined' ? (0, module.require)('util').TextDecoder : TextDecoder;
 
 let cachedTextDecoder = new lTextDecoder('utf-8', { ignoreBOM: true, fatal: true });
@@ -18,12 +38,6 @@ function getStringFromWasm0(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 
-const heap = new Array(32).fill(undefined);
-
-heap.push(undefined, null, true, false);
-
-let heap_next = heap.length;
-
 function addHeapObject(obj) {
     if (heap_next === heap.length) heap.push(heap.length + 1);
     const idx = heap_next;
@@ -31,20 +45,6 @@ function addHeapObject(obj) {
 
     heap[idx] = obj;
     return idx;
-}
-
-function getObject(idx) { return heap[idx]; }
-
-function dropObject(idx) {
-    if (idx < 36) return;
-    heap[idx] = heap_next;
-    heap_next = idx;
-}
-
-function takeObject(idx) {
-    const ret = getObject(idx);
-    dropObject(idx);
-    return ret;
 }
 
 let WASM_VECTOR_LEN = 0;
@@ -150,6 +150,7 @@ export class Universe {
         wasm.universe_kill(this.ptr, row, column);
     }
     /**
+    * Toggle state of given cell position
     * @param {number} row
     * @param {number} column
     */
@@ -167,6 +168,17 @@ export class Universe {
         return ret;
     }
     /**
+    * Returns the corresponding previous cell state when invoked with a given cell position for
+    * @param {number} row
+    * @param {number} column
+    * @returns {number}
+    */
+    get_previous_cell_state(row, column) {
+        const ret = wasm.universe_get_previous_cell_state(this.ptr, row, column);
+        return ret;
+    }
+    /**
+    * Compute next state of game-of-life simulation
     */
     tick() {
         wasm.universe_tick(this.ptr);
@@ -181,15 +193,6 @@ export class Universe {
         return Universe.__wrap(ret);
     }
 }
-
-export function __wbindgen_string_new(arg0, arg1) {
-    const ret = getStringFromWasm0(arg0, arg1);
-    return addHeapObject(ret);
-};
-
-export function __wbindgen_object_drop_ref(arg0) {
-    takeObject(arg0);
-};
 
 export function __wbg_new_693216e109162396() {
     const ret = new Error();
@@ -212,8 +215,8 @@ export function __wbg_error_09919627ac0992f5(arg0, arg1) {
     }
 };
 
-export function __wbg_log_e8ba7b992c7ad0eb(arg0) {
-    console.log(getObject(arg0));
+export function __wbindgen_object_drop_ref(arg0) {
+    takeObject(arg0);
 };
 
 export function __wbindgen_throw(arg0, arg1) {

@@ -1,17 +1,16 @@
 use wasm_bindgen::prelude::*;
-use web_sys::console;
+use crate::basic::cell;
+use crate::utils::set_panic_hook;
 
-use crate::{
-    cell::{self},
-    utils::set_panic_hook,
-};
 
 #[wasm_bindgen]
 pub struct Universe {
     columns: usize,
     rows: usize,
     cells: Vec<cell::State>,
+    previous_cells: Vec<cell::State>,
 }
+
 
 impl Universe {
     fn get_linear_index(&self, (row, column): cell::Position) -> usize {
@@ -63,6 +62,7 @@ impl Universe {
         self.cells[idx] = cell::get_next_state(self.cells[idx], 0);
     }
 
+    /// Toggle state of given cell position
     pub fn toggle(&mut self, row: usize, column: usize) {
         let idx = self.get_linear_index((row, column));
 
@@ -79,8 +79,15 @@ impl Universe {
         self.cells[idx]
     }
 
+    /// Returns the corresponding previous cell state when invoked with a given cell position for
+    pub fn get_previous_cell_state(&self, row: usize, column: usize) -> cell::State {
+        let idx = self.get_linear_index((row, column));
+        self.previous_cells[idx]
+    }
+
+    /// Compute next state of game-of-life simulation
     pub fn tick(&mut self) {
-        let snapshot = self.cells.clone();
+        self.previous_cells = self.cells.clone();
 
         for row in 0..self.rows {
             for col in 0..self.columns {
@@ -88,8 +95,8 @@ impl Universe {
                 let cell_linear_idx = self.get_linear_index(cell_position);
 
                 self.cells[cell_linear_idx] = cell::get_next_state(
-                    snapshot[cell_linear_idx],
-                    self.live_neighbor_count(cell_position, &snapshot),
+                    self.previous_cells[cell_linear_idx],
+                    self.live_neighbor_count(cell_position, &self.previous_cells),
                 );
             }
         }
@@ -99,17 +106,18 @@ impl Universe {
         set_panic_hook();
 
         let cells = vec![0; rows * columns];
-        
-        console::log_1(&cells.len().to_string().into());
-        console::log_1 ( &rows.to_string().into());
-        console::log_1( &columns.to_string().into() );
+        let previous_cells = cells.clone();
+
         Universe {
             columns,
             cells,
             rows,
+            previous_cells,
         }
     }
 }
+
+
 
 #[test]
 fn something() {
