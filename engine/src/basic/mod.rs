@@ -1,6 +1,5 @@
-pub use self::ecosystem::Universe;
 
-
-
-mod cell;
 pub mod ecosystem;
+pub mod cell;
+
+pub use self::ecosystem::Ecosystem;

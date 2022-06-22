@@ -13,10 +13,10 @@ pub type State = u8;
 /// The position of a given cell in an ecosystem.
 /// The first index represent a row number while, the second
 /// represent a the column number
-pub type Cell = (usize , usize);
+pub type Cell = (i32 , i32);
 
 /// Return  a new cell described by its position when given a row and column number;
-pub fn new(row: usize, column: usize) -> Cell {
+pub fn new(row: i32, column: i32) -> Cell {
     return (row, column) as Cell;
 }
 

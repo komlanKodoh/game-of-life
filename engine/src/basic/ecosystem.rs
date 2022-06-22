@@ -1,10 +1,12 @@
+
 use wasm_bindgen::prelude::*;
-use crate::basic::cell;
-use crate::utils::set_panic_hook;
+use crate::{utils::set_panic_hook};
+
+use super::cell;
 
 
 #[wasm_bindgen]
-pub struct Universe {
+pub struct Ecosystem {
     columns: usize,
     rows: usize,
     cells: Vec<cell::State>,
@@ -12,14 +14,14 @@ pub struct Universe {
 }
 
 
-impl Universe {
-    fn get_linear_index(&self, (row, column): cell::Position) -> usize {
+impl Ecosystem {
+    fn get_linear_index(&self, (row, column): cell::Cell) -> usize {
         row * self.columns + column
     }
 
     fn live_neighbor_count(
         &self,
-        (row, column): cell::Position,
+        (row, column): cell::Cell,
         snapshot: &Vec<cell::State>,
     ) -> u8 {
         let mut count = 0;
@@ -49,7 +51,7 @@ impl Universe {
 }
 
 #[wasm_bindgen]
-impl Universe {
+impl Ecosystem {
     /// Brings cells at given position back alive
     pub fn bless(&mut self, row: usize, column: usize) {
         let idx = self.get_linear_index((row, column));
@@ -91,7 +93,7 @@ impl Universe {
 
         for row in 0..self.rows {
             for col in 0..self.columns {
-                let cell_position = cell::new_position(row, col);
+                let cell_position = cell::new(row, col);
                 let cell_linear_idx = self.get_linear_index(cell_position);
 
                 self.cells[cell_linear_idx] = cell::get_next_state(
@@ -102,13 +104,13 @@ impl Universe {
         }
     }
 
-    pub fn new(rows: usize, columns: usize) -> Universe {
+    pub fn new(rows: usize, columns: usize) -> Ecosystem {
         set_panic_hook();
 
         let cells = vec![0; rows * columns];
         let previous_cells = cells.clone();
 
-        Universe {
+        Ecosystem {
             columns,
             cells,
             rows,
@@ -124,7 +126,7 @@ fn something() {
     let row = 10;
     let column = 8;
 
-    let mut ecosystem = Universe::new(row, column);
+    let mut ecosystem = Ecosystem::new(row, column);
 
     ecosystem.bless(2, 0);
     ecosystem.bless(2, 1);

@@ -113,10 +113,10 @@ function getInt32Memory0() {
 }
 /**
 */
-export class Universe {
+export class AssociativeEcosystem {
 
     static __wrap(ptr) {
-        const obj = Object.create(Universe.prototype);
+        const obj = Object.create(AssociativeEcosystem.prototype);
         obj.ptr = ptr;
 
         return obj;
@@ -131,7 +131,95 @@ export class Universe {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_universe_free(ptr);
+        wasm.__wbg_associativeecosystem_free(ptr);
+    }
+    /**
+    * @param {number} row
+    * @param {number} column
+    * @returns {number}
+    */
+    get_cell_state(row, column) {
+        const ret = wasm.associativeecosystem_get_cell_state(this.ptr, row, column);
+        return ret;
+    }
+    /**
+    * @param {number} row
+    * @param {number} column
+    * @returns {number}
+    */
+    get_previous_cell_state(row, column) {
+        const ret = wasm.associativeecosystem_get_previous_cell_state(this.ptr, row, column);
+        return ret;
+    }
+    /**
+    * @param {number} row
+    * @param {number} column
+    */
+    kill(row, column) {
+        wasm.associativeecosystem_kill(this.ptr, row, column);
+    }
+    /**
+    * @param {number} row
+    * @param {number} column
+    */
+    bless(row, column) {
+        wasm.associativeecosystem_bless(this.ptr, row, column);
+    }
+    /**
+    * @param {number} row
+    * @param {number} column
+    */
+    toggle(row, column) {
+        wasm.associativeecosystem_toggle(this.ptr, row, column);
+    }
+    /**
+    */
+    tick() {
+        wasm.associativeecosystem_tick(this.ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get_relevant_cells() {
+        const ret = wasm.associativeecosystem_get_relevant_cells(this.ptr);
+        return ret;
+    }
+    /**
+    * @returns {number}
+    */
+    get_relevant_cells_length() {
+        const ret = wasm.associativeecosystem_get_relevant_cells_length(this.ptr);
+        return ret >>> 0;
+    }
+    /**
+    * @returns {AssociativeEcosystem}
+    */
+    static new() {
+        const ret = wasm.associativeecosystem_new();
+        return AssociativeEcosystem.__wrap(ret);
+    }
+}
+/**
+*/
+export class Ecosystem {
+
+    static __wrap(ptr) {
+        const obj = Object.create(Ecosystem.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_ecosystem_free(ptr);
     }
     /**
     * Brings cells at given position back alive
@@ -139,7 +227,7 @@ export class Universe {
     * @param {number} column
     */
     bless(row, column) {
-        wasm.universe_bless(this.ptr, row, column);
+        wasm.ecosystem_bless(this.ptr, row, column);
     }
     /**
     * kills a living cell
@@ -147,7 +235,7 @@ export class Universe {
     * @param {number} column
     */
     kill(row, column) {
-        wasm.universe_kill(this.ptr, row, column);
+        wasm.ecosystem_kill(this.ptr, row, column);
     }
     /**
     * Toggle state of given cell position
@@ -155,7 +243,7 @@ export class Universe {
     * @param {number} column
     */
     toggle(row, column) {
-        wasm.universe_toggle(this.ptr, row, column);
+        wasm.ecosystem_toggle(this.ptr, row, column);
     }
     /**
     * Returns the corresponding cell state when invoked with a given cell position
@@ -164,7 +252,7 @@ export class Universe {
     * @returns {number}
     */
     get_cell_state(row, column) {
-        const ret = wasm.universe_get_cell_state(this.ptr, row, column);
+        const ret = wasm.ecosystem_get_cell_state(this.ptr, row, column);
         return ret;
     }
     /**
@@ -174,23 +262,84 @@ export class Universe {
     * @returns {number}
     */
     get_previous_cell_state(row, column) {
-        const ret = wasm.universe_get_previous_cell_state(this.ptr, row, column);
+        const ret = wasm.ecosystem_get_previous_cell_state(this.ptr, row, column);
         return ret;
     }
     /**
     * Compute next state of game-of-life simulation
     */
     tick() {
-        wasm.universe_tick(this.ptr);
+        wasm.ecosystem_tick(this.ptr);
     }
     /**
     * @param {number} rows
     * @param {number} columns
-    * @returns {Universe}
+    * @returns {Ecosystem}
     */
     static new(rows, columns) {
-        const ret = wasm.universe_new(rows, columns);
-        return Universe.__wrap(ret);
+        const ret = wasm.ecosystem_new(rows, columns);
+        return Ecosystem.__wrap(ret);
+    }
+}
+/**
+*/
+export class Iterator {
+
+    static __wrap(ptr) {
+        const obj = Object.create(Iterator.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_iterator_free(ptr);
+    }
+    /**
+    * @returns {boolean}
+    */
+    is_empty() {
+        const ret = wasm.iterator_is_empty(this.ptr);
+        return ret !== 0;
+    }
+    /**
+    */
+    next() {
+        wasm.iterator_next(this.ptr);
+    }
+    /**
+    */
+    reset() {
+        wasm.iterator_reset(this.ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get_current_row() {
+        const ret = wasm.iterator_get_current_row(this.ptr);
+        return ret;
+    }
+    /**
+    * @returns {number}
+    */
+    get_current_column() {
+        const ret = wasm.iterator_get_current_column(this.ptr);
+        return ret;
+    }
+    /**
+    * @returns {Iterator}
+    */
+    static new() {
+        const ret = wasm.iterator_new();
+        return Iterator.__wrap(ret);
     }
 }
 

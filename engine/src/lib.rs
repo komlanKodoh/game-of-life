@@ -1,7 +1,9 @@
 
 pub mod basic;
-mod utils;
+pub mod associative;
 
+mod utils;
+mod shared;
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
 #[cfg(feature = "wee_alloc")]

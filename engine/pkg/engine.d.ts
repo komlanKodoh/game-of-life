@@ -2,7 +2,54 @@
 /* eslint-disable */
 /**
 */
-export class Universe {
+export class AssociativeEcosystem {
+  free(): void;
+/**
+* @param {number} row
+* @param {number} column
+* @returns {number}
+*/
+  get_cell_state(row: number, column: number): number;
+/**
+* @param {number} row
+* @param {number} column
+* @returns {number}
+*/
+  get_previous_cell_state(row: number, column: number): number;
+/**
+* @param {number} row
+* @param {number} column
+*/
+  kill(row: number, column: number): void;
+/**
+* @param {number} row
+* @param {number} column
+*/
+  bless(row: number, column: number): void;
+/**
+* @param {number} row
+* @param {number} column
+*/
+  toggle(row: number, column: number): void;
+/**
+*/
+  tick(): void;
+/**
+* @returns {number}
+*/
+  get_relevant_cells(): number;
+/**
+* @returns {number}
+*/
+  get_relevant_cells_length(): number;
+/**
+* @returns {AssociativeEcosystem}
+*/
+  static new(): AssociativeEcosystem;
+}
+/**
+*/
+export class Ecosystem {
   free(): void;
 /**
 * Brings cells at given position back alive
@@ -43,7 +90,34 @@ export class Universe {
 /**
 * @param {number} rows
 * @param {number} columns
-* @returns {Universe}
+* @returns {Ecosystem}
 */
-  static new(rows: number, columns: number): Universe;
+  static new(rows: number, columns: number): Ecosystem;
+}
+/**
+*/
+export class Iterator {
+  free(): void;
+/**
+* @returns {boolean}
+*/
+  is_empty(): boolean;
+/**
+*/
+  next(): void;
+/**
+*/
+  reset(): void;
+/**
+* @returns {number}
+*/
+  get_current_row(): number;
+/**
+* @returns {number}
+*/
+  get_current_column(): number;
+/**
+* @returns {Iterator}
+*/
+  static new(): Iterator;
 }
