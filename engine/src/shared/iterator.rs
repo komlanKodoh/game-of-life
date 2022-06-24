@@ -1,5 +1,4 @@
-use wasm_bindgen::prelude::wasm_bindgen;
-
+use wasm_bindgen::prelude::*;
 use super::cell;
 
 #[wasm_bindgen]
@@ -7,6 +6,7 @@ pub struct Iterator {
     cells: Vec<i32>,
     idx: usize,
 }
+
 
 impl Iterator {
     pub fn add(&mut self, cell: cell::Cell) {
@@ -18,8 +18,8 @@ impl Iterator {
         self.cells = cells;
     }
 
-    pub fn get_cells(&self) -> *const Vec<i32> {
-        &self.cells as *const Vec<i32>
+    pub fn get_cells(&self) -> *const i32 {
+        self.cells.as_ptr()
     }
     pub fn get_length(&self) -> usize {
         self.cells.len()
