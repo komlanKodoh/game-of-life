@@ -119,20 +119,7 @@ export default class Ecosystem {
   /**
    * Iterate over all cells in the universe that are either alive or present residual state
    */
-  for_each_relevant_cell(
-    cb: (cell: Cell, state: number) => void,
-    bounds?: Bounds
-  ) {
-    if (!bounds) {
-      bounds = {
-        top: 0,
-        bottom: this.rows - 1,
-
-        left: 0,
-        right: this.columns - 1,
-      };
-    }
-
+  for_each_relevant_cell(cb: (cell: Cell, state: number) => void) {
     let iterator = this.engine.get_relevant_cells();
     let length = this.engine.get_relevant_cells_length();
 
@@ -148,6 +135,9 @@ export default class Ecosystem {
     }
   }
 
+  /**
+   * Iterate over all cells in the universe within the specified range
+   */
   for_each_cell(cb: (cell: Cell, state: number) => void, bounds?: Bounds) {
     if (!bounds) {
       bounds = {
@@ -159,18 +149,12 @@ export default class Ecosystem {
       };
     }
 
-    let iterator = this.engine.get_relevant_cells();
-    let length = this.engine.get_relevant_cells_length();
+    for (let row = bounds.top; row <= bounds.bottom; row++) {
+      for (let column = bounds.left; column <= bounds.right; column++) {
+        const cell = [row, column] as const;
 
-    let relevant_cells = new Int32Array(memory.buffer, iterator, length);
-
-    for (let first_idx = 0; first_idx < relevant_cells.length; first_idx += 2) {
-      const cell = [
-        relevant_cells[first_idx] as number,
-        relevant_cells[first_idx + 1] as number,
-      ] as const;
-
-      cb(cell, this.get_cell_state(cell) as number);
+        cb(cell, this.get_cell_state(cell) as number);
+      }
     }
   }
   /**
