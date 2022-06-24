@@ -1,5 +1,5 @@
-import { Universe } from 'game-of-life';
-
+import { AssociativeEcosystem } from 'game-of-life';
+import { memory } from 'game-of-life/engine_bg.wasm';
 import { ObjectMap } from '../utils/index.generic';
 
 import Cell from './Cell';
@@ -10,7 +10,7 @@ import { Bounds } from './Renderer';
 export default class Ecosystem {
   rows: number;
   columns: number;
-  engine: Universe;
+  engine: AssociativeEcosystem;
 
   parser = new Directive.Parser();
 
@@ -18,7 +18,7 @@ export default class Ecosystem {
     this.rows = config.rows;
     this.columns = config.columns;
 
-    this.engine = Universe.new(config.rows, config.columns);
+    this.engine = AssociativeEcosystem.new();
 
     if (config.is_alive) {
       this.process_ecosystem(config.is_alive);
@@ -104,7 +104,7 @@ export default class Ecosystem {
   /**
    * Returns the state of any given cell;
    */
-  private get_cell_state(cell: Cell) {
+  get_cell_state(cell: Cell) {
     return this.engine.get_cell_state(...cell);
   }
 
@@ -112,13 +112,42 @@ export default class Ecosystem {
    * Returns the state of a given cell at the previous iteration
    */
 
-   public get_previous_cell_state(cell: Cell) {
+  public get_previous_cell_state(cell: Cell) {
     return this.engine.get_previous_cell_state(...cell);
   }
 
   /**
-   * Iterate over all cells in the universe
+   * Iterate over all cells in the universe that are either alive or present residual state
    */
+  for_each_relevant_cell(
+    cb: (cell: Cell, state: number) => void,
+    bounds?: Bounds
+  ) {
+    if (!bounds) {
+      bounds = {
+        top: 0,
+        bottom: this.rows - 1,
+
+        left: 0,
+        right: this.columns - 1,
+      };
+    }
+
+    let iterator = this.engine.get_relevant_cells();
+    let length = this.engine.get_relevant_cells_length();
+
+    let relevant_cells = new Int32Array(memory.buffer, iterator, length);
+
+    for (let first_idx = 0; first_idx < relevant_cells.length; first_idx += 2) {
+      const cell = [
+        relevant_cells[first_idx] as number,
+        relevant_cells[first_idx + 1] as number,
+      ] as const;
+
+      cb(cell, this.get_cell_state(cell) as number);
+    }
+  }
+
   for_each_cell(cb: (cell: Cell, state: number) => void, bounds?: Bounds) {
     if (!bounds) {
       bounds = {
@@ -130,18 +159,25 @@ export default class Ecosystem {
       };
     }
 
-    for (let row = bounds.top; row <= bounds.bottom; row++) {
-      for (let column = bounds.left; column <= bounds.right; column++) {
-        cb([row, column], this.get_cell_state([row, column]) as number);
-      }
+    let iterator = this.engine.get_relevant_cells();
+    let length = this.engine.get_relevant_cells_length();
+
+    let relevant_cells = new Int32Array(memory.buffer, iterator, length);
+
+    for (let first_idx = 0; first_idx < relevant_cells.length; first_idx += 2) {
+      const cell = [
+        relevant_cells[first_idx] as number,
+        relevant_cells[first_idx + 1] as number,
+      ] as const;
+
+      cb(cell, this.get_cell_state(cell) as number);
     }
   }
-
   /**
    * Process all cells in the universe and assigns the {@link Cell} PrimaryState returned by the callback;
    */
   process_ecosystem(cb: (cell: Cell, state: number) => boolean) {
-    this.for_each_cell((cell, state) => {
+    this.for_each_relevant_cell((cell, state) => {
       const is_alive = cb(cell, state);
 
       if (is_alive) {

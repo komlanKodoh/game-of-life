@@ -155,7 +155,10 @@ export default class Renderer {
 
       const cell: Cell = [cell_row, cell_column];
 
-      if (!isWithinBounds(cell, this.get_bounds())) return;
+      // if (!isWithinBounds(cell, this.get_bounds())) return;
+
+      console.log( " State : ", this.engine.get_cell_state(cell), " cell : ", cell);
+      
 
       this.engine.toggle([cell_row, cell_column]);
     });

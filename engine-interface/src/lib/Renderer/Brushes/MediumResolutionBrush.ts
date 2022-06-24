@@ -15,25 +15,31 @@ export default class MediumResolutionBrush extends AbstractBrush {
 
     ctx.beginPath(); // Start a new path
 
-    for (let row = 0; row < this.engine.rows; row++) {
+    let left = Math.floor(this.scene.x / Config.SIZE);
+    let right = Math.ceil((this.scene.x + this.scene.width) / Config.SIZE);
+
+    let top = Math.floor(this.scene.y / Config.SIZE);
+    let bottom = Math.ceil((this.scene.y + this.scene.height) / Config.SIZE);
+
+    for (let row = top; row < bottom; row++) {
       ctx.moveTo(
-        this.scene.map_x(0),
+        this.scene.map_x(this.scene.x),
         this.scene.map_y(row * Config.SIZE - Config.PADDING / 2)
       ); // Move the pen to (30, 50)
       ctx.lineTo(
-        this.scene.map_x(this.engine.columns * Config.SIZE),
+        this.scene.map_x(this.scene.x + this.scene.width),
         this.scene.map_y(row * Config.SIZE - Config.PADDING / 2)
       );
     }
 
-    for (let column = 0; column < this.engine.columns; column++) {
+    for (let column = left; column < right; column++) {
       ctx.moveTo(
         this.scene.map_x(column * Config.SIZE - Config.PADDING / 2),
-        this.scene.map_y(0)
+        this.scene.map_y(this.scene.y)
       ); // Move the pen to (30, 50)
       ctx.lineTo(
         this.scene.map_x(column * Config.SIZE - Config.PADDING / 2),
-        this.scene.map_y(this.engine.rows * Config.SIZE)
+        this.scene.map_y(this.scene.y + this.scene.height)
       );
     }
 
@@ -48,7 +54,7 @@ export default class MediumResolutionBrush extends AbstractBrush {
     this.wipe_canvas();
     this.prepare_living_area();
 
-    this.engine.for_each_cell((cell, state) => {
+    this.engine.for_each_relevant_cell((cell, state) => {
       const cell_x = cell[1] * Config.SIZE;
       const cell_y = cell[0] * Config.SIZE;
 

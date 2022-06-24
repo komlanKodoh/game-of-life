@@ -1,4 +1,4 @@
-import { Universe } from 'game-of-life';
+import { AssociativeEcosystem } from 'game-of-life';
 
 import Cell from './lib/Cell';
 import Directive from './lib/Configuration/directive';
@@ -26,11 +26,11 @@ export { Ecosystem, Runner, Renderer, Serializer, Scene, Mouse };
 export {
   Cell,
   Bounds,
-  Universe,
   ObjectMap,
   RenderConfig,
   DragListener,
   GameOfLifeConfig,
+  AssociativeEcosystem,
   DirectiveComposition,
   CellRenderingDirective,
 };

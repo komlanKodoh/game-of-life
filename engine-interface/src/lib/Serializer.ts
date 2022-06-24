@@ -9,12 +9,11 @@ export class Serializer {
 
     let current_row = bounds?.top || 0;
 
-    engine.for_each_cell((cell: Cell, state: number) => {
-      
+    engine.for_each_relevant_cell((cell: Cell, state: number) => {
       if (current_row !== cell[0]) {
         // if (cell[0] - current_row > 1) directive += `->${cell[0]} `;
         directive += '\n';
-        
+
         current_row = cell[0];
       }
 

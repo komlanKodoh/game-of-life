@@ -19,7 +19,7 @@ export default class Scene {
   }
 
   map_dimension(dimension: number) {
-    return Math.floor(dimension * this.scale_x);
+    return Math.floor(dimension * this.scale_x * 1000 ) / 1000 ;
   }
 
   fit(width: number, height: number) {

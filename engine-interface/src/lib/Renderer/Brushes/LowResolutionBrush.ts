@@ -20,7 +20,7 @@ export default class LowResolutionBrush extends AbstractBrush {
     let ctx = this.get_rendering_context();
     this.wipe_canvas();
 
-    this.engine.for_each_cell((cell, state) => {
+    this.engine.for_each_relevant_cell((cell, state) => {
       const cell_x = cell[1] * Config.SIZE;
       const cell_y = cell[0] * Config.SIZE;
 
