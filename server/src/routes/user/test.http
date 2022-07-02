@@ -14,7 +14,7 @@ content-type: application/json
 
 ### Get user from authorization header
 GET http://localhost:3000/api/user/ HTTP/1.1
-Authorization: qwerty eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFkY2Q0Zjg2LThkZDMtNDRjZC1iMmE3LWVlYTk4N2E5OTg2NyIsImlhdCI6MTY1NTQxODI4MiwiZXhwIjoxNjU1NDIxODgyfQ.TTzDIedR4OjPvirbqc6x3xfyHzofLrO0pgkxrZT3hY0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjljNjQ4YTllLTk1NDYtNGZiZC04NzIxLTU5YmZjNGY4ODVjNyIsImlhdCI6MTY1NjI1MzM1NywiZXhwIjoxNjU2MjU2OTU3fQ.owR9YE9A94mK_HdRMERNQiG7Pe8O-QPfvGX_bP7KDpc
 
 ### Get user from user Id
 

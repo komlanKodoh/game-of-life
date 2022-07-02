@@ -11,18 +11,17 @@ import {
 const router = new utils.api.Router();
 
 router.get("/", async (ctx) => {
-  let limit = ctx.query.limit || 15;
-  // let page = ctx.query.page || 1;
-
-  if (typeof limit !== "number")
-    throw BadRequestError("limit must be an integer");
-
+  let limit = + (ctx.query.limit || 15);
+  let startAt = ctx.query.startAt;
+  
   const filter: { [key: string]: string | boolean } = { public: true };
-  if (ctx.query.name) filter.name = ctx.query.name as string;
 
-  ctx.body = await EcosystemRepository.scan(filter)
-    .limit(limit)
-    .exec();
+  let query = EcosystemRepository.scan(filter).limit(limit);
+
+
+  startAt && query.startAt({name: startAt});
+
+  ctx.body = await query.exec();
 });
 
 router.get("/unique/:name", async (ctx) => {
@@ -33,7 +32,6 @@ router.get("/unique/:name", async (ctx) => {
 
   if ( !ecosystem ) throw NotFoundError("Ecosystem with given name does not exist");
 
-  console.log( ecosystem.owner_id, user?.id)
   if ( ecosystem.public === false && (!user || ecosystem.owner_id !== user.id )) throw InvalidCredentialError("Ecosystem is private and user does not have necessary permission");
 
   ctx.body = ecosystem;

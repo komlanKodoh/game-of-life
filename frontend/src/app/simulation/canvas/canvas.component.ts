@@ -41,7 +41,7 @@ export class CanvasComponent {
   channel = new Channel();
 
   ngAfterViewInit(): void {
-    window.addEventListener("mouseup", () => {
+    window.addEventListener('mouseup', () => {
       this.optionPromptIsVisible = false;
     });
 
@@ -63,6 +63,8 @@ export class CanvasComponent {
       bounds = _bounds;
 
       this.optionPromptIsVisible = true;
+
+      console.log(Serializer.generate_string_directive(this.engine, bounds));
       this.tempSelection = {
         columns: bounds.right - bounds.left + 1,
         rows: bounds.bottom - bounds.top + 1,
@@ -103,7 +105,6 @@ export class CanvasComponent {
     new Runner(() => {
       this.renderer.render();
     }).start();
-    
   }
 
   saveCurrentSelection() {
