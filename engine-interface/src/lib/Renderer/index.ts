@@ -1,7 +1,6 @@
 import { sort_number, to_pixel } from '../../utils';
 import Cell from '../Cell';
 import Ecosystem from '../Ecosystem';
-import { isWithinBounds } from '../Util';
 import { Brush } from './Brushes/Brush';
 // import LowResolutionBrush from './Brushes/LowResolutionBrush';
 import MediumResolutionBrush from './Brushes/MediumResolutionBrush';
@@ -48,7 +47,11 @@ export default class Renderer {
   constructor(config: RenderConfig) {
     this.engine = config.engine;
     this.canvas = config.canvas;
-    this.brush = new MediumResolutionBrush(this.scene, this.engine,  this.canvas,);
+    this.brush = new MediumResolutionBrush(
+      this.scene,
+      this.engine,
+      this.canvas
+    );
 
     this.fitCanvas();
     this.mouse = new Mouse(this.scene, this.canvas);
@@ -66,7 +69,7 @@ export default class Renderer {
 
     const cell: Cell = [cell_row, cell_column];
 
-    if (!isWithinBounds(cell, this.get_bounds())) return null;
+    // if (!isWithinBounds(cell, this.get_bounds())) return null;
 
     return cell;
   }
@@ -157,8 +160,12 @@ export default class Renderer {
 
       // if (!isWithinBounds(cell, this.get_bounds())) return;
 
-      console.log( " State : ", this.engine.get_cell_state(cell), " cell : ", cell);
-      
+      console.log(
+        ' State : ',
+        this.engine.get_cell_state(cell),
+        ' cell : ',
+        cell
+      );
 
       this.engine.toggle([cell_row, cell_column]);
     });
@@ -177,15 +184,16 @@ export default class Renderer {
     return this;
   }
 
-  get_bounds(): Bounds {
-    return {
-      top: 0,
-      bottom: this.engine.rows - 1,
+  // get_bounds(): Bounds {
 
-      left: 0,
-      right: this.engine.columns - 1,
-    };
-  }
+  //   return {
+  //     top: 0,
+  //     bottom: this.engine.rows - 1,
+
+  //     left: 0,
+  //     right: this.engine.columns - 1,
+  //   };
+  // }
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
   configure_drag_behavior() {
@@ -273,7 +281,6 @@ export default class Renderer {
    * the scene will change in size.
    */
   fitCanvas() {
-
     const { width, height } = this.canvas.getBoundingClientRect();
 
     // Resize the canvas to have the same real dimension as its real css rendered dimensions;
@@ -287,14 +294,16 @@ export default class Renderer {
     this.scene.width = width;
     this.scene.height = height;
 
-    // fit the scene to have same width as engine width
-    this.scene.resize(this.engine.columns * this.SIZE);
-
-    // center scene on both y and x axis
-    this.scene.x = (this.engine.columns * this.SIZE - this.scene.width) / 2;
-    this.scene.y = (this.engine.rows * this.SIZE - this.scene.height) / 2;
-
     this.scene.fit_width(this.canvas.width);
+
+    if (this.engine.columns && this.engine.rows) {
+      // fit the scene to have same width as engine width
+      this.scene.resize(this.engine.columns * this.SIZE);
+
+      // center scene on both y and x axis
+      this.scene.x = (this.engine.columns * this.SIZE - this.scene.width) / 2;
+      this.scene.y = (this.engine.rows * this.SIZE - this.scene.height) / 2;
+    }
 
     this.render();
   }
@@ -315,91 +324,9 @@ export default class Renderer {
     return this.ctx;
   }
 
-  // living_area_canvas?: HTMLCanvasElement;
-  // living_area_is_valid = false;
-  // private prepare_living_area() {
-  //   if (!this.living_area_canvas || !this.living_area_is_valid) {
-  //     this.living_area_canvas = document.createElement('canvas');
-  //     const ctx = this.living_area_canvas.getContext(
-  //       '2d'
-  //     ) as CanvasRenderingContext2D;
-
-  //     this.living_area_canvas.width = this.scene.map_dimension(
-  //       this.engine.columns * this.SIZE
-  //     );
-  //     this.living_area_canvas.height = this.scene.map_dimension(
-  //       this.engine.rows * this.SIZE
-  //     );
-
-  //     const visible_area =
-  //       (this.scene.width * this.scene.height) / (this.SIZE * this.SIZE);
-
-  //     if (visible_area > 90000) return;
-
-  //     this.engine.for_each_cell((cell, state) => {
-  //       if (state !== 0) {
-  //         return;
-  //       }
-
-  //       const cell_x = cell[1] * this.SIZE;
-  //       const cell_y = cell[0] * this.SIZE;
-
-  //       // Renderer.rectangle(
-  //       //   ctx,
-  //       //   this.scene.map_dimension(cell_x),
-  //       //   this.scene.map_dimension(cell_y),
-  //       //   this.scene.map_dimension(this.SIZE - this.PADDING),
-  //       //   this.scene.map_dimension(this.SIZE - this.PADDING),
-  //       //   this.scene.map_dimension(this.RADIUS)
-  //       // );
-
-  //       ctx.fillRect(
-  //         this.scene.map_dimension(cell_x),
-  //         this.scene.map_dimension(cell_y),
-  //         this.scene.map_dimension(this.SIZE - this.PADDING),
-  //         this.scene.map_dimension(this.SIZE - this.PADDING)
-  //       );
-  
-
-  //       ctx.fillStyle = `rgba( 0 ,0,0, 0.1)`;
-
-  //       ctx.fill();
-  //     });
-
-  //     this.living_area_is_valid = true;
-  //   }
-
-  //   this.get_rendering_context().drawImage(
-  //     this.living_area_canvas,
-  //     this.scene.map_x(0),
-  //     this.scene.map_y(0)
-  //   );
-  // }
-
   render() {
     this.brush.render();
   }
-
-  // private static rectangle(
-  //   ctx: CanvasRenderingContext2D,
-  //   x: number,
-  //   y: number,
-  //   width: number,
-  //   height: number,
-  //   radius: number
-  // ) {
-  //   ctx.beginPath();
-  //   ctx.moveTo(x + radius, y);
-  //   ctx.lineTo(x + width - radius, y);
-  //   ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-  //   ctx.lineTo(x + width, y + height - radius);
-  //   ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  //   ctx.lineTo(x + radius, y + height);
-  //   ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-  //   ctx.lineTo(x, y + radius);
-  //   ctx.quadraticCurveTo(x, y, x + radius, y);
-  //   ctx.closePath();
-  // }
 
   to_cell_coordinate(coordinate: number) {
     return Math.floor(coordinate / this.SIZE);
