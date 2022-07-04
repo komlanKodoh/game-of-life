@@ -6,6 +6,7 @@ import { PauseRunComponent } from './pause-run/pause-run.component';
 import { PopupComponent } from './popup/popup.component';
 import { OverlayComponent } from './overlay/overlay.component';
 import { MousePopupComponent } from './mouse-popup/mouse-popup.component';
+import { ScrollComponent } from './scroll/scroll.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { MousePopupComponent } from './mouse-popup/mouse-popup.component';
     PopupComponent,
     OverlayComponent,
     MousePopupComponent,
+    ScrollComponent,
   ],
   imports: [CommonModule],
   exports: [
@@ -22,6 +24,7 @@ import { MousePopupComponent } from './mouse-popup/mouse-popup.component';
     PopupComponent,
     OverlayComponent,
     MousePopupComponent,
+    ScrollComponent,
   ],
 })
 export class ComponentsModule {}

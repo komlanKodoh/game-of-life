@@ -22,3 +22,26 @@ export const fitDimension = (object: Dimension, container: Dimension): Dimension
     };
   }
 };
+
+/**
+ * Assigned only defined values to destination object
+ */
+
+export function assignDefined<
+  T extends { [key: string]: any },
+  U extends { [key: string]: any }[]
+>(target: T, ...sources: U) {
+  for (const source of sources) {
+    for (const key of Object.keys(source)) {
+      const val = source[key];
+      if (val !== undefined) {
+        target[key as keyof T] = val;
+      }
+    }
+  }
+  return target as T &
+    {
+      [K in keyof U]: { [P in keyof U[K]]: Exclude<U[K][P], undefined> };
+    }[number];
+}
+

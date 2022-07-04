@@ -17,7 +17,7 @@ import { UserService } from 'src/app/account/user.service';
 })
 export class ConfigurationPanelComponent implements OnInit {
   ecosystems!: EcosystemRecord[];
-  marketplaceEcosystems!: EcosystemRecord[];
+  marketplaceEcosystems: EcosystemRecord[] = [];
 
   userProfile!: Profile | undefined | null;
 
@@ -26,7 +26,7 @@ export class ConfigurationPanelComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private userService: UserService,
-    private ecosystemService: EcosystemService,
+    private ecosystemService: EcosystemService
   ) {
     this.store.pipe().subscribe((store) => {
       this.ecosystems = store.user?.ecosystems;
@@ -34,27 +34,34 @@ export class ConfigurationPanelComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
-  
-  ngAfterViewInit(){
-    this.ecosystemService.getEcosystems().subscribe(({ data }) => {
+  ngOnInit(): void {}
+
+  ngAfterViewInit() {
+    this.ecosystemService.getEcosystems(20).subscribe(({ data }) => {
       this.marketplaceEcosystems = data;
     });
-
-
-
   }
   toggle() {
     this.store.dispatch(togglePanel());
   }
 
   tabIdx: number = 0;
-  handleTabChange( idx: number ){
-    this.tabIdx = idx
+  handleTabChange(idx: number) {
+    this.tabIdx = idx;
   }
 
-  logout(){
+  loadMoreEcosystem() {
+    if (this.tabIdx === 0) {
+      let startAt = this.marketplaceEcosystems[this.marketplaceEcosystems.length - 1].name;
+
+      this.ecosystemService.getEcosystems(20,startAt).subscribe(({ data }) => {
+        this.marketplaceEcosystems.push(...data);
+        
+      });
+    }
+  }
+
+  logout() {
     this.userService.logout();
   }
 

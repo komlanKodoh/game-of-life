@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EcosystemRecord } from '../state/user/reducer';
 import { UserService } from './user.service';
+import { assignDefined } from 'src/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -33,9 +34,9 @@ export class EcosystemService {
     );
   }
 
-  getEcosystems() {
+  getEcosystems(limit?: number , startAt?: string, ) {
     return this.http.get<{ data: EcosystemRecord[] }>('/api/ecosystem', {
-      params: {},
+      params: assignDefined({ limit: limit ?? 2 }, { startAt }),
     });
   }
 

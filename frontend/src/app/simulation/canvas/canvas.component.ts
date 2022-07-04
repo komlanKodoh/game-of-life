@@ -64,7 +64,6 @@ export class CanvasComponent {
 
       this.optionPromptIsVisible = true;
 
-      console.log(Serializer.generate_string_directive(this.engine, bounds));
       this.tempSelection = {
         columns: bounds.right - bounds.left + 1,
         rows: bounds.bottom - bounds.top + 1,

@@ -4,7 +4,6 @@
             class=" py-6 px-10 w-[65ch] bg-black  text-white max-w-full m-auto relative">
             <h1 class="text-xl "> {{ ecosystemRecord?.name }} - {{ ecosystemRecord.public ? "public" : "private"}} </h1>
 
-
             <app-universe-display class="w-full" [config]="ecosystemRecord" [ratio]="70" [visible]="true">
             </app-universe-display> <br>
 
@@ -12,6 +11,11 @@
                 <li>rows : &nbsp; <span class=" text-purple-600 "> {{ecosystemRecord.rows}}</span></li>
                 <li>columns: &nbsp; <span class=" text-purple-600 "> {{ecosystemRecord.rows}}</span> </li>
             </ul> <br>
+
+            <mat-form-field class="w-full">
+                <input class="w-full" matInput formControlName="name"
+                    placeholder="Change name"/>
+            </mat-form-field>
 
             <mat-form-field class="w-full">
                 <textarea class="w-full" matInput formControlName="description"
@@ -23,6 +27,7 @@
                 <mat-radio-button name="public" [value]="true">Public</mat-radio-button>
                 <mat-radio-button name="public" [value]="false">Private</mat-radio-button>
             </mat-radio-group>
+
 
 
             <div class="flex">

@@ -26,6 +26,7 @@ export class EcosystemEditComponent implements OnInit {
     this.name = this.route.snapshot.paramMap.get('name') as string;
 
     this.ecosystemRecordForm = this.formBuilder.group({
+      name: '',
       description: '',
       public: false,
     });
@@ -44,6 +45,7 @@ export class EcosystemEditComponent implements OnInit {
       this.ecosystemRecordForm = this.formBuilder.group({
         description: data.description || "",
         public: data.public,
+        name: data.name
       });
       
     });
@@ -59,7 +61,6 @@ export class EcosystemEditComponent implements OnInit {
       public: boolean;
     };
 
-    console.log(formValue);
     Object.assign(this.ecosystemRecord, formValue);
 
     this.ecosystem.updateEcosystem(this.ecosystemRecord).subscribe();
