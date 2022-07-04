@@ -8,8 +8,8 @@ import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
 import { Bounds } from './Renderer';
 
 export default class Ecosystem {
-  rows: number;
-  columns: number;
+  rows?: number;
+  columns?: number;
   engine: AssociativeEcosystem;
 
   parser = new Directive.Parser();
@@ -69,7 +69,12 @@ export default class Ecosystem {
         break;
       }
 
-      this.bless(Cell.create(cell[0] % this.rows, cell[1] % this.columns));
+      this.bless(
+        Cell.create(
+          this.rows ? cell[0] % this.rows : cell[0],
+          this.columns ? cell[1] % this.columns : cell[1]
+        )
+      );
     }
   }
 
@@ -136,10 +141,14 @@ export default class Ecosystem {
   }
 
   /**
-   * Iterate over all cells in the universe within the specified range
+   * Iterate over all cells in the universe within the specified range,
+   * uses default universe bound if the universe is bounded and no bound is provided;
    */
   for_each_cell(cb: (cell: Cell, state: number) => void, bounds?: Bounds) {
+
+    
     if (!bounds) {
+      if (!this.rows || !this.columns) return;
       bounds = {
         top: 0,
         bottom: this.rows - 1,

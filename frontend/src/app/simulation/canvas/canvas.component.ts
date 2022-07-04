@@ -112,6 +112,8 @@ export class CanvasComponent {
         name: 'save-as-component',
         component: this.tempSelection,
       });
+
+      console.log(this.tempSelection)
   }
 
   constructor(private store: Store<AppState>) {}
