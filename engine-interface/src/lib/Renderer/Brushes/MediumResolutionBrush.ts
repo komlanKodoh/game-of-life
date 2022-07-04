@@ -44,7 +44,7 @@ export default class MediumResolutionBrush extends AbstractBrush {
     }
 
     ctx.lineWidth = this.scene.map_dimension(Config.PADDING);
-    // ctx.strokeStyle = "white";
+    ctx.strokeStyle = this.getSecondaryStyle();
     ctx.stroke();
   }
 

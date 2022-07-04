@@ -36,6 +36,10 @@ export default class AbstractBrush {
     );
   }
 
+  getSecondaryStyle(){
+    return "#0a0000";
+  }
+
   styleCache: ObjectMap<string, string> = {};
   getFillStyle(state: number) {
     if (this.styleCache[state]) return this.styleCache[state] as string;
