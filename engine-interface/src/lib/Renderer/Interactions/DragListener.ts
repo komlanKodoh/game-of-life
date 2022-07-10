@@ -40,11 +40,11 @@ export default class DragListener {
       this.modifiers = null;
       this.is_dragging = true;
 
-      this.previous_x = e.offsetX;
-      this.previous_y = e.offsetY;
+      this.previous_x = e.clientX;
+      this.previous_y = e.clientY;
 
-      this.drag_start_y = e.offsetY;
-      this.drag_start_x = e.offsetX;
+      this.drag_start_y = e.clientY;
+      this.drag_start_x = e.clientX;
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -58,8 +58,8 @@ export default class DragListener {
 
       this.callback(this.new_drag_event(e));
 
-      this.previous_x = e.offsetX;
-      this.previous_y = e.offsetY;
+      this.previous_x = e.clientX;
+      this.previous_y = e.clientY;
     });
 
     window.addEventListener('mouseup', (e) => {
@@ -85,25 +85,27 @@ export default class DragListener {
     });
   }
 
-  new_drag_event(e: MouseEvent): DragEvent {
+  /** create {@link DragEvent} from {@link MouseEvent} */
+  private new_drag_event(e: MouseEvent): DragEvent {
     if (!this.modifiers) throw new Error('new drag outside drag event context');
     
     return {
       e,
 
-      x: e.offsetX,
-      y: e.offsetY,
+      x: e.clientX,
+      y: e.clientY,
 
       drag_star_x: this.drag_start_x,
       drag_star_y: this.drag_start_y,
 
-      displacement_x: this.previous_x - e.offsetX,
-      displacement_y: this.previous_y - e.offsetY,
+      displacement_x: this.previous_x - e.clientX,
+      displacement_y: this.previous_y - e.clientY,
 
       modifiers: this.modifiers,
     };
   }
 
+  
   onDragStart(callback: (e: DragEvent) => void) {
     this.callback_drag_start = callback;
     return this;

@@ -22,6 +22,13 @@ export type Bounds = {
   bottom: number;
 };
 
+export type Modifications = {
+  bounds: Bounds;
+  style: {
+    color: string;
+  };
+}[];
+
 /** Change cell rendering behaviors by manipulation render context */
 export type CellRenderingDirective = (
   cell: Cell,
@@ -67,8 +74,6 @@ export default class Renderer {
     const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
     const cell: Cell = [cell_row, cell_column];
-
-    // if (!isWithinBounds(cell, this.get_bounds())) return null;
 
     return cell;
   }
@@ -155,7 +160,6 @@ export default class Renderer {
 
       const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
-
       this.engine.toggle([cell_row, cell_column]);
     });
 
@@ -170,7 +174,6 @@ export default class Renderer {
 
     return this;
   }
-
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
   configure_scroll_behavior() {
@@ -192,11 +195,13 @@ export default class Renderer {
     const selector = document.createElement('div');
 
     selector.style.opacity = '0';
+    selector.style.position = 'fixed';
     selector.style.pointerEvents = 'none';
     selector.classList.add('canvas-cell-selector');
-    this.canvas.parentNode?.appendChild(selector);
+    document.body.appendChild(selector);
 
     new DragListener(this.canvas, (event) => {
+      // console.log(event.x, event.y)
       if (!event.modifiers.has('Control')) return;
 
       const vertical_bounds = [event.drag_star_x, event.x];
@@ -237,15 +242,15 @@ export default class Renderer {
             bounds,
             done: true,
           });
-      });
 
-    window.addEventListener('click', () => {
-      Object.assign(selector.style, {
-        opacity: 0,
-        width: '0px',
-        height: '0px',
+        Object.assign(selector.style, {
+          opacity: 0,
+          width: '0px',
+          height: '0px',
+        });
+
+        this.engine.modifications = [{ style: { color: '#f21f82' }, bounds }];
       });
-    });
 
     return this;
   }

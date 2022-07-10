@@ -5,12 +5,14 @@ import { ObjectMap } from '../utils/index.generic';
 import Cell from './Cell';
 import Directive from './Configuration/directive';
 import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
-import { Bounds } from './Renderer';
+import { Bounds, Modifications } from './Renderer';
+
 
 export default class Ecosystem {
   rows?: number;
   columns?: number;
   engine: AssociativeEcosystem;
+  modifications : Modifications = [];
 
   parser = new Directive.Parser();
 
