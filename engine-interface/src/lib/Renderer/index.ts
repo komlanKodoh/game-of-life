@@ -155,16 +155,6 @@ export default class Renderer {
 
       const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
-      const cell: Cell = [cell_row, cell_column];
-
-      // if (!isWithinBounds(cell, this.get_bounds())) return;
-
-      console.log(
-        ' State : ',
-        this.engine.get_cell_state(cell),
-        ' cell : ',
-        cell
-      );
 
       this.engine.toggle([cell_row, cell_column]);
     });
@@ -181,16 +171,6 @@ export default class Renderer {
     return this;
   }
 
-  // get_bounds(): Bounds {
-
-  //   return {
-  //     top: 0,
-  //     bottom: this.engine.rows - 1,
-
-  //     left: 0,
-  //     right: this.engine.columns - 1,
-  //   };
-  // }
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
   configure_scroll_behavior() {
