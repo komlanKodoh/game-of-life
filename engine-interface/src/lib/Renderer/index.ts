@@ -3,7 +3,6 @@ import Cell from '../Cell';
 import Ecosystem from '../Ecosystem';
 import { isWithinBounds } from '../Util';
 import { Brush } from './Brushes/Brush';
-// import LowResolutionBrush from './Brushes/LowResolutionBrush';
 import MediumResolutionBrush from './Brushes/MediumResolutionBrush';
 
 import DragListener from './Interactions/DragListener';
@@ -48,7 +47,11 @@ export default class Renderer {
   constructor(config: RenderConfig) {
     this.engine = config.engine;
     this.canvas = config.canvas;
-    this.brush = new MediumResolutionBrush(this.scene, this.engine,  this.canvas,);
+    this.brush = new MediumResolutionBrush(
+      this.scene,
+      this.engine,
+      this.canvas
+    );
 
     this.fitCanvas();
     this.mouse = new Mouse(this.scene, this.canvas);
@@ -79,7 +82,7 @@ export default class Renderer {
    */
   bind_all() {
     this.configure_zoom_control();
-    this.configure_drag_behavior();
+    this.configure_scroll_behavior();
     this.configure_select_behavior();
     this.configure_cell_state_control();
   }
@@ -157,16 +160,18 @@ export default class Renderer {
 
       // if (!isWithinBounds(cell, this.get_bounds())) return;
 
-      console.log( " State : ", this.engine.get_cell_state(cell), " cell : ", cell);
-      
+      console.log(
+        ' State : ',
+        this.engine.get_cell_state(cell),
+        ' cell : ',
+        cell
+      );
 
       this.engine.toggle([cell_row, cell_column]);
     });
 
     new DragListener(this.canvas, (event) => {
-      if (!event.modifiers.has('Shift')) {
-        return;
-      }
+      if (event.modifiers.size > 0) return;
 
       this.engine.bless([
         this.to_cell_coordinate(this.mouse.y),
@@ -188,15 +193,12 @@ export default class Renderer {
   }
 
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
-  configure_drag_behavior() {
-    new DragListener(this.canvas, (event) => {
-      if (event.modifiers.size > 0) {
-        return;
-      }
-      this.scene.x +=
-        (event.displacement_x * this.scene.width) / this.canvas.width;
-      this.scene.y +=
-        (event.displacement_y * this.scene.height) / this.canvas.height;
+  configure_scroll_behavior() {
+    window.addEventListener('wheel', (event) => {
+      if (Keyboard.keys_pushed.size > 0) return;
+
+      this.scene.x += (event.deltaX * this.scene.width) / this.canvas.width;
+      this.scene.y += (event.deltaY * this.scene.height) / this.canvas.height;
     });
 
     return this;
@@ -273,7 +275,6 @@ export default class Renderer {
    * the scene will change in size.
    */
   fitCanvas() {
-
     const { width, height } = this.canvas.getBoundingClientRect();
 
     // Resize the canvas to have the same real dimension as its real css rendered dimensions;
@@ -359,7 +360,6 @@ export default class Renderer {
   //         this.scene.map_dimension(this.SIZE - this.PADDING),
   //         this.scene.map_dimension(this.SIZE - this.PADDING)
   //       );
-  
 
   //       ctx.fillStyle = `rgba( 0 ,0,0, 0.1)`;
 
