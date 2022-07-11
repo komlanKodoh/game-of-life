@@ -2,7 +2,6 @@ import { sort_number, to_pixel } from '../../utils';
 import Cell from '../Cell';
 import Ecosystem from '../Ecosystem';
 import { Brush } from './Brushes/Brush';
-// import LowResolutionBrush from './Brushes/LowResolutionBrush';
 import MediumResolutionBrush from './Brushes/MediumResolutionBrush';
 
 import DragListener from './Interactions/DragListener';
@@ -22,6 +21,13 @@ export type Bounds = {
   top: number;
   bottom: number;
 };
+
+export type Modifications = {
+  bounds: Bounds;
+  style: {
+    color: string;
+  };
+}[];
 
 /** Change cell rendering behaviors by manipulation render context */
 export type CellRenderingDirective = (
@@ -69,8 +75,6 @@ export default class Renderer {
 
     const cell: Cell = [cell_row, cell_column];
 
-    // if (!isWithinBounds(cell, this.get_bounds())) return null;
-
     return cell;
   }
 
@@ -82,7 +86,7 @@ export default class Renderer {
    */
   bind_all() {
     this.configure_zoom_control();
-    this.configure_drag_behavior();
+    this.configure_scroll_behavior();
     this.configure_select_behavior();
     this.configure_cell_state_control();
   }
@@ -156,24 +160,11 @@ export default class Renderer {
 
       const cell_row = Math.floor(this.mouse.y / this.SIZE);
 
-      const cell: Cell = [cell_row, cell_column];
-
-      // if (!isWithinBounds(cell, this.get_bounds())) return;
-
-      console.log(
-        ' State : ',
-        this.engine.get_cell_state(cell),
-        ' cell : ',
-        cell
-      );
-
       this.engine.toggle([cell_row, cell_column]);
     });
 
     new DragListener(this.canvas, (event) => {
-      if (!event.modifiers.has('Shift')) {
-        return;
-      }
+      if (event.modifiers.size > 0) return;
 
       this.engine.bless([
         this.to_cell_coordinate(this.mouse.y),
@@ -184,27 +175,13 @@ export default class Renderer {
     return this;
   }
 
-  // get_bounds(): Bounds {
-
-  //   return {
-  //     top: 0,
-  //     bottom: this.engine.rows - 1,
-
-  //     left: 0,
-  //     right: this.engine.columns - 1,
-  //   };
-  // }
-
   /** Configures canvas drag behaviors and listeners : double-tap and mouse movement  */
-  configure_drag_behavior() {
-    new DragListener(this.canvas, (event) => {
-      if (event.modifiers.size > 0) {
-        return;
-      }
-      this.scene.x +=
-        (event.displacement_x * this.scene.width) / this.canvas.width;
-      this.scene.y +=
-        (event.displacement_y * this.scene.height) / this.canvas.height;
+  configure_scroll_behavior() {
+    window.addEventListener('wheel', (event) => {
+      if (Keyboard.keys_pushed.size > 0) return;
+
+      this.scene.x += (event.deltaX * this.scene.width) / this.canvas.width;
+      this.scene.y += (event.deltaY * this.scene.height) / this.canvas.height;
     });
 
     return this;
@@ -218,11 +195,13 @@ export default class Renderer {
     const selector = document.createElement('div');
 
     selector.style.opacity = '0';
+    selector.style.position = 'fixed';
     selector.style.pointerEvents = 'none';
     selector.classList.add('canvas-cell-selector');
-    this.canvas.parentNode?.appendChild(selector);
+    document.body.appendChild(selector);
 
     new DragListener(this.canvas, (event) => {
+      // console.log(event.x, event.y)
       if (!event.modifiers.has('Control')) return;
 
       const vertical_bounds = [event.drag_star_x, event.x];
@@ -263,15 +242,15 @@ export default class Renderer {
             bounds,
             done: true,
           });
-      });
 
-    window.addEventListener('click', () => {
-      Object.assign(selector.style, {
-        opacity: 0,
-        width: '0px',
-        height: '0px',
+        Object.assign(selector.style, {
+          opacity: 0,
+          width: '0px',
+          height: '0px',
+        });
+
+        this.engine.modifications = [{ style: { color: '#f21f82' }, bounds }];
       });
-    });
 
     return this;
   }
