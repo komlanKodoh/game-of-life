@@ -52,8 +52,7 @@ jobs:
           aws-region: us-east-2
 
       - name: Update deployment
-        run: aws ecs update-service --force-new-deployment --service game-of-life-service  --cluster game-of-life &&
-              aws ecs wait services-stable --cluster game-of-life --service game-of-life-service
+        run: aws ecs update-service --force-new-deployment --service game-of-life-service  --cluster game-of-life
 
   registry-cleanup:
     needs: [deploy]
