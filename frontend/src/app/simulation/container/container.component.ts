@@ -26,6 +26,7 @@ import Channel from '../canvas/Channel';
 import { PanelState } from '../../state/simulation/panel/reducer';
 import { AppState } from 'src/app/state';
 import { UserService } from 'src/app/account/user.service';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-container',
@@ -74,7 +75,9 @@ export class ContainerComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private userService: UserService
+    private userService: UserService,
+    private meta: Meta,
+    private title: Title,
   ) {
     this.store.pipe().subscribe((state) => {
       this.panel = state.simulation.panel;
@@ -84,6 +87,10 @@ export class ContainerComponent implements OnInit {
 
   ngOnInit() {
     this.userService.refreshToken();
+    this.title.setTitle("Conway's Game of Life");
+    this.meta.addTags([
+      {name: "description", description: "A implementation of Conway's game of life simulation running in the your browser using wasm." }
+    ])
   }
 
   ngAfterViewInit(): void {
