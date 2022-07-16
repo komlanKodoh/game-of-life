@@ -5,6 +5,10 @@ export default class AbstractBrush {
 
   constructor(protected config: BrushConfig) {}
 
+  setConfig(config : BrushConfig){
+    this.config = config;
+  }
+
   /** Returns canvas rendering context */
   get_rendering_context() {
     if (this.ctx) {

@@ -1,5 +1,10 @@
 import Renderer from "../Renderer/Renderer";
 
+/**
+ * Brush configuration is passed down to the renderer. A brush is used to paint 
+ * the cells to the canvas. Changing this configuration will change the way the
+ *  world is rendered onto the screen
+ */
 export type BrushConfig = {
     /** Relative cell size in universe */
     size: number,
