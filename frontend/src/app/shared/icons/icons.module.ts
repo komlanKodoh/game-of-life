@@ -9,6 +9,7 @@ import { MenuComponent } from './menu/menu.component';
 import { MoreComponent } from './more/more.component';
 import { ExpendComponent } from './expend/expend.component';
 import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -20,9 +21,11 @@ import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator
     MoreComponent,
     ExpendComponent,
     LoadingIndicatorComponent,
+    SettingsComponent,
   ],
   imports: [CommonModule],
   exports: [
+    SettingsComponent,
     PlusComponent,
     MinusComponent,
     BackwardComponent,

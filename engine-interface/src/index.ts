@@ -1,3 +1,4 @@
+import { BrushConfig } from './lib/Configuration/brush.config.type';
 import { AssociativeEcosystem } from 'game-of-life';
 
 import Cell from './lib/Cell';
@@ -24,6 +25,7 @@ export {
   Cell,
   Bounds,
   ObjectMap,
+  BrushConfig,
   RenderConfig,
   DragListener,
   GameOfLifeConfig,
