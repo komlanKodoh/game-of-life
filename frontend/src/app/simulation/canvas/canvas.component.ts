@@ -5,6 +5,7 @@ import {
   Ecosystem,
   Serializer,
   GameOfLifeConfig,
+  BrushConfig,
 } from 'game-of-life-engine';
 import {
   Output,
@@ -143,5 +144,9 @@ export class CanvasComponent {
 
   unZoom() {
     this.renderer.zoom(200, false);
+  }
+
+  updateBrush(config: Omit< BrushConfig, "renderer">){
+    this.renderer.brush.setConfig({ ...config, renderer: this.renderer });
   }
 }

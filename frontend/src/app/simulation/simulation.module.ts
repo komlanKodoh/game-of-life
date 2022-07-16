@@ -1,3 +1,4 @@
+import {  ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from './canvas/canvas.component';
@@ -19,6 +20,7 @@ import { SimulationBrushConfigComponent } from './simulation-brush-config/simula
     SimulationBrushConfigComponent,
   ],
   imports: [
+    ReactiveFormsModule,
     AppRouterModule,
     SharedModule,
     CommonModule,
