@@ -1,4 +1,5 @@
+import Renderer from "../Renderer";
 
 export interface Brush {
-    render() : void;
+  render(renderer: Renderer): void;
 }

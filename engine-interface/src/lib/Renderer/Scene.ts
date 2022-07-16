@@ -8,8 +8,8 @@ export default class Scene {
   x = 0;
   y = 0;
 
-  width: number = 0;
-  height: number = 0;
+  width = 0;
+  height = 0;
 
   /**scale between scene values and canvas values, used for value mapping between universe and canvas */
   private scale_x = 1;
@@ -88,11 +88,11 @@ export default class Scene {
   /**
    * Resize scene to given dimension. when omitted, height is computed,
    * in order to maintain the current aspect ratio.
-   * 
+   *
    * @note When passed, height could modify the current scene aspect ratio. This would
    * result in a skewed rendering on the current canvas. To mitigate this issue, make sure to
-   * call fit with a with and height whose aspect ratio match the new scene aspect ratio. 
-   * 
+   * call fit with a with and height whose aspect ratio match the new scene aspect ratio.
+   *
    * @param width new scene width
    * @param height new scene height
    */
@@ -106,7 +106,6 @@ export default class Scene {
 
     this.fit(this.container_width, this.container_height);
   }
-
 
   /**
    * Centers the scene around a point with coordinates x and y

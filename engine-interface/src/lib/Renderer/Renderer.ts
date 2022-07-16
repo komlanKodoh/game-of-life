@@ -1,26 +1,20 @@
+
+
 import { sort_number, to_pixel } from '../../utils';
+import { Bounds } from '../../utils/index.generic';
 import Cell from '../Cell';
+import { RenderConfig } from '../Configuration/renderer.config.type';
 import Ecosystem from '../Ecosystem';
+
 import { Brush } from './Brushes/Brush';
 import MediumResolutionBrush from './Brushes/MediumResolutionBrush';
-
 import DragListener from './Interactions/DragListener';
 import Keyboard from './Interactions/Keyboard';
 import Mouse from './Interactions/Mouse';
 import Scene from './Scene';
+import { DefaultBrushConfig } from './defaults.config';
 
-/** Renderer configuration */
-export interface RenderConfig {
-  canvas: HTMLCanvasElement;
-  engine: Ecosystem;
-}
 
-export type Bounds = {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-};
 
 export type Modifications = {
   bounds: Bounds;
@@ -53,11 +47,7 @@ export default class Renderer {
   constructor(config: RenderConfig) {
     this.engine = config.engine;
     this.canvas = config.canvas;
-    this.brush = new MediumResolutionBrush(
-      this.scene,
-      this.engine,
-      this.canvas
-    );
+    this.brush = new MediumResolutionBrush( {renderer: this, ... (config.brush  || DefaultBrushConfig)} );
 
     this.fitCanvas();
     this.mouse = new Mouse(this.scene, this.canvas);
@@ -304,7 +294,7 @@ export default class Renderer {
   }
 
   render() {
-    this.brush.render();
+    this.brush.render(this);
   }
 
   to_cell_coordinate(coordinate: number) {

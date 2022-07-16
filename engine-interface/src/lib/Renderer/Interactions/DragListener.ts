@@ -88,7 +88,7 @@ export default class DragListener {
   /** create {@link DragEvent} from {@link MouseEvent} */
   private new_drag_event(e: MouseEvent): DragEvent {
     if (!this.modifiers) throw new Error('new drag outside drag event context');
-    
+
     return {
       e,
 
@@ -105,7 +105,6 @@ export default class DragListener {
     };
   }
 
-  
   onDragStart(callback: (e: DragEvent) => void) {
     this.callback_drag_start = callback;
     return this;

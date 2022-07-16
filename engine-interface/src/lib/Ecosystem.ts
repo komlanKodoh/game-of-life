@@ -1,18 +1,18 @@
 import { AssociativeEcosystem } from 'game-of-life';
 import { memory } from 'game-of-life/engine_bg.wasm';
-import { ObjectMap } from '../utils/index.generic';
+
+import { Bounds, ObjectMap } from '../utils/index.generic';
 
 import Cell from './Cell';
 import Directive from './Configuration/directive';
-import { GameOfLifeConfig } from './Configuration/game-of-life-config.type';
-import { Bounds, Modifications } from './Renderer';
-
+import { GameOfLifeConfig } from './Configuration/game-of-life.config.type';
+import { Modifications } from './Renderer/Renderer';
 
 export default class Ecosystem {
   rows?: number;
   columns?: number;
   engine: AssociativeEcosystem;
-  modifications : Modifications = [];
+  modifications: Modifications = [];
 
   parser = new Directive.Parser();
 
@@ -127,10 +127,10 @@ export default class Ecosystem {
    * Iterate over all cells in the universe that are either alive or present residual state
    */
   for_each_relevant_cell(cb: (cell: Cell, state: number) => void) {
-    let iterator = this.engine.get_relevant_cells();
-    let length = this.engine.get_relevant_cells_length();
+    const iterator = this.engine.get_relevant_cells();
+    const length = this.engine.get_relevant_cells_length();
 
-    let relevant_cells = new Int32Array(memory.buffer, iterator, length);
+    const relevant_cells = new Int32Array(memory.buffer, iterator, length);
 
     for (let first_idx = 0; first_idx < relevant_cells.length; first_idx += 2) {
       const cell = [
@@ -147,8 +147,6 @@ export default class Ecosystem {
    * uses default universe bound if the universe is bounded and no bound is provided;
    */
   for_each_cell(cb: (cell: Cell, state: number) => void, bounds?: Bounds) {
-
-    
     if (!bounds) {
       if (!this.rows || !this.columns) return;
       bounds = {

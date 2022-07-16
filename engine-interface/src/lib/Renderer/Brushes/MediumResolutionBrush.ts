@@ -1,92 +1,99 @@
-import Scene from '../Scene';
-import { Config } from './../Config';
-import Ecosystem from '../../Ecosystem';
+import { Bounds } from '../../../utils/index.generic';
+import { BrushConfig } from '../../Configuration/brush.config.type';
+
 import AbstractBrush from './AbstractBrush';
-import { Bounds } from '..';
 
 export default class MediumResolutionBrush extends AbstractBrush {
   ctx?: CanvasRenderingContext2D;
 
-  constructor(scene: Scene, engine: Ecosystem, canvas: HTMLCanvasElement) {
-    super(scene, engine, canvas);
+  constructor(config: BrushConfig) {
+    super(config);
   }
 
-  prepare_living_area(){
-    let left = Math.floor(this.scene.x / Config.SIZE);
-    let right = Math.ceil((this.scene.x + this.scene.width) / Config.SIZE);
+  prepare_living_area() {
+    const left = Math.floor(this.config.renderer.scene.x / this.config.size);
+    const right = Math.ceil(
+      (this.config.renderer.scene.x + this.config.renderer.scene.width) / this.config.size
+    );
 
-    let top = Math.floor(this.scene.y / Config.SIZE);
-    let bottom = Math.ceil((this.scene.y + this.scene.height) / Config.SIZE);
-    this.paint_grid({
-      left,
-      right,
-      top,
-      bottom
-    }, {
-      color: this.getSecondaryStyle()
-    });
+    const top = Math.floor(this.config.renderer.scene.y / this.config.size);
+    const bottom = Math.ceil(
+      (this.config.renderer.scene.y + this.config.renderer.scene.height) / this.config.size
+    );
 
-    this.engine.modifications.forEach(modification => {
+    this.paint_grid(
+      {
+        left,
+        right,
+        top,
+        bottom,
+      },
+      {
+        color: this.get_grid_line_color(),
+      }
+    );
+
+    this.config.renderer.engine.modifications.forEach((modification) => {
       this.paint_grid(modification.bounds, {
-        color : modification.style.color 
+        color: this.config.selection_color
       });
-    })
+    });
   }
 
-  paint_grid({left, right, bottom, top} : Bounds, style: {color: string} ) {
-    let ctx = this.get_rendering_context();
+  paint_grid({ left, right, bottom, top }: Bounds, style: { color: string }) {
+    const ctx = this.get_rendering_context();
 
     ctx.beginPath(); // Start a new path
 
-    bottom ++;
-    right ++;
-    
+    bottom++;
+    right++;
+
     for (let row = top; row <= bottom; row++) {
       ctx.moveTo(
-        this.scene.map_x(left * Config.SIZE),
-        this.scene.map_y(row * Config.SIZE - Config.PADDING / 2)
+        this.config.renderer.scene.map_x(left * this.config.size),
+        this.config.renderer.scene.map_y(row * this.config.size - this.config.padding / 2)
       ); // Move the pen to (30, 50)
       ctx.lineTo(
-        this.scene.map_x(right * Config.SIZE),
-        this.scene.map_y(row * Config.SIZE - Config.PADDING / 2)
+        this.config.renderer.scene.map_x(right * this.config.size),
+        this.config.renderer.scene.map_y(row * this.config.size - this.config.padding / 2)
       );
     }
 
     for (let column = left; column <= right; column++) {
       ctx.moveTo(
-        this.scene.map_x(column * Config.SIZE - Config.PADDING / 2),
-        this.scene.map_y(top * Config.SIZE)
+        this.config.renderer.scene.map_x(column * this.config.size - this.config.padding / 2),
+        this.config.renderer.scene.map_y(top * this.config.size)
       ); // Move the pen to (30, 50)
       ctx.lineTo(
-        this.scene.map_x(column * Config.SIZE - Config.PADDING / 2),
-        this.scene.map_y(bottom * Config.SIZE)
+        this.config.renderer.scene.map_x(column * this.config.size - this.config.padding / 2),
+        this.config.renderer.scene.map_y(bottom * this.config.size)
       );
     }
 
-    ctx.lineWidth = this.scene.map_dimension(Config.PADDING);
-    ctx.strokeStyle = style.color ;
+    ctx.lineWidth = this.config.renderer.scene.map_dimension(this.config.padding);
+    ctx.strokeStyle = style.color;
     ctx.stroke();
   }
 
   render() {
-    let ctx = this.get_rendering_context();
+    const ctx = this.get_rendering_context();
 
     this.wipe_canvas();
     this.prepare_living_area();
 
-    this.engine.for_each_relevant_cell((cell, state) => {
-      const cell_x = cell[1] * Config.SIZE;
-      const cell_y = cell[0] * Config.SIZE;
+    this.config.renderer.engine.for_each_relevant_cell((cell, state) => {
+      const cell_x = cell[1] * this.config.size;
+      const cell_y = cell[0] * this.config.size;
 
       if (state === 0 || state === 1) return;
 
-      ctx.fillStyle = this.getFillStyle(state);
+      ctx.fillStyle = this.get_fill_style(state);
 
       ctx.fillRect(
-        this.scene.map_x(cell_x),
-        this.scene.map_y(cell_y),
-        this.scene.map_dimension(Config.SIZE - Config.PADDING),
-        this.scene.map_dimension(Config.SIZE - Config.PADDING)
+        this.config.renderer.scene.map_x(cell_x),
+        this.config.renderer.scene.map_y(cell_y),
+        this.config.renderer.scene.map_dimension(this.config.size - this.config.padding),
+        this.config.renderer.scene.map_dimension(this.config.size - this.config.padding)
       );
     });
   }

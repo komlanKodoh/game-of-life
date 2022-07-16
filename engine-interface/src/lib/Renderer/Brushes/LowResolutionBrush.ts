@@ -1,6 +1,4 @@
-import Scene from '../Scene';
-import { Config } from './../Config';
-import Ecosystem from '../../Ecosystem';
+import { BrushConfig } from './../../Configuration/brush.config.type';
 import AbstractBrush from './AbstractBrush';
 
 /**
@@ -12,27 +10,29 @@ import AbstractBrush from './AbstractBrush';
 export default class LowResolutionBrush extends AbstractBrush {
   ctx?: CanvasRenderingContext2D;
 
-  constructor(scene: Scene, engine: Ecosystem, canvas: HTMLCanvasElement) {
-    super(scene, engine, canvas);
+  constructor(config: BrushConfig) {
+    super(config);
   }
 
   render() {
-    let ctx = this.get_rendering_context();
+    const ctx = this.get_rendering_context();
+    const scene = this.config.renderer.scene;
+
     this.wipe_canvas();
 
-    this.engine.for_each_relevant_cell((cell, state) => {
-      const cell_x = cell[1] * Config.SIZE;
-      const cell_y = cell[0] * Config.SIZE;
+    this.config.renderer.engine.for_each_relevant_cell((cell, state) => {
+      const cell_x = cell[1] * this.config.size;
+      const cell_y = cell[0] * this.config.size;
 
       if (state === 0 || state === 1) return;
 
-      ctx.fillStyle = this.getFillStyle(state);
+      ctx.fillStyle = this.get_fill_style(state);
 
       ctx.fillRect(
-        this.scene.map_x(cell_x),
-        this.scene.map_y(cell_y),
-        this.scene.map_dimension(Config.SIZE - Config.PADDING),
-        this.scene.map_dimension(Config.SIZE - Config.PADDING)
+        scene.map_x(cell_x),
+        scene.map_y(cell_y),
+        scene.map_dimension(this.config.size - this.config.padding),
+        scene.map_dimension(this.config.size - this.config.padding)
       );
     });
   }
