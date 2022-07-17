@@ -1,5 +1,4 @@
 import { saveEcosystem } from './../../state/user/actions';
-import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configuration/game-of-life-config.type';
 import { ClipboardData } from '../../state/simulation/clipboard/reducer';
 import {
   Component,
@@ -18,7 +17,6 @@ import {
   animate,
   transition,
 } from '@angular/animations';
-import Directive from 'game-of-life-engine/build/main/lib/Configuration/directive';
 import { AreaSelectionEvent } from '../canvas/type';
 import { write } from '../../state/simulation/clipboard/actions';
 import Mouse from 'src/utils/Mouse';
@@ -27,6 +25,7 @@ import { PanelState } from '../../state/simulation/panel/reducer';
 import { AppState } from 'src/app/state';
 import { UserService } from 'src/app/account/user.service';
 import { Meta, Title } from '@angular/platform-browser';
+import { GameOfLifeConfig } from 'game-of-life-engine';
 
 @Component({
   selector: 'app-container',

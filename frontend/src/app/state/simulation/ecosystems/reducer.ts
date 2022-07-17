@@ -1,5 +1,5 @@
-import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configuration/game-of-life-config.type';
-import { createReducer, createSelector, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
+import { GameOfLifeConfig } from 'game-of-life-engine';
 import * as ecosystemsAction from './actions';
 
 
