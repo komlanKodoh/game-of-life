@@ -6,6 +6,7 @@ export default class AbstractBrush {
   constructor(protected config: BrushConfig) {}
 
   setConfig(config : BrushConfig){
+    this.styleCache = {};
     this.config = config;
   }
 
@@ -42,6 +43,6 @@ export default class AbstractBrush {
   get_fill_style(state: number) {
     if (this.styleCache[state]) return this.styleCache[state] as string;
 
-      return this.styleCache[state] = this.config.cell_shader(state);
+    return this.styleCache[state] = this.config.cell_shader(state);
   }
 }
