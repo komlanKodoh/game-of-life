@@ -27,7 +27,8 @@ export default class AbstractBrush {
   }
 
   wipe_canvas() {
-    this.get_rendering_context().clearRect(
+    this.get_rendering_context().fillStyle = this.config.canvas_fill_color;
+    this.get_rendering_context().fillRect(
       0,
       0,
       this.config.renderer.canvas.width,
