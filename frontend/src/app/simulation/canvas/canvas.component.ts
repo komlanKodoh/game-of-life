@@ -5,6 +5,7 @@ import {
   Ecosystem,
   Serializer,
   GameOfLifeConfig,
+  BrushConfig,
 } from 'game-of-life-engine';
 import {
   Output,
@@ -50,7 +51,7 @@ export class CanvasComponent {
 
     this.renderer = new Renderer({
       canvas: this.canvas.nativeElement,
-      engine: this.engine,
+      engine: this.engine
     });
 
     let bounds: Bounds | null = null;
@@ -112,8 +113,6 @@ export class CanvasComponent {
         name: 'save-as-component',
         component: this.tempSelection,
       });
-
-      console.log(this.tempSelection)
   }
 
   constructor(private store: Store<AppState>) {}
@@ -145,5 +144,9 @@ export class CanvasComponent {
 
   unZoom() {
     this.renderer.zoom(200, false);
+  }
+
+  updateBrush(config: Omit< BrushConfig, "renderer">){
+    this.renderer.brush.setConfig({ ...config, renderer: this.renderer });
   }
 }

@@ -16,6 +16,9 @@
     class=" bg-green-500 p-2 rounded shadow-lg shadow-black active:shadow-none absolute bottom-5 w-8 left-1/2 -translate-x-1/2 ">
 </app-icon-menu>
 
+<app-simulation-brush-config (SaveEvent)="updateBrush($event)" class="absolute bottom-0 right-0">
+
+</app-simulation-brush-config>
 
 <app-mouse-popup [isVisible]="optionPromptIsVisible">
     <div class="bg-green-700 p-2 text-white ">

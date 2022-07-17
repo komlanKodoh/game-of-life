@@ -1,3 +1,4 @@
+import {  ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from './canvas/canvas.component';
@@ -9,14 +10,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from './components/components.module';
 import { AppRouterModule } from '../app-router.module';
+import { SimulationBrushConfigComponent } from './simulation-brush-config/simulation-brush-config.component';
 
 @NgModule({
   declarations: [
     CanvasComponent,
     ContainerComponent,
     ConfigurationPanelComponent,
+    SimulationBrushConfigComponent,
   ],
   imports: [
+    ReactiveFormsModule,
     AppRouterModule,
     SharedModule,
     CommonModule,
@@ -27,7 +31,6 @@ import { AppRouterModule } from '../app-router.module';
 
   exports: [
     CanvasComponent,
-    ConfigurationPanelComponent,
     ComponentsModule,
     ContainerComponent,
   ],

@@ -1,0 +1,72 @@
+<div class="relative h-0 w-0">
+
+
+    <div #container class="absolute transition-all rounded"></div>
+
+    <form #settings [formGroup]="configurationForm"
+        class=" text-white w-64  absolute bottom-2 right-2 p-4 transition-opacity"
+        [style]="isOpen(settingsElement) ? enabledStyle : disabledStyle ">
+
+        <h2> Simulation settings </h2>
+        <p class="absolute top-2 right-2" (click)="toggle()">close</p>
+
+        <mat-form-field class="w-full">
+            <mat-label> size </mat-label>
+            <input matInput type="number" class="block" formControlName="size">
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label> radius </mat-label>
+            <input matInput type="number" class="block" formControlName="radius">
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label> padding </mat-label>
+            <input matInput type="number" class="block" formControlName="padding">
+        </mat-form-field>
+
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="grid_line_color" class="">Color of the grid lines</label>
+            <div class="w-8 inline-block">
+                <input type="color" id="grid_line_color" matInput formControlName="grid_line_color" />
+            </div>
+        </div>
+
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="canvas_fill_color">Grid background color</label>
+            <div class="w-8 inline-block">
+                <input id="canvas_fill_color" type="color" matInput formControlName="canvas_fill_color" />
+            </div>
+        </div>
+
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="live_cell_color">Live cell color</label>
+            <div class="w-8 inline-block">
+                <input id="live_cell_color" type="color" matInput formControlName="live_cell_color" />
+            </div>
+        </div>
+
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="dead_cell_color">Dead cell color</label>
+            <div class="w-8 inline-block">
+                <input id="dead_cell_color" type="color" matInput formControlName="dead_cell_color" />
+            </div>
+        </div>
+
+
+        <div>
+
+        </div>
+
+        <br>
+
+        <button class=" active:bg-yellow-400 bg-yellow-500 py-1 px-2 rounded" (click)="save()"> Save </button>
+
+    </form>
+
+    <div #icon [style]="isOpen(iconElement) ? enabledStyle : disabledStyle " (click)="toggle()"
+        class="p-2 rounded shadow-lg shadow-black active:shadow-none absolute bottom-10 w-8 right-10 transition-opacity">
+        <app-settings></app-settings>
+    </div>
+
+</div>

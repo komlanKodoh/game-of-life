@@ -1,7 +1,8 @@
+import { Bounds } from '../utils/index.generic';
+
 import Cell from './Cell';
 import Directive from './Configuration/directive';
 import Ecosystem from './Ecosystem';
-import { Bounds } from './Renderer';
 
 export class Serializer {
   static generate_string_directive(engine: Ecosystem, bounds?: Bounds) {

@@ -14,3 +14,14 @@
 export type ObjectMap<TKey extends string | number | symbol, TValue> = {
   [key in TKey]: TValue;
 };
+
+
+/**
+ * Delimit a region of the plane where the universe is rendered
+ */
+export type Bounds = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};

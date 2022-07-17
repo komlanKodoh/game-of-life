@@ -1,4 +1,7 @@
+import { BrushConfig } from "../../Configuration/brush.config.type";
+import Renderer from "../Renderer";
 
 export interface Brush {
-    render() : void;
+  setConfig(config: BrushConfig): void ;
+  render(renderer: Renderer): void;
 }
