@@ -25,27 +25,37 @@
             <input matInput type="number" class="block" formControlName="padding">
         </mat-form-field>
 
-        <div class="">
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="grid_line_color" class="">Color of the grid lines</label>
             <div class="w-8 inline-block">
-                <input type="color" matInput formControlName="grid_line_color" />
+                <input type="color" id="grid_line_color" matInput formControlName="grid_line_color" />
             </div>
-            <span> {{configurationForm.value.grid_line_color}} </span>
         </div>
 
-        <div class="">
-
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="canvas_fill_color">Grid background color</label>
             <div class="w-8 inline-block">
-                <input type="color" matInput formControlName="canvas_fill_color" />
+                <input id="canvas_fill_color" type="color" matInput formControlName="canvas_fill_color" />
             </div>
-            <span> {{configurationForm.value.canvas_fill_color}} </span>
         </div>
 
-        <div class="">
-
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="live_cell_color">Live cell color</label>
             <div class="w-8 inline-block">
-                <input type="color" matInput formControlName="selection_color" />
+                <input id="live_cell_color" type="color" matInput formControlName="live_cell_color" />
             </div>
-            <span> {{configurationForm.value.selection_color}} </span>
+        </div>
+
+        <div  class="flex justify-between  items-end ">
+            <label htmlFor="dead_cell_color">Dead cell color</label>
+            <div class="w-8 inline-block">
+                <input id="dead_cell_color" type="color" matInput formControlName="dead_cell_color" />
+            </div>
+        </div>
+
+
+        <div>
+
         </div>
 
         <br>

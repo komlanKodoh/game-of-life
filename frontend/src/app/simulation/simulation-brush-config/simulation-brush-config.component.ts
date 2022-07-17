@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { toRGB } from 'src/utils';
 
 @Component({
   selector: 'app-simulation-brush-config',
@@ -36,6 +37,8 @@ export class SimulationBrushConfigComponent implements OnInit {
       padding: 4,
 
       grid_line_color: '#0a0000',
+      live_cell_color: "#0ff55f",
+      dead_cell_color: "#79f2b6",
       canvas_fill_color: '#0a0000',
       selection_color: '#32a0a8',
       cell_shader: '',
@@ -91,13 +94,17 @@ export class SimulationBrushConfigComponent implements OnInit {
   }
 
   save() {
+    let live_cell_color = this.configurationForm.value.live_cell_color;
+    let rgb = toRGB(this.configurationForm.value.dead_cell_color);
+
+    console.log(  `rgba( ${rgb.red}, ${rgb.green}, ${rgb.blue} , ${255 /  (255 * 3) })`)
     this.SaveEvent.emit({
       ...this.configurationForm.value,
       cell_shader: (state: number) => {
-        const color = `${state / 2} , ${state / 1.3} , ${state / 1.7}`;
-        let fillStyle = `rgba( 15, 225, 95 , ${state / (255 * 1.5) + 0.2})`;
+        let fillStyle = `rgba( ${rgb.red}, ${rgb.green}, ${rgb.blue} , ${state /  (255 * 3) })`;
 
-        if (state === 255) fillStyle = '#0ff55f';
+      
+        if (state === 255) fillStyle = live_cell_color ;
 
         return fillStyle;
       },
