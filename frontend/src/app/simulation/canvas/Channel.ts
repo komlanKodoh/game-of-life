@@ -1,5 +1,4 @@
-import { Cell } from 'game-of-life-engine';
-import { GameOfLifeConfig } from 'game-of-life-engine/build/main/lib/Configuration/game-of-life-config.type';
+import { Cell, GameOfLifeConfig } from 'game-of-life-engine';
 
 type EventsDefinition = {
   'paste-component': {

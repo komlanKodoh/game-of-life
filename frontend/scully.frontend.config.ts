@@ -8,6 +8,5 @@ export const config: ScullyConfig = {
   projectName: "frontend",
   spsModulePath: 'YOUR OWN MODULE PATH HERE',
   outDir: './build',
-  routes: {
-  }
+  routes: {}
 };
