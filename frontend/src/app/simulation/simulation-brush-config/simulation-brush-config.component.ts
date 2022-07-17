@@ -39,18 +39,22 @@ export class SimulationBrushConfigComponent implements OnInit {
       grid_line_color: '#0a0000',
       live_cell_color: "#0ff55f",
       dead_cell_color: "#79f2b6",
-      canvas_fill_color: '#0a0000',
+
+      canvas_fill_color: '#1f1f1f',
       selection_color: '#32a0a8',
       cell_shader: '',
     });
   }
 
   ngAfterViewInit() {
-    this.setCurrentElement(this.settingsElement);
+    this.setCurrentElement(this.iconElement);
+
+    // Setting time out so the following command is executed after its parent initialization;
+    setTimeout( () =>  this.save(), 0);
   }
 
+
   toggle() {
-    console.log(this.configurationForm.value);
     this.setCurrentElement(
       this.currentElement === this.settingsElement
         ? this.iconElement
@@ -97,7 +101,6 @@ export class SimulationBrushConfigComponent implements OnInit {
     let live_cell_color = this.configurationForm.value.live_cell_color;
     let rgb = toRGB(this.configurationForm.value.dead_cell_color);
 
-    console.log(  `rgba( ${rgb.red}, ${rgb.green}, ${rgb.blue} , ${255 /  (255 * 3) })`)
     this.SaveEvent.emit({
       ...this.configurationForm.value,
       cell_shader: (state: number) => {

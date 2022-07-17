@@ -51,7 +51,7 @@ export class CanvasComponent {
 
     this.renderer = new Renderer({
       canvas: this.canvas.nativeElement,
-      engine: this.engine,
+      engine: this.engine
     });
 
     let bounds: Bounds | null = null;
