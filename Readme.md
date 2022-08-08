@@ -7,3 +7,5 @@ AWS_REGION
 PORT
 PUBLIC_DIR
 ```
+
+# Project availabe at [gameoflifes.com](https://gameoflives.com)
