@@ -8,4 +8,4 @@ PORT
 PUBLIC_DIR
 ```
 
-# Project availabe at [gameoflifes.com](https://gameoflives.com)
+# Project availabe at [gameoflifes.com](https://gameoflifes.com)
