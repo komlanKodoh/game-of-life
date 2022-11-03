@@ -39,3 +39,4 @@ pub fn get_next_state(current_state: State, live_neighbors: u8) -> State {
         }
     }
 }
+    

@@ -1,25 +1,36 @@
 import utils from "../../utils";
-import { UserIdentifier } from "../auth/auth.service";
 import { EcosystemRepository } from "./Ecosystem";
 
 interface Ecosystem {
+  name: string;
+
+  public: boolean,
+  type: "ascii" | "buffer",
+
   rows: number;
   columns: number;
+  description: string;
 
   directive_composition: string;
   directives?: [name: string, definition: string][];
 }
 
-export const createEcosystem = (
-  userIdentifier: UserIdentifier,
+export const  createEcosystem = async (
+  userId: string,
   ecosystem: Ecosystem
 ) => {
-  EcosystemRepository.create({
-    name: utils.getUUID(),
-    owner_id: userIdentifier.id,
+  await EcosystemRepository.create({
+    id: utils.getUUID(),
+
+    name: ecosystem.name,
+    owner_id: userId,
+
+    type: ecosystem.type,
+    public: ecosystem.public,
 
     rows: ecosystem.rows,
     columns: ecosystem.columns,
+    description: ecosystem.description,
 
     directives: ecosystem.directives,
     directive_composition: ecosystem.directive_composition,

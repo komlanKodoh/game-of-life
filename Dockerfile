@@ -12,7 +12,7 @@ RUN apt-get update || : && apt-get install python -y
 RUN npm config set python /usr/bin/python
 RUN cd server && npm i --production && npm rebuild bcrypt --build-from-source ;
 
-COPY ./_start.sh ./
+COPY ./cmd/start.sh ./
 
-ENTRYPOINT ["sh", "/game-of-life/_start.sh" ]
+ENTRYPOINT ["sh", "/game-of-life/cmd/start.sh" ]
 

@@ -1,9 +1,7 @@
-
+use crate::utils::set_panic_hook;
 use wasm_bindgen::prelude::*;
-use crate::{utils::set_panic_hook};
 
 use super::cell;
-
 
 #[wasm_bindgen]
 pub struct Ecosystem {
@@ -13,17 +11,12 @@ pub struct Ecosystem {
     previous_cells: Vec<cell::State>,
 }
 
-
 impl Ecosystem {
     fn get_linear_index(&self, (row, column): cell::Cell) -> usize {
         row * self.columns + column
     }
 
-    fn live_neighbor_count(
-        &self,
-        (row, column): cell::Cell,
-        snapshot: &Vec<cell::State>,
-    ) -> u8 {
+    fn live_neighbor_count(&self, (row, column): cell::Cell, snapshot: &Vec<cell::State>) -> u8 {
         let mut count = 0;
 
         for delta_row in [self.rows - 1, 0, 1].iter().cloned() {
@@ -118,8 +111,6 @@ impl Ecosystem {
         }
     }
 }
-
-
 
 #[test]
 fn something() {

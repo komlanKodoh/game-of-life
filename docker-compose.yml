@@ -5,10 +5,9 @@ services:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     image: "amazon/dynamodb-local:latest"
     container_name: dynamodb-local
-    ports:
-      - "3500:8000"
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
+    user: root
     working_dir: /home/dynamodblocal
 
   app-node:
@@ -27,4 +26,4 @@ services:
       AWS_REGION: 'eu-west-1'
       PORT: 3000
       PUBLIC_DIR: '/game-of-life/public'
-      DYNAMODB_LOCAL: "http://dynamodb-local:3500"
+      DYNAMODB_LOCAL: "http://dynamodb-local:8000"

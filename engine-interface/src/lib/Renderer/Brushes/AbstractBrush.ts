@@ -1,5 +1,6 @@
 import { ObjectMap } from '../../../utils/index.generic';
 import { BrushConfig } from '../../Configuration/brush.config.type';
+
 export default class AbstractBrush {
   ctx?: CanvasRenderingContext2D;
 

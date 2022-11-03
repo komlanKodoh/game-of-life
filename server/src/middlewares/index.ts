@@ -3,6 +3,7 @@ import parse from "co-body";
 import Auth from "../routes/auth";
 import { InvalidCredentialError } from "../error/CustomErrors";
 import { RouterContext } from "../utils/api";
+import Config from "../config";
 
 type Middleware = (ctx: RouterContext, next: () => Promise<any>) => void;
 
@@ -18,7 +19,8 @@ const userAuthentication: Middleware = async (ctx, next) => {
   const bearerToken = ctx.get("Authorization")?.slice(7);
 
   if (bearerToken) ctx.user = Auth.Service.parseToken(bearerToken);
-
+  else if (Config.isDev()) ctx.user = {id: "test-user-id"};
+  
   await next();
 };
 

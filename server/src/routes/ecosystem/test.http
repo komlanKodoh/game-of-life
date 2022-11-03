@@ -1,7 +1,6 @@
 
 ### Add item 
 POST http://localhost:3000/api/ecosystem HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjljNjQ4YTllLTk1NDYtNGZiZC04NzIxLTU5YmZjNGY4ODVjNyIsImlhdCI6MTY1NjI1MzM1NywiZXhwIjoxNjU2MjU2OTU3fQ.owR9YE9A94mK_HdRMERNQiG7Pe8O-QPfvGX_bP7KDpc
 content-type: application/json
 
 {
@@ -18,11 +17,31 @@ content-type: application/json
     } 
 }
 
+### Update item
+PUT http://localhost:3000/api/ecosystem HTTP/1.1
+content-type: application/json
+
+{
+    "ecosystem": {
+        "id": "001f22b1-af6f-4f21-9cbe-1f9408368602",
+
+        "name": "new not that rare user name",
+        "owner_id":"test-user-id",
+
+        "rows": 60,
+        "columns": 15,
+
+        "public": true,
+        "type":"ascii",
+
+        "directive_composition": "1,2,3"
+    } 
+}
+
 ### Get all public items
 
-GET http://localhost:3000/api/ecosystem?limit=10&startAt=5
+GET http://localhost:3000/api/ecosystem/unique/001f22b1-af6f-4f21-9cbe-1f9408368602
 
 ### Get item owned by the request maker
 
-GET http://localhost:3000/api/ecosystem/mine?name=3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjljNjQ4YTllLTk1NDYtNGZiZC04NzIxLTU5YmZjNGY4ODVjNyIsImlhdCI6MTY1NjI1MzM1NywiZXhwIjoxNjU2MjU2OTU3fQ.owR9YE9A94mK_HdRMERNQiG7Pe8O-QPfvGX_bP7KDpc
+GET http://localhost:3000/api/ecosystem/mine?id=001f22b1-af6f-4f21-9cbe-1f9408368602

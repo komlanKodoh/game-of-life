@@ -3,6 +3,8 @@ import { Document } from "dynamoose/dist/Document";
 import Config from "../../config";
 
 export class Ecosystem extends Document {
+  id!: string;
+
   name!: string;
   owner_id!: string;
 
@@ -22,6 +24,8 @@ export class Ecosystem extends Document {
 
 const EcosystemSchema = new dynamoose.Schema(
   {
+    id: String,
+
     name: String,
     owner_id: String,
 

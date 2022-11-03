@@ -20,10 +20,10 @@ const Config = {
 /** AWS Dynamo db configuration */
 if ( Config.isDev() ) dynamoose.aws.ddb.local(process.env.DYNAMODB_LOCAL);
 
-dynamoose.aws.sdk.config.update({
+else dynamoose.aws.sdk.config.update({
   "region": process.env.AWS_REGION,
-  "accessKeyId": process.env.AWS_ACCESS_KEY_ID ,
-  "secretAccessKey": process.env.AWS_ACCESS_KEY_SECRET ,
+  "accessKeyId": process.env.AWS_ACCESS_KEY_ID,
+  "secretAccessKey": process.env.AWS_ACCESS_KEY_SECRET,
 });
 
 

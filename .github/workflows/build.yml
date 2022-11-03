@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build image
-      run: ./_build.sh
+      run: ./cmd/build.sh
 
     - name: Test docker image
-      run: ./_integration.sh
+      run: ./cmd/integration.sh
