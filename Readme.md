@@ -16,3 +16,7 @@ PUBLIC_DIR #The directory containing the public files. This shoudl be the same a
 ```
 
 The container uses the temporary database int the docker network for developpement purposes
+
+# Deployement
+
+This project was deployed using AWS ECS and available at https://gameoflives.com. I still own the domain but teared down the infrastructure for this project. 
