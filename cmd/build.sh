@@ -1,9 +1,11 @@
 #!/bin/bash
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" && cd ..
 
-./server/cmd/build.sh &&
-./engine-interface/cmd/build.sh &&
-./frontend/cmd/build.sh
+pwd
+
+./server/_build.sh &&
+./engine-interface/_build.sh &&
+./frontend/_build.sh
 
 docker build . -t game-of-life

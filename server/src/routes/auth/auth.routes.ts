@@ -40,4 +40,5 @@ router.get("/logout", async (ctx) => {
     "see you"
   );
 })
+
 export default router.routes();
